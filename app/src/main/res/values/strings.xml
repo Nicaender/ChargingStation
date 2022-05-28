@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NZSE_Chargingstation</string>
+    <string name="login_techniker_btn">Login als Techniker</string>
+    <string name="back">Back</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="techniker_site">Techniker Site</string>
 </resources>
