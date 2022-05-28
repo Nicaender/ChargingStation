@@ -6,4 +6,10 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="techniker_site">Techniker Site</string>
+    <string name="favorites">Favorites</string>
+    <string name="login_site">Login Site</string>
+    <string name="main">Main</string>
+    <string name="my_cars">My Cars</string>
+    <string name="maps">Maps</string>
+    <string name="settings">Settings</string>
 </resources>

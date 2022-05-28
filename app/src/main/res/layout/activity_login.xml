@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <Button
             android:id="@+id/button_back_login_techniker"
@@ -23,14 +23,18 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_above="@id/edittext_password"
-            android:hint="@string/username" />
+            android:hint="@string/username"
+            android:autofillHints="@string/username"
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/edittext_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:autofillHints="@string/password"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/button_confirm_login_techniker"
@@ -45,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Login Site" />
+            android:text="@string/login_site" />
     </RelativeLayout>
 
 </RelativeLayout>

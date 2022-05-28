@@ -4,21 +4,21 @@
     <item
         android:id="@+id/nav_maps"
         android:icon="@drawable/ic_baseline_navigation_24"
-        android:title="Maps" />
+        android:title="@string/maps" />
 
     <item
         android:id="@+id/nav_mycars"
         android:icon="@drawable/ic_baseline_electric_car_24"
-        android:title="My Cars" />
+        android:title="@string/my_cars" />
 
     <item
         android:id="@+id/nav_favorites"
         android:icon="@drawable/ic_baseline_favorite_border_24"
-        android:title="Favorites" />
+        android:title="@string/favorites" />
 
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_baseline_menu_24"
-        android:title="Settings" />
+        android:title="@string/settings" />
 
 </menu>

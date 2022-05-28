@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,27 +23,19 @@ public class LoginActivity extends AppCompatActivity {
         et_username = findViewById(R.id.edittext_username);
         et_password = findViewById(R.id.edittext_password);
 
-        btn_back_login_techniker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btn_back_login_techniker.setOnClickListener(v -> finish());
+
+        btn_confirm_login_techniker.setOnClickListener(v -> {
+            if(et_username.getText().toString().equals("nicaender") && et_password.getText().toString().equals("nic123"))
+            {
+                Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), TechnikerActivity.class));
+//                    overridePendingTransition(0, 0);
                 finish();
             }
-        });
-
-        btn_confirm_login_techniker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(et_username.getText().toString().equals("nicaender") && et_password.getText().toString().equals("nic123"))
-                {
-                    Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), TechnikerActivity.class));
-//                    overridePendingTransition(0, 0);
-                    finish();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_LONG).show();
-                }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_LONG).show();
             }
         });
     }
