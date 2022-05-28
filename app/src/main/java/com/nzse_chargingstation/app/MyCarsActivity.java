@@ -3,7 +3,6 @@ package com.nzse_chargingstation.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,17 +10,17 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MyCarsActivity extends AppCompatActivity {
 
     BottomNavigationView bottom_nav_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_my_cars);
 
         bottom_nav_bar = findViewById(R.id.bottom_navbar);
-        bottom_nav_bar.setSelectedItemId(R.id.nav_maps);
+        bottom_nav_bar.setSelectedItemId(R.id.nav_mycars);
 
         // Bottom navbar implementation
         bottom_nav_bar.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -31,11 +30,11 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId())
                 {
                     case R.id.nav_maps:
-                        return true;
-                    case R.id.nav_mycars:
-                        startActivity(new Intent(getApplicationContext(), MyCarsActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0, 0);
                         finish();
+                        return true;
+                    case R.id.nav_mycars:
                         return true;
                     case R.id.nav_favorites:
                         startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
