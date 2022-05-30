@@ -19,10 +19,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -106,19 +107,19 @@ public class MainActivity extends AppCompatActivity implements
     public void onMapReady(@NonNull GoogleMap googleMap) {
 //        map.setMaxZoomPreference(4);
 
+        ChargingStation test_subject_1 = new ChargingStation("Hochschule Darmstadt", 49.86625273516996, 8.640257820411557);
+        ChargingStation test_subject_2 = new ChargingStation("KFC Weiterstadt", 49.905710, 8.581990);
+        ChargingStation test_subject_3 = new ChargingStation("Media Campus", 49.902004957188076, 8.854893065467536);
+        Container.getUnfiltered_list().add(test_subject_1);
+        Container.getUnfiltered_list().add(test_subject_2);
+        Container.getUnfiltered_list().add(test_subject_3);
+
         map = googleMap;
         map.setOnMyLocationButtonClickListener(this);
         map.setOnMyLocationClickListener(this);
         enableMyLocation();
+        addCSToMaps();
 
-        LatLng department = new LatLng (49.86625273516996, 8.640257820411557);
-        map.addMarker(new MarkerOptions().position(department).title("Marker h_da, fbi"));
-
-        LatLng kfc = new LatLng (49.905710, 8.581990);
-        map.addMarker(new MarkerOptions().position(kfc).title("KFC Weiterstadt"));
-
-        LatLng mediacampus  = new LatLng (49.902004957188076, 8.854893065467536);
-        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).position(mediacampus).title("Marker Media Campus"));
 /*
         Here are the approximate zoom levels and what they do :
         1: World
@@ -127,14 +128,9 @@ public class MainActivity extends AppCompatActivity implements
         15: Streets
         20: Buildings
  */
-        float zoomLevel = (float) 10.0;
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(department, zoomLevel));
-
-//        double centerlat = (mediacampus.latitude+department.latitude)/2;
-//        double centerlon = (mediacampus.longitude+department.longitude)/2;
-//        LatLng center  = new LatLng (centerlat, centerlon);
-//        googleMap.animateCamera(CameraUpdateFactory.newLatLng(department));
-//        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        LatLng start = new LatLng(49.8728, 8.6512);
+        float zoomLevel = (float) 15.0;
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
     }
 
     /**
@@ -205,5 +201,21 @@ public class MainActivity extends AppCompatActivity implements
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
+     * Clear all markers on map and then loop for adding all charging stations as marker in map.
+     */
+    private void addCSToMaps() {
+        ArrayList<ChargingStation> tmp_unfiltered = Container.getUnfiltered_list();
+        ArrayList<ChargingStation> tmp_filtered = Container.getFiltered_list();
+
+        map.clear();
+        for(int i = 0; i < tmp_unfiltered.size(); i++) {
+            map.addMarker(new MarkerOptions().position(tmp_unfiltered.get(i).getLocation()).title(tmp_unfiltered.get(i).getAddress()));
+        }
+        for(int i = 0; i < tmp_filtered.size(); i++) {
+            map.addMarker(new MarkerOptions().position(tmp_filtered.get(i).getLocation()).title(tmp_filtered.get(i).getAddress()));
+        }
     }
 }
