@@ -17,4 +17,7 @@
     <string name="location_permission_denied">Location permission denied</string>
     <string name="permission_required_toast">Permission required</string>
     <string name="permission_rationale_location">Request permission</string>
+    <string name="radius">Radius:</string>
+    <string name="km">KM</string>
+    <string name="confirm">Confirm</string>
 </resources>

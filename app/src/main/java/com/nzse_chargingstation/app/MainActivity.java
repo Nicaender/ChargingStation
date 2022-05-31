@@ -13,6 +13,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -21,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,8 +44,12 @@ public class MainActivity extends AppCompatActivity implements
     // Initialization
     private BottomNavigationView bottom_nav_bar;
     private GoogleMap map;
+    private TextView tv_radius_value;
+    private Button btn_radius_confirm;
+    private ImageButton imgbtn_arrow_up, imgbtn_arrow_down;
     private FusedLocationProviderClient fusedLocationClient;
     private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static int radius_value = 0;
 
     /**
      * Request code for location permission request.
@@ -53,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements
      * #onRequestPermissionsResult(int, String[], int[])}.
      */
     private boolean permissionDenied = false;
-
-
 
     @SuppressLint({"NonConstantResourceId", "MissingPermission"})
     @Override
@@ -72,6 +80,18 @@ public class MainActivity extends AppCompatActivity implements
 
         bottom_nav_bar = findViewById(R.id.bottom_navbar);
         bottom_nav_bar.setSelectedItemId(R.id.nav_maps);
+        tv_radius_value = findViewById(R.id.textview_radius_value);
+        btn_radius_confirm = findViewById(R.id.button_radius_confirm);
+        imgbtn_arrow_up = findViewById(R.id.imagebutton_arrow_up);
+        imgbtn_arrow_down = findViewById(R.id.imagebutton_arrow_down);
+
+        if(radius_value < 10)
+        {
+            String tmp = "0" + radius_value;
+            tv_radius_value.setText(tmp);
+        }
+        else
+            tv_radius_value.setText(String.valueOf(radius_value));
 
         // Saving state of our app
         // using SharedPreferences
@@ -111,6 +131,58 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
             }
             return false;
+        });
+
+        btn_radius_confirm.setOnClickListener(v -> {
+            Container.setRange_filter(radius_value);
+            map.clear();
+            for(int i = 0; i < Container.getFiltered_list().size(); i++)
+            {
+                if(calculateLength(Container.getFiltered_list().get(i).getLocation(), Container.getLast_location()) > Container.getRange_filter())
+                {
+                    Container.getUnfiltered_list().add(Container.getFiltered_list().get(i));
+                    Container.getFiltered_list().remove(i);
+                    i--;
+                }
+            }
+            for(int i = 0; i < Container.getUnfiltered_list().size(); i++)
+            {
+                if(calculateLength(Container.getUnfiltered_list().get(i).getLocation(), Container.getLast_location()) < Container.getRange_filter())
+                {
+                    Container.getFiltered_list().add(Container.getUnfiltered_list().get(i));
+                    Container.getUnfiltered_list().remove(i);
+                    i--;
+                }
+            }
+            addCSToMaps();
+        });
+
+        imgbtn_arrow_up.setOnClickListener(v -> {
+            if(radius_value < 99)
+            {
+                radius_value++;
+                if(radius_value < 10)
+                {
+                    String tmp = "0" + radius_value;
+                    tv_radius_value.setText(tmp);
+                }
+                else
+                    tv_radius_value.setText(String.valueOf(radius_value));
+            }
+        });
+
+        imgbtn_arrow_down.setOnClickListener(v -> {
+            if(radius_value > 0)
+            {
+                radius_value--;
+                if(radius_value < 10)
+                {
+                    String tmp = "0" + radius_value;
+                    tv_radius_value.setText(tmp);
+                }
+                else
+                    tv_radius_value.setText(String.valueOf(radius_value));
+            }
         });
     }
 
@@ -234,11 +306,16 @@ public class MainActivity extends AppCompatActivity implements
      * Clear all markers on map and then loop for adding all charging stations as marker in map.
      */
     private void addCSToMaps() {
-        map.clear();
         for(int i = 0; i < Container.getUnfiltered_list().size(); i++) {
             map.addMarker(new MarkerOptions()
                     .position(Container.getUnfiltered_list().get(i).getLocation())
                     .title(Container.getUnfiltered_list().get(i).getAddress()));
+        }
+        for(int i = 0; i < Container.getFiltered_list().size(); i++) {
+            map.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .position(Container.getFiltered_list().get(i).getLocation())
+                    .title(Container.getFiltered_list().get(i).getAddress()));
         }
     }
 

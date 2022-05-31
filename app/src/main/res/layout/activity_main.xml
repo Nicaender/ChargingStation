@@ -10,15 +10,78 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navbar" >
+        android:layout_above="@id/bottom_navbar">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottom_navbar"
-            tools:ignore="NotSibling" />
+            android:layout_above="@id/button_radius_confirm" />
+
+        <TextView
+            android:id="@+id/textview_radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/radius"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/textview_radius_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/textview_radius"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/textview_radius_value"
+            android:layout_marginLeft="10dp"
+            android:text="@string/km"
+            android:textSize="35sp" />
+
+        <ImageButton
+            android:id="@+id/imagebutton_arrow_up"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_above="@id/imagebutton_arrow_down"
+            android:layout_toRightOf="@id/km"
+            app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/imagebutton_arrow_down"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/km"
+            app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"
+            tools:ignore="ContentDescription" />
+
+        <Button
+            android:id="@+id/button_radius_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/confirm"
+            tools:ignore="RelativeOverlap" />
+
 
     </RelativeLayout>
 
