@@ -9,6 +9,7 @@ public class Container {
     private static ArrayList<ChargingStation> filtered_list = new ArrayList<>();
     private static double range_filter = 0;
     private static Location last_location;
+    public static boolean first_time = true;
 
     /**
      *

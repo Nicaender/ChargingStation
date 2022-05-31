@@ -180,8 +180,6 @@ public abstract class PermissionUtils {
                                 R.string.permission_required_toast,
                                 Toast.LENGTH_SHORT)
                         .show();
-                //noinspection ConstantConditions
-                getActivity().finish();
             }
         }
     }

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements
     // Initialization
     private BottomNavigationView bottom_nav_bar;
     private GoogleMap map;
+    private FusedLocationProviderClient fusedLocationClient;
     private static final DecimalFormat df = new DecimalFormat("#.##");
 
     /**
@@ -62,16 +63,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         // get current location
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        // Logic to handle location object
-                        Container.setLast_location(location);
-                    }
-                });
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initializing the google map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -148,9 +140,6 @@ public class MainActivity extends AppCompatActivity implements
         15: Streets
         20: Buildings
  */
-        LatLng start = new LatLng(49.8728, 8.6512);
-        float zoomLevel = (float) 15.0;
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
     }
 
     /**
@@ -164,6 +153,24 @@ public class MainActivity extends AppCompatActivity implements
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Container.setLast_location(location);
+                            LatLng start = new LatLng(Container.getLast_location().getLatitude(), Container.getLast_location().getLongitude());
+                            float zoomLevel = (float) 15.0;
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
+                            if(Container.first_time)
+                            {
+                                Container.first_time = false;
+                                startActivity(new Intent(getApplicationContext(), LoadingActivity.class));
+                                overridePendingTransition(0, 0);
+                                finish();
+                            }
+                        }
+                    });
             return;
         }
 
@@ -236,8 +243,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onMarkerClick(final Marker marker) {
-        marker.setSnippet("Distance: " + df.format(calculateLength(marker.getPosition(), Container.getLast_location())) + " KM");
+    public boolean onMarkerClick(@NonNull final Marker marker) {
+        if(Container.getLast_location() != null)
+            marker.setSnippet("Distance: " + df.format(calculateLength(marker.getPosition(), Container.getLast_location())) + " KM");
+        else
+            marker.setSnippet("Distance: unknown");
 
         return false;
     }
