@@ -15,24 +15,30 @@ import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
+        GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    BottomNavigationView bottom_nav_bar;
+    // Initialization
+    private BottomNavigationView bottom_nav_bar;
     private GoogleMap map;
+    private static final DecimalFormat df = new DecimalFormat("#.##");
 
     /**
      * Request code for location permission request.
@@ -49,12 +55,25 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "MissingPermission"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // get current location
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        Container.setLast_location(location);
+                    }
+                });
+
+        // Initializing the google map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
@@ -117,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements
         map = googleMap;
         map.setOnMyLocationButtonClickListener(this);
         map.setOnMyLocationClickListener(this);
+        map.setOnMarkerClickListener(this);
         enableMyLocation();
         addCSToMaps();
 
@@ -207,15 +227,39 @@ public class MainActivity extends AppCompatActivity implements
      * Clear all markers on map and then loop for adding all charging stations as marker in map.
      */
     private void addCSToMaps() {
-        ArrayList<ChargingStation> tmp_unfiltered = Container.getUnfiltered_list();
-        ArrayList<ChargingStation> tmp_filtered = Container.getFiltered_list();
-
         map.clear();
-        for(int i = 0; i < tmp_unfiltered.size(); i++) {
-            map.addMarker(new MarkerOptions().position(tmp_unfiltered.get(i).getLocation()).title(tmp_unfiltered.get(i).getAddress()));
+        for(int i = 0; i < Container.getUnfiltered_list().size(); i++) {
+            map.addMarker(new MarkerOptions()
+                    .position(Container.getUnfiltered_list().get(i).getLocation())
+                    .title(Container.getUnfiltered_list().get(i).getAddress()));
         }
-        for(int i = 0; i < tmp_filtered.size(); i++) {
-            map.addMarker(new MarkerOptions().position(tmp_filtered.get(i).getLocation()).title(tmp_filtered.get(i).getAddress()));
-        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        marker.setSnippet("Distance: " + df.format(calculateLength(marker.getPosition(), Container.getLast_location())) + " KM");
+
+        return false;
+    }
+
+    // Calculate distance between marker and user
+    private double calculateLength(LatLng marker, Location user)
+    {
+        double lat1 = deg2grad(marker.latitude);
+        double lat2 = deg2grad(user.getLatitude());
+        double long1 = deg2grad(marker.longitude);
+        double long2 = deg2grad(user.getLongitude());
+
+        double deltalat = (lat2-lat1)/2;
+        double deltalong = (long2-long1)/2;
+
+
+        return (2 * 6371 * Math.asin(Math.sqrt(Math.sin(deltalat)*Math.sin(deltalat)+Math.cos(lat1)*Math.cos(lat2)*(Math.sin(deltalong)*Math.sin(deltalong)))));
+    }
+
+    private double deg2grad(double degree)
+    {
+        double pi = 3.14;
+        return (degree * (pi/180));
     }
 }
