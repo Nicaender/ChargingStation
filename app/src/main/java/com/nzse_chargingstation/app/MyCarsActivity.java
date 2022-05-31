@@ -21,7 +21,7 @@ public class MyCarsActivity extends AppCompatActivity {
         bottom_nav_bar = findViewById(R.id.bottom_navbar);
         bottom_nav_bar.setSelectedItemId(R.id.nav_mycars);
 
-        // Bottom navbar implementation
+        // Implementation of bottom navigation bar
         bottom_nav_bar.setOnItemSelectedListener(item -> {
 
             switch (item.getItemId())

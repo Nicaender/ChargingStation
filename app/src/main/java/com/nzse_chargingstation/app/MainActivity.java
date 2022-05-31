@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        // Bottom navbar implementation
+        // Implementation of bottom navigation bar
         bottom_nav_bar.setOnItemSelectedListener(item -> {
 
             switch (item.getItemId())

@@ -23,8 +23,10 @@ public class LoginActivity extends AppCompatActivity {
         et_username = findViewById(R.id.edittext_username);
         et_password = findViewById(R.id.edittext_password);
 
+        // Go back to previous activity
         btn_back_login_techniker.setOnClickListener(v -> finish());
 
+        // Implementation of button to log in to techniker site
         btn_confirm_login_techniker.setOnClickListener(v -> {
             if(et_username.getText().toString().equals("nicaender") && et_password.getText().toString().equals("nic123"))
             {

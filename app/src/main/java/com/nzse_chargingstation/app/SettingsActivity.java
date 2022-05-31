@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
             btn_darkmode.setText(R.string.enable_darkmode);
         }
 
-        // Button darkmode implementation
+        // Implementation of dark mode button
         btn_darkmode.setOnClickListener(v -> {
             if (isDarkModeOn) {
                 // if dark mode is on it
@@ -71,14 +71,14 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        // Button login als techniker implementation
+        // Implementation of button to login site from techniker
         btn_login_techniker.setOnClickListener(v -> {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 //                overridePendingTransition(0, 0);
 //                finish();
         });
 
-        // Bottom navbar implementation
+        // Implementation of bottom navigation bar
         bottom_nav_bar.setOnItemSelectedListener(item -> {
 
             switch (item.getItemId())
