@@ -11,14 +11,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,20 +29,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements
-        GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener,
         GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnInfoWindowClickListener,
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    // Initialization
-    private BottomNavigationView bottom_nav_bar;
     private GoogleMap map;
     private TextView tv_radius_value;
-    private Button btn_radius_confirm;
-    private ImageButton imgbtn_arrow_up, imgbtn_arrow_down;
     private FusedLocationProviderClient fusedLocationClient;
     private static final DecimalFormat df = new DecimalFormat("#.##");
     private static int radius_value = 0;
@@ -70,28 +62,13 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get current location
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        // Initializing the google map
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
-
-        bottom_nav_bar = findViewById(R.id.bottom_navbar);
+        // Initialization
+        BottomNavigationView bottom_nav_bar = findViewById(R.id.bottom_navbar);
         bottom_nav_bar.setSelectedItemId(R.id.nav_maps);
         tv_radius_value = findViewById(R.id.textview_radius_value);
-        btn_radius_confirm = findViewById(R.id.button_radius_confirm);
-        imgbtn_arrow_up = findViewById(R.id.imagebutton_arrow_up);
-        imgbtn_arrow_down = findViewById(R.id.imagebutton_arrow_down);
-
-        if(radius_value < 10)
-        {
-            String tmp = "0" + radius_value;
-            tv_radius_value.setText(tmp);
-        }
-        else
-            tv_radius_value.setText(String.valueOf(radius_value));
+        Button btn_radius_confirm = findViewById(R.id.button_radius_confirm);
+        ImageButton imgbtn_arrow_up = findViewById(R.id.imagebutton_arrow_up);
+        ImageButton imgbtn_arrow_down = findViewById(R.id.imagebutton_arrow_down);
 
         // Saving state of our app
         // using SharedPreferences
@@ -106,6 +83,61 @@ public class MainActivity extends AppCompatActivity implements
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
+        // get current location
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // Initializing the google map
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+
+        // Setting the start value of filter range
+        if(radius_value < 10)
+        {
+            String tmp = "0" + radius_value;
+            tv_radius_value.setText(tmp);
+        }
+        else
+            tv_radius_value.setText(String.valueOf(radius_value));
+
+        // Implementation of button to confirm the radius filter
+        btn_radius_confirm.setOnClickListener(v -> {
+            ContainerAndGlobal.setFilter_range(radius_value);
+            ContainerAndGlobal.enable_filter();
+            map.clear();
+            addCSToMaps();
+        });
+
+        // Implementation of increment from radius_value
+        imgbtn_arrow_up.setOnClickListener(v -> {
+            if(radius_value < 99)
+            {
+                radius_value++;
+                if(radius_value < 10)
+                {
+                    String tmp = "0" + radius_value;
+                    tv_radius_value.setText(tmp);
+                }
+                else
+                    tv_radius_value.setText(String.valueOf(radius_value));
+            }
+        });
+
+        // Implementation of decrement from radius_value
+        imgbtn_arrow_down.setOnClickListener(v -> {
+            if(radius_value > 0)
+            {
+                radius_value--;
+                if(radius_value < 10)
+                {
+                    String tmp = "0" + radius_value;
+                    tv_radius_value.setText(tmp);
+                }
+                else
+                    tv_radius_value.setText(String.valueOf(radius_value));
+            }
+        });
 
         // Implementation of bottom navigation bar
         bottom_nav_bar.setOnItemSelectedListener(item -> {
@@ -132,78 +164,23 @@ public class MainActivity extends AppCompatActivity implements
             }
             return false;
         });
-
-        btn_radius_confirm.setOnClickListener(v -> {
-            Container.setRange_filter(radius_value);
-            map.clear();
-            for(int i = 0; i < Container.getFiltered_list().size(); i++)
-            {
-                if(calculateLength(Container.getFiltered_list().get(i).getLocation(), Container.getLast_location()) > Container.getRange_filter())
-                {
-                    Container.getUnfiltered_list().add(Container.getFiltered_list().get(i));
-                    Container.getFiltered_list().remove(i);
-                    i--;
-                }
-            }
-            for(int i = 0; i < Container.getUnfiltered_list().size(); i++)
-            {
-                if(calculateLength(Container.getUnfiltered_list().get(i).getLocation(), Container.getLast_location()) < Container.getRange_filter())
-                {
-                    Container.getFiltered_list().add(Container.getUnfiltered_list().get(i));
-                    Container.getUnfiltered_list().remove(i);
-                    i--;
-                }
-            }
-            addCSToMaps();
-        });
-
-        imgbtn_arrow_up.setOnClickListener(v -> {
-            if(radius_value < 99)
-            {
-                radius_value++;
-                if(radius_value < 10)
-                {
-                    String tmp = "0" + radius_value;
-                    tv_radius_value.setText(tmp);
-                }
-                else
-                    tv_radius_value.setText(String.valueOf(radius_value));
-            }
-        });
-
-        imgbtn_arrow_down.setOnClickListener(v -> {
-            if(radius_value > 0)
-            {
-                radius_value--;
-                if(radius_value < 10)
-                {
-                    String tmp = "0" + radius_value;
-                    tv_radius_value.setText(tmp);
-                }
-                else
-                    tv_radius_value.setText(String.valueOf(radius_value));
-            }
-        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-//        map.setMaxZoomPreference(4);
 
         ChargingStation test_subject_1 = new ChargingStation("Hochschule Darmstadt", 49.86625273516996, 8.640257820411557);
         ChargingStation test_subject_2 = new ChargingStation("KFC Weiterstadt", 49.905710, 8.581990);
         ChargingStation test_subject_3 = new ChargingStation("Media Campus", 49.902004957188076, 8.854893065467536);
-        Container.getUnfiltered_list().add(test_subject_1);
-        Container.getUnfiltered_list().add(test_subject_2);
-        Container.getUnfiltered_list().add(test_subject_3);
+        ContainerAndGlobal.getCharging_station_list().add(test_subject_1);
+        ContainerAndGlobal.getCharging_station_list().add(test_subject_2);
+        ContainerAndGlobal.getCharging_station_list().add(test_subject_3);
 
         map = googleMap;
-        map.setOnMyLocationButtonClickListener(this);
-        map.setOnMyLocationClickListener(this);
         map.setOnMarkerClickListener(this);
+        map.setOnInfoWindowClickListener(this);
         enableMyLocation();
         addCSToMaps();
-
 /*
         Here are the approximate zoom levels and what they do :
         1: World
@@ -212,6 +189,24 @@ public class MainActivity extends AppCompatActivity implements
         15: Streets
         20: Buildings
  */
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull final Marker marker) {
+        if(ContainerAndGlobal.getCurrent_location() != null)
+            marker.setSnippet("Distance: " + df.format(ContainerAndGlobal.calculateLength(marker.getPosition(), ContainerAndGlobal.getCurrent_location())) + " KM, click for more info");
+        else
+            marker.setSnippet("Distance: unknown");
+
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull final Marker marker) {
+        if(!report_charging_station(marker))
+            return;
+
+        startActivity(new Intent(getApplicationContext(), ReportActivity.class));
     }
 
     /**
@@ -230,13 +225,14 @@ public class MainActivity extends AppCompatActivity implements
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            Container.setLast_location(location);
-                            LatLng start = new LatLng(Container.getLast_location().getLatitude(), Container.getLast_location().getLongitude());
+                            ContainerAndGlobal.setCurrent_location(location);
+                            LatLng start = new LatLng(ContainerAndGlobal.getCurrent_location().getLatitude(), ContainerAndGlobal.getCurrent_location().getLongitude());
                             float zoomLevel = (float) 15.0;
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
-                            if(Container.first_time)
+                            if(ContainerAndGlobal.isFirst_time())
                             {
-                                Container.first_time = false;
+                                ContainerAndGlobal.setFirst_time(false);
+                                map.clear();
                                 startActivity(new Intent(getApplicationContext(), LoadingActivity.class));
                                 overridePendingTransition(0, 0);
                                 finish();
@@ -248,19 +244,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // 2. Otherwise, request location permissions from the user.
         PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE, Manifest.permission.ACCESS_COARSE_LOCATION, true);
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
-    }
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -306,47 +289,45 @@ public class MainActivity extends AppCompatActivity implements
      * Clear all markers on map and then loop for adding all charging stations as marker in map.
      */
     private void addCSToMaps() {
-        for(int i = 0; i < Container.getUnfiltered_list().size(); i++) {
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
+        {
             map.addMarker(new MarkerOptions()
-                    .position(Container.getUnfiltered_list().get(i).getLocation())
-                    .title(Container.getUnfiltered_list().get(i).getAddress()));
+                    .position(ContainerAndGlobal.getCharging_station_list().get(i).getLocation())
+                    .title(ContainerAndGlobal.getCharging_station_list().get(i).getAddress()));
         }
-        for(int i = 0; i < Container.getFiltered_list().size(); i++) {
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
+        {
             map.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .position(Container.getFiltered_list().get(i).getLocation())
-                    .title(Container.getFiltered_list().get(i).getAddress()));
+                    .position(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation())
+                    .title(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getAddress()));
         }
     }
 
-    @Override
-    public boolean onMarkerClick(@NonNull final Marker marker) {
-        if(Container.getLast_location() != null)
-            marker.setSnippet("Distance: " + df.format(calculateLength(marker.getPosition(), Container.getLast_location())) + " KM");
-        else
-            marker.setSnippet("Distance: unknown");
+    /**
+     * Marking a charging station as defective
+     * @param marker from clicked location in google map
+     * @return true if marker exists & the same location of charging station exists
+     */
+    private boolean report_charging_station(Marker marker)
+    {
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
+        {
+            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list().get(i).getLocation()))
+            {
+                ContainerAndGlobal.setReported_charging_station(ContainerAndGlobal.getCharging_station_list().get(i));
+                return true;
+            }
+        }
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
+        {
+            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation()))
+            {
+                ContainerAndGlobal.setReported_charging_station(ContainerAndGlobal.getCharging_station_list_filtered().get(i));
+                return true;
+            }
+        }
 
         return false;
-    }
-
-    // Calculate distance between marker and user
-    private double calculateLength(LatLng marker, Location user)
-    {
-        double lat1 = deg2grad(marker.latitude);
-        double lat2 = deg2grad(user.getLatitude());
-        double long1 = deg2grad(marker.longitude);
-        double long2 = deg2grad(user.getLongitude());
-
-        double deltalat = (lat2-lat1)/2;
-        double deltalong = (long2-long1)/2;
-
-
-        return (2 * 6371 * Math.asin(Math.sqrt(Math.sin(deltalat)*Math.sin(deltalat)+Math.cos(lat1)*Math.cos(lat2)*(Math.sin(deltalong)*Math.sin(deltalong)))));
-    }
-
-    private double deg2grad(double degree)
-    {
-        double pi = 3.14;
-        return (degree * (pi/180));
     }
 }

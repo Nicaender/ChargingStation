@@ -20,4 +20,6 @@
     <string name="radius">Radius:</string>
     <string name="km">KM</string>
     <string name="confirm">Confirm</string>
+    <string name="report">Report</string>
+    <string name="additional_information">Additional information:</string>
 </resources>

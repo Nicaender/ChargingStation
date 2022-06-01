@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReportActivity">
+
+    <Button
+        android:id="@+id/button_report_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:layout_marginLeft="7dp" />
+
+    <ImageView
+        android:id="@+id/imageview_charging_station"
+        android:layout_width="94dp"
+        android:layout_height="81dp"
+        android:layout_below="@id/button_report_back"
+        app:srcCompat="@drawable/ic_baseline_electrical_services_24"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/textview_charging_station_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageview_charging_station"
+        android:layout_below="@id/button_report_back" />
+
+    <TextView
+        android:id="@+id/textview_additional_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageview_charging_station"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:text="@string/additional_information" />
+
+    <EditText
+        android:id="@+id/edittext_additional_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_additional_information"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:background="@color/backgroundColor"
+        android:autofillHints="Additional information"
+        tools:ignore="LabelFor"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/button_report_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:text="@string/report" />
+
+</RelativeLayout>
