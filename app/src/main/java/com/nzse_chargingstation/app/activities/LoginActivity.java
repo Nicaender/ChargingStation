@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
             {
                 Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), TechnikerActivity.class));
-//                    overridePendingTransition(0, 0);
                 finish();
             }
             else

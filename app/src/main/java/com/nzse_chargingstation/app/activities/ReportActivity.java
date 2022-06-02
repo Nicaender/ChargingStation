@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
@@ -37,28 +38,14 @@ public class ReportActivity extends AppCompatActivity {
 
     private void add_defective()
     {
+        if(!ContainerAndGlobal.remove_charging_station(ContainerAndGlobal.getReported_charging_station()))
+            return;
 
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
-        {
-            if(ContainerAndGlobal.getCharging_station_list().get(i).equals(ContainerAndGlobal.getReported_charging_station()))
-            {
-                Defective tmp = new Defective(ContainerAndGlobal.getReported_charging_station(), et_additional_information.getText().toString());
-                ContainerAndGlobal.getDefective_list().add(tmp);
-                ContainerAndGlobal.getCharging_station_list().remove(i);
-                ContainerAndGlobal.setReported_charging_station(null);
-                return;
-            }
-        }
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
-        {
-            if(ContainerAndGlobal.getCharging_station_list_filtered().get(i).equals(ContainerAndGlobal.getReported_charging_station()))
-            {
-                Defective tmp = new Defective(ContainerAndGlobal.getReported_charging_station(), et_additional_information.getText().toString());
-                ContainerAndGlobal.getDefective_list().add(tmp);
-                ContainerAndGlobal.getCharging_station_list_filtered().remove(i);
-                ContainerAndGlobal.setReported_charging_station(null);
-                return;
-            }
-        }
+        Defective tmp = new Defective(ContainerAndGlobal.getReported_charging_station(), et_additional_information.getText().toString());
+        ContainerAndGlobal.getDefective_list().add(tmp);
+        ContainerAndGlobal.setReported_charging_station(null);
+        finish();
+        Toast.makeText(this, "Charging station successfully reported", Toast.LENGTH_LONG).show();
+        ContainerAndGlobal.setChangedSetting(true);
     }
 }

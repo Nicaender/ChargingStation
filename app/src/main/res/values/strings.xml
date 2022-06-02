@@ -22,4 +22,7 @@
     <string name="confirm">Confirm</string>
     <string name="report">Report</string>
     <string name="additional_information">Additional information:</string>
+    <string name="mark">mark</string>
+    <string name="reason">Reason</string>
+    <string name="address">Address</string>
 </resources>

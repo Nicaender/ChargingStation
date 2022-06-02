@@ -27,11 +27,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
-import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 import java.text.DecimalFormat;
-import java.util.Objects;
 
 public class MapsFragment extends Fragment {
 
@@ -64,13 +62,6 @@ public class MapsFragment extends Fragment {
         }
 
         mMapView.getMapAsync(mMap -> {
-            ChargingStation test_subject_1 = new ChargingStation("Hochschule Darmstadt", 49.86625273516996, 8.640257820411557);
-            ChargingStation test_subject_2 = new ChargingStation("KFC Weiterstadt", 49.905710, 8.581990);
-            ChargingStation test_subject_3 = new ChargingStation("Media Campus", 49.902004957188076, 8.854893065467536);
-            ContainerAndGlobal.getCharging_station_list().add(test_subject_1);
-            ContainerAndGlobal.getCharging_station_list().add(test_subject_2);
-            ContainerAndGlobal.getCharging_station_list().add(test_subject_3);
-
             googleMap = mMap;
 
             googleMap.setOnMarkerClickListener(marker -> {
@@ -134,7 +125,6 @@ public class MapsFragment extends Fragment {
             {
                 ContainerAndGlobal.setFilter_range(radius_value);
                 ContainerAndGlobal.enable_filter();
-                googleMap.clear();
                 addCSToMaps();
             }
             else
@@ -176,6 +166,11 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        if(ContainerAndGlobal.isChangedSetting())
+        {
+            addCSToMaps();
+            ContainerAndGlobal.setChangedSetting(false);
+        }
     }
 
     @Override
@@ -214,6 +209,7 @@ public class MapsFragment extends Fragment {
      * Clear all markers on map and then loop for adding all charging stations as marker in map.
      */
     private void addCSToMaps() {
+        googleMap.clear();
         for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
         {
             googleMap.addMarker(new MarkerOptions()
@@ -236,23 +232,7 @@ public class MapsFragment extends Fragment {
      */
     private boolean report_charging_station(Marker marker)
     {
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
-        {
-            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list().get(i).getLocation()))
-            {
-                ContainerAndGlobal.setReported_charging_station(ContainerAndGlobal.getCharging_station_list().get(i));
-                return true;
-            }
-        }
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
-        {
-            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation()))
-            {
-                ContainerAndGlobal.setReported_charging_station(ContainerAndGlobal.getCharging_station_list_filtered().get(i));
-                return true;
-            }
-        }
-
-        return false;
+        ContainerAndGlobal.setReported_charging_station(ContainerAndGlobal.search_charging_station(marker));
+        return ContainerAndGlobal.getReported_charging_station() != null;
     }
 }

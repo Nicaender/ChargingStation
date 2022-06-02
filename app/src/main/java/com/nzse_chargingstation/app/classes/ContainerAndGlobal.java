@@ -1,10 +1,13 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.location.Location;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ContainerAndGlobal {
     @SuppressWarnings("FieldMayBeFinal")
@@ -67,6 +70,9 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.changedSetting = changedSetting;
     }
 
+    /**
+     * Enabling filter whether a charging station is within range or not
+     */
     public static void enable_filter()
     {
         for(int i = 0; i < charging_station_list_filtered.size(); i++)
@@ -89,7 +95,64 @@ public class ContainerAndGlobal {
         }
     }
 
-    // Calculate distance between marker and user
+    /**
+     * removing a charging station from either normal list or filtered list
+     * @param input is a charging station that will be removed from the list
+     * @return a boolean whether the charging station has successfully been removed
+     */
+    public static boolean remove_charging_station(ChargingStation input)
+    {
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
+        {
+            if(ContainerAndGlobal.getCharging_station_list().get(i).equals(input))
+            {
+                ContainerAndGlobal.getCharging_station_list().remove(i);
+                return true;
+            }
+        }
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
+        {
+            if(ContainerAndGlobal.getCharging_station_list_filtered().get(i).equals(input))
+            {
+                ContainerAndGlobal.getCharging_station_list_filtered().remove(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * search for a charging station using its location
+     * @param marker the location of searched charging station
+     * @return charging station with the same location as the marker
+     */
+    public static ChargingStation search_charging_station(Marker marker)
+    {
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
+        {
+            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list().get(i).getLocation()))
+            {
+                return ContainerAndGlobal.getCharging_station_list().get(i);
+            }
+        }
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
+        {
+            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation()))
+            {
+                return ContainerAndGlobal.getCharging_station_list_filtered().get(i);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculate distance between marker and user
+     * @param marker is a location from where it needs to be calculated
+     * @param user is the location from the user
+     * @return a calculated distance between the user and the marker
+     */
     public static double calculateLength(LatLng marker, Location user)
     {
         double lat1 = deg2grad(marker.latitude);
@@ -103,6 +166,11 @@ public class ContainerAndGlobal {
         return (2 * 6371 * Math.asin(Math.sqrt(Math.sin(deltalat)*Math.sin(deltalat)+Math.cos(lat1)*Math.cos(lat2)*(Math.sin(deltalong)*Math.sin(deltalong)))));
     }
 
+    /**
+     * convert from degree to grad
+     * @param degree is the latitude or longitude
+     * @return converted value from latitude or longitude
+     */
     private static double deg2grad(double degree)
     {
         double pi = 3.14;

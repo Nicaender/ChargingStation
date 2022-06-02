@@ -1,19 +1,20 @@
 package com.nzse_chargingstation.app.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.activities.LoginActivity;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 public class SettingsFragment extends Fragment {
@@ -80,10 +81,6 @@ public class SettingsFragment extends Fragment {
         });
 
         // Implementation of button to login site from techniker
-        btn_login_techniker.setOnClickListener(v -> {
-//            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-//                overridePendingTransition(0, 0);
-//                finish();
-        });
+        btn_login_techniker.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
     }
 }

@@ -1,10 +1,12 @@
 package com.nzse_chargingstation.app.classes;
 
+import com.nzse_chargingstation.app.R;
+
 public class Defective {
     private final ChargingStation defective_cs;
     private final String reason;
     private boolean fixed = false;
-    private String technician;
+    private String technician = "mark";
 
     public Defective(ChargingStation defective_cs, String reason) {
         this.defective_cs = defective_cs;

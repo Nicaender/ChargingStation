@@ -11,10 +11,11 @@
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_defective_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/techniker_site" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/button_back_techniker" />
 
         <Button
             android:id="@+id/button_back_techniker"
