@@ -30,6 +30,8 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         Defective current_defective = defective_list.get(position);
         holder.tv_defective_address.setText(current_defective.getDefective_cs().getAddress());
         holder.tv_defective_reason.setText(current_defective.getReason());
+        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrent_location())) + " KM";
+        holder.tv_distance.setText(tmp);
         holder.btn_mark_to_repair.setText(current_defective.getTechnician());
     }
 
@@ -45,13 +47,14 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     }
 
     class defectiveHolder extends RecyclerView.ViewHolder {
-        private TextView tv_defective_address, tv_defective_reason;
+        private TextView tv_defective_address, tv_defective_reason, tv_distance;
         private Button btn_mark_to_repair;
 
         public defectiveHolder(@NonNull View itemView) {
             super(itemView);
             tv_defective_address = itemView.findViewById(R.id.textview_defective_address);
             tv_defective_reason = itemView.findViewById(R.id.textview_defective_reason);
+            tv_distance = itemView.findViewById(R.id.textview_distance);
             btn_mark_to_repair = itemView.findViewById(R.id.button_mark_to_repair);
         }
     }

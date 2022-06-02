@@ -35,7 +35,6 @@ public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
-    private static final DecimalFormat df = new DecimalFormat("#.##");
     private TextView tv_radius_value;
     private static int radius_value = 0;
 
@@ -67,7 +66,7 @@ public class MapsFragment extends Fragment {
             googleMap.setOnMarkerClickListener(marker -> {
                 // Triggered when user click any marker on the map
                 if(ContainerAndGlobal.getCurrent_location() != null)
-                    marker.setSnippet("Distance: " + df.format(ContainerAndGlobal.calculateLength(marker.getPosition(), ContainerAndGlobal.getCurrent_location())) + " KM, click for more info");
+                    marker.setSnippet("Distance: " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(marker.getPosition(), ContainerAndGlobal.getCurrent_location())) + " KM, click for more info");
                 else
                     marker.setSnippet("Distance: unknown");
                 return false;

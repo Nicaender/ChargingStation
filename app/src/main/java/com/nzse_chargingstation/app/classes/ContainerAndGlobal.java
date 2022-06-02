@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class ContainerAndGlobal {
     private static boolean first_time = true;
     private static ChargingStation reported_charging_station;
     private static boolean changedSetting = false;
+    public static final DecimalFormat df = new DecimalFormat("#.##");
 
     public static ArrayList<ChargingStation> getCharging_station_list() {
         return charging_station_list;
