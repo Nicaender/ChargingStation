@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,21 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrent_location())) + " KM";
         holder.tv_distance.setText(tmp);
         holder.btn_mark_to_repair.setText(current_defective.getTechnician());
+
+        holder.btn_mark_to_repair.setOnClickListener(v -> {
+            if(holder.btn_mark_to_repair.getText().toString().equals("mark"))
+            {
+                current_defective.setTechnician("marked by me");
+                notifyItemChanged(holder.getAdapterPosition());
+                Toast.makeText(v.getContext(), "Successfully marked", Toast.LENGTH_LONG).show();
+            }
+            else if(holder.btn_mark_to_repair.getText().toString().equals("marked by me"))
+            {
+                ContainerAndGlobal.add_or_remove_defective(current_defective, false);
+                notifyItemRemoved(holder.getAdapterPosition());
+                Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -43,7 +59,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     public void setDefective_list(List<Defective> defectives)
     {
         this.defective_list = defectives;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, defectives.size());
     }
 
     class defectiveHolder extends RecyclerView.ViewHolder {

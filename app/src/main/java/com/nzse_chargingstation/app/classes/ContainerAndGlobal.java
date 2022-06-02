@@ -1,7 +1,6 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.location.Location;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -20,7 +19,7 @@ public class ContainerAndGlobal {
     private static double filter_range = 0;
     private static Location current_location = null;
     private static boolean first_time = true;
-    private static ChargingStation reported_charging_station;
+    private static ChargingStation reported_charging_station = null;
     private static boolean changedSetting = false;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -98,12 +97,80 @@ public class ContainerAndGlobal {
     }
 
     /**
+     * Adding a defective charging station to the defective list and remove it from normal list.
+     * Then set reported_charging_station to null. It can also remove a defective class from the
+     * defective array and add that charging station back to normal list
+     * @param input is the defective class that contains the charging station and the reason
+     * @param add is a boolean, whether to add or to remove the defective class
+     * @return true if it is possible to add or remove
+     */
+    public static boolean add_or_remove_defective(Defective input, boolean add)
+    {
+        if(input == null)
+            return false;
+
+        setChangedSetting(true);
+        if(add)
+        {
+            defective_list.add(input);
+            remove_charging_station(input.getDefective_cs());
+            reported_charging_station = null;
+            return true;
+        }
+        else
+        {
+            for(int i = 0; i < defective_list.size(); i++)
+            {
+                if(defective_list.get(i).equals(input))
+                {
+                    add_charging_station(input.getDefective_cs());
+                    defective_list.remove(i);
+                    return true;
+                }
+            }
+        }
+
+        setChangedSetting(false);
+        return false;
+    }
+
+    /**
+     * Adding a charging station in the array
+     * @param input is a charging station that will be added to the list
+     * @return true if it input exists and is able to be put in the array
+     */
+    public static boolean add_charging_station(ChargingStation input)
+    {
+        if(input == null)
+            return false;
+
+        setChangedSetting(true);
+        if(current_location == null)
+        {
+            charging_station_list.add(input);
+            return true;
+        }
+        else
+        {
+            if(calculateLength(input.getLocation(), current_location) < filter_range)
+            {
+                charging_station_list_filtered.add(input);
+                return true;
+            }
+            else
+                charging_station_list.add(input);
+            return true;
+        }
+    }
+
+    /**
      * removing a charging station from either normal list or filtered list
      * @param input is a charging station that will be removed from the list
      * @return a boolean whether the charging station has successfully been removed
      */
     public static boolean remove_charging_station(ChargingStation input)
     {
+        setChangedSetting(true);
         for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
         {
             if(ContainerAndGlobal.getCharging_station_list().get(i).equals(input))
@@ -121,6 +188,7 @@ public class ContainerAndGlobal {
             }
         }
 
+        setChangedSetting(false);
         return false;
     }
 
