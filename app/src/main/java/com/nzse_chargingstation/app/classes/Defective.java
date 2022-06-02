@@ -1,4 +1,4 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.classes;
 
 public class Defective {
     private final ChargingStation defective_cs;

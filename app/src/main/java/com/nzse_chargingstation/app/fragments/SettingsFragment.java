@@ -1,36 +1,43 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.fragments;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
+import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+public class SettingsFragment extends Fragment {
 
-public class SettingsActivity extends AppCompatActivity {
-
-    BottomNavigationView bottom_nav_bar;
     Button btn_login_techniker, btn_darkmode;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_settings, container, false);
 
-        bottom_nav_bar = findViewById(R.id.bottom_navbar);
-        btn_login_techniker =  findViewById(R.id.button_login_techniker);
-        btn_darkmode = findViewById(R.id.button_darkmode);
+    }
 
-        bottom_nav_bar.setSelectedItemId(R.id.nav_settings);
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        btn_login_techniker =  view.findViewById(R.id.button_login_techniker);
+        btn_darkmode = view.findViewById(R.id.button_darkmode);
 
         // Saving state of our app
         // using SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
 
@@ -69,39 +76,14 @@ public class SettingsActivity extends AppCompatActivity {
                 // change text of Button
                 btn_darkmode.setText(R.string.disable_darkmode);
             }
+            ContainerAndGlobal.setChangedSetting(true);
         });
 
         // Implementation of button to login site from techniker
         btn_login_techniker.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+//            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 //                overridePendingTransition(0, 0);
 //                finish();
-        });
-
-        // Implementation of bottom navigation bar
-        bottom_nav_bar.setOnItemSelectedListener(item -> {
-
-            switch (item.getItemId())
-            {
-                case R.id.nav_maps:
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    overridePendingTransition(0, 0);
-                    finish();
-                    return true;
-                case R.id.nav_mycars:
-                    startActivity(new Intent(getApplicationContext(), MyCarsActivity.class));
-                    overridePendingTransition(0, 0);
-                    finish();
-                    return true;
-                case R.id.nav_favorites:
-                    startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
-                    overridePendingTransition(0, 0);
-                    finish();
-                    return true;
-                case R.id.nav_settings:
-                    return true;
-            }
-            return false;
         });
     }
 }

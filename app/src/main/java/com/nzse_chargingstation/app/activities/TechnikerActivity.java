@@ -1,9 +1,11 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.nzse_chargingstation.app.R;
 
 public class TechnikerActivity extends AppCompatActivity {
 

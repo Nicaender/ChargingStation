@@ -1,4 +1,4 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.classes;
 
 import com.google.android.gms.maps.model.LatLng;
 

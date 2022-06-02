@@ -1,4 +1,4 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
+import com.nzse_chargingstation.app.classes.Defective;
 
 public class ReportActivity extends AppCompatActivity {
 

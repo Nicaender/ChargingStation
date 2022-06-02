@@ -1,4 +1,4 @@
-package com.nzse_chargingstation.app;
+package com.nzse_chargingstation.app.classes;
 
 import android.location.Location;
 
@@ -17,6 +17,7 @@ public class ContainerAndGlobal {
     private static Location current_location = null;
     private static boolean first_time = true;
     private static ChargingStation reported_charging_station;
+    private static boolean changedSetting = false;
 
     public static ArrayList<ChargingStation> getCharging_station_list() {
         return charging_station_list;
@@ -56,6 +57,14 @@ public class ContainerAndGlobal {
 
     public static void setReported_charging_station(ChargingStation reported_charging_station) {
         ContainerAndGlobal.reported_charging_station = reported_charging_station;
+    }
+
+    public static boolean isChangedSetting() {
+        return changedSetting;
+    }
+
+    public static void setChangedSetting(boolean changedSetting) {
+        ContainerAndGlobal.changedSetting = changedSetting;
     }
 
     public static void enable_filter()
