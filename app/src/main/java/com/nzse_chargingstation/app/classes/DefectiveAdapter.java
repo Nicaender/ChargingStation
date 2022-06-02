@@ -1,5 +1,6 @@
 package com.nzse_chargingstation.app.classes;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         return new defectiveHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
         Defective current_defective = defective_list.get(position);
@@ -33,16 +35,19 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         holder.tv_defective_reason.setText(current_defective.getReason());
         String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrent_location())) + " KM";
         holder.tv_distance.setText(tmp);
-        holder.btn_mark_to_repair.setText(current_defective.getTechnician());
+        if(!current_defective.isMarked())
+            holder.btn_mark_to_repair.setText("Mark");
+        else
+            holder.btn_mark_to_repair.setText("Marked");
 
         holder.btn_mark_to_repair.setOnClickListener(v -> {
-            if(holder.btn_mark_to_repair.getText().toString().equals("mark"))
+            if(!current_defective.isMarked())
             {
-                current_defective.setTechnician("marked by me");
+                current_defective.setMarked(true);
                 notifyItemChanged(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully marked", Toast.LENGTH_LONG).show();
             }
-            else if(holder.btn_mark_to_repair.getText().toString().equals("marked by me"))
+            else
             {
                 ContainerAndGlobal.add_or_remove_defective(current_defective, false);
                 notifyItemRemoved(holder.getAdapterPosition());

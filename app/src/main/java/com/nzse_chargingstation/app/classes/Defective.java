@@ -5,8 +5,7 @@ import com.nzse_chargingstation.app.R;
 public class Defective {
     private final ChargingStation defective_cs;
     private final String reason;
-    private boolean fixed = false;
-    private String technician = "mark";
+    private boolean marked = false;
 
     public Defective(ChargingStation defective_cs, String reason) {
         this.defective_cs = defective_cs;
@@ -21,19 +20,12 @@ public class Defective {
         return reason;
     }
 
-    public boolean isFixed() {
-        return fixed;
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean isMarked() {
+        return marked;
     }
 
-    public void setFixed(boolean fixed) {
-        this.fixed = fixed;
-    }
-
-    public String getTechnician() {
-        return technician;
-    }
-
-    public void setTechnician(String technician) {
-        this.technician = technician;
+    public void setMarked(boolean marked) {
+        this.marked = marked;
     }
 }

@@ -23,7 +23,7 @@
             android:name=".activities.ReportActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.TechnikerActivity"
+            android:name=".activities.TechnicianActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"

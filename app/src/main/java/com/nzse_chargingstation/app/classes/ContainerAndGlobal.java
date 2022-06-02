@@ -15,6 +15,8 @@ public class ContainerAndGlobal {
     @SuppressWarnings("FieldMayBeFinal")
     private static ArrayList<ChargingStation> charging_station_list_filtered = new ArrayList<>();
     @SuppressWarnings("FieldMayBeFinal")
+    private static ArrayList<ChargingStation> charging_station_favorites = new ArrayList<>();
+    @SuppressWarnings("FieldMayBeFinal")
     private static ArrayList<Defective> defective_list = new ArrayList<>();
     private static double filter_range = 0;
     private static Location current_location = null;
@@ -33,6 +35,10 @@ public class ContainerAndGlobal {
 
     public static ArrayList<Defective> getDefective_list() {
         return defective_list;
+    }
+
+    public static ArrayList<ChargingStation> getCharging_station_favorites() {
+        return charging_station_favorites;
     }
 
     public static void setFilter_range(double filter_range) {
@@ -96,8 +102,62 @@ public class ContainerAndGlobal {
         }
     }
 
+    public static boolean is_already_favorite(ChargingStation input)
+    {
+        if(input == null)
+            return true;
+
+        for(int i = 0; i < charging_station_favorites.size(); i++)
+        {
+            if(charging_station_favorites.get(i).equals(input))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
-     * Adding a defective charging station to the defective list and remove it from normal list.
+     * Add a charging station to favorites and remove it from normal list or remove it from
+     * favorites list and add it back to normal list
+     * @param input is the charging station that wants to be added
+     * @param add is a boolean, whether to add or to remove the charging station from favorites
+     * @return true if it is possible to add or remove
+     */
+    public static boolean add_or_remove_favorite(ChargingStation input, boolean add)
+    {
+        {
+            if(input == null)
+                return false;
+
+            setChangedSetting(true);
+            if(add)
+            {
+                add_or_remove_charging_station(input, false);
+                charging_station_favorites.add(input);
+                return true;
+            }
+            else
+            {
+                for(int i = 0; i < charging_station_favorites.size(); i++)
+                {
+                    if(charging_station_favorites.get(i).equals(input))
+                    {
+                        add_or_remove_charging_station(input, true);
+                        charging_station_favorites.remove(i);
+                        return true;
+                    }
+                }
+            }
+
+            setChangedSetting(false);
+            return false;
+        }
+    }
+
+    /**
+     * Add a defective charging station to the defective list and remove it from normal list.
      * Then set reported_charging_station to null. It can also remove a defective class from the
      * defective array and add that charging station back to normal list
      * @param input is the defective class that contains the charging station and the reason
@@ -113,7 +173,7 @@ public class ContainerAndGlobal {
         if(add)
         {
             defective_list.add(input);
-            remove_charging_station(input.getDefective_cs());
+            add_or_remove_charging_station(input.getDefective_cs(), false);
             reported_charging_station = null;
             return true;
         }
@@ -123,7 +183,7 @@ public class ContainerAndGlobal {
             {
                 if(defective_list.get(i).equals(input))
                 {
-                    add_charging_station(input.getDefective_cs());
+                    add_or_remove_charging_station(input.getDefective_cs(), true);
                     defective_list.remove(i);
                     return true;
                 }
@@ -135,56 +195,61 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * Adding a charging station in the array
-     * @param input is a charging station that will be added to the list
-     * @return true if it input exists and is able to be put in the array
+     * Add a charging station to the normal or filtered list or remove it from either of list
+     * @param input is the charging station that wants to be removed
+     * @param add is the boolean, whether to add it or remove it
+     * @return true if it is possible to add or remove
      */
-    public static boolean add_charging_station(ChargingStation input)
+    public static boolean add_or_remove_charging_station(ChargingStation input, boolean add)
     {
         if(input == null)
             return false;
 
         setChangedSetting(true);
-        if(current_location == null)
+        if(add)
         {
-            charging_station_list.add(input);
+            if(current_location == null)
+            {
+                charging_station_list.add(input);
+            }
+            else
+            {
+                if(calculateLength(input.getLocation(), current_location) < filter_range)
+                {
+                    charging_station_list_filtered.add(input);
+                }
+                else
+                {
+                    charging_station_list.add(input);
+                }
+            }
             return true;
         }
         else
         {
-            if(calculateLength(input.getLocation(), current_location) < filter_range)
+            for(int i = 0; i < getCharging_station_list().size(); i++)
             {
-                charging_station_list_filtered.add(input);
-                return true;
+                if(getCharging_station_list().get(i).equals(input))
+                {
+                    getCharging_station_list().remove(i);
+                    return true;
+                }
             }
-            else
-                charging_station_list.add(input);
-            return true;
-        }
-    }
-
-    /**
-     * removing a charging station from either normal list or filtered list
-     * @param input is a charging station that will be removed from the list
-     * @return a boolean whether the charging station has successfully been removed
-     */
-    public static boolean remove_charging_station(ChargingStation input)
-    {
-        setChangedSetting(true);
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
-        {
-            if(ContainerAndGlobal.getCharging_station_list().get(i).equals(input))
+            for(int i = 0; i < getCharging_station_list_filtered().size(); i++)
             {
-                ContainerAndGlobal.getCharging_station_list().remove(i);
-                return true;
+                if(getCharging_station_list_filtered().get(i).equals(input))
+                {
+                    getCharging_station_list_filtered().remove(i);
+                    return true;
+                }
             }
-        }
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
-        {
-            if(ContainerAndGlobal.getCharging_station_list_filtered().get(i).equals(input))
+            for(int i = 0; i < getCharging_station_favorites().size(); i++)
             {
-                ContainerAndGlobal.getCharging_station_list_filtered().remove(i);
-                return true;
+                if(getCharging_station_favorites().get(i).equals(input))
+                {
+                    getCharging_station_favorites().remove(i);
+                    return true;
+                }
             }
         }
 
@@ -193,24 +258,31 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * search for a charging station using its location
+     * Search for a charging station using its location
      * @param marker the location of searched charging station
      * @return charging station with the same location as the marker
      */
     public static ChargingStation search_charging_station(Marker marker)
     {
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list().size(); i++)
+        for(int i = 0; i < getCharging_station_list().size(); i++)
         {
-            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list().get(i).getLocation()))
+            if(Objects.requireNonNull(marker.getPosition()).equals(getCharging_station_list().get(i).getLocation()))
             {
-                return ContainerAndGlobal.getCharging_station_list().get(i);
+                return getCharging_station_list().get(i);
             }
         }
-        for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
+        for(int i = 0; i < getCharging_station_list_filtered().size(); i++)
         {
-            if(Objects.requireNonNull(marker.getPosition()).equals(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation()))
+            if(Objects.requireNonNull(marker.getPosition()).equals(getCharging_station_list_filtered().get(i).getLocation()))
             {
-                return ContainerAndGlobal.getCharging_station_list_filtered().get(i);
+                return getCharging_station_list_filtered().get(i);
+            }
+        }
+        for(int i = 0; i < getCharging_station_favorites().size(); i++)
+        {
+            if(Objects.requireNonNull(marker.getPosition()).equals(getCharging_station_favorites().get(i).getLocation()))
+            {
+                return getCharging_station_favorites().get(i);
             }
         }
 
@@ -237,7 +309,7 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * convert from degree to grad
+     * Convert from degree to grad
      * @param degree is the latitude or longitude
      * @return converted value from latitude or longitude
      */

@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
             if(et_username.getText().toString().equals("nicaender") && et_password.getText().toString().equals("nic123"))
             {
                 Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(getApplicationContext(), TechnikerActivity.class));
+                startActivity(new Intent(getApplicationContext(), TechnicianActivity.class));
                 finish();
             }
             else

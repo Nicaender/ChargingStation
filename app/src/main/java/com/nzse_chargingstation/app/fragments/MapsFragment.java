@@ -29,8 +29,6 @@ import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
-import java.text.DecimalFormat;
-
 public class MapsFragment extends Fragment {
 
     private MapView mMapView;
@@ -73,6 +71,13 @@ public class MapsFragment extends Fragment {
             });
 
             googleMap.setOnInfoWindowClickListener(marker -> {
+                if(ContainerAndGlobal.is_already_favorite(ContainerAndGlobal.search_charging_station(marker)))
+                    return;
+                ContainerAndGlobal.add_or_remove_favorite(ContainerAndGlobal.search_charging_station(marker), true);
+                addCSToMaps();
+            });
+
+            googleMap.setOnInfoWindowLongClickListener(marker -> {
                 if(!report_charging_station(marker))
                     return;
 
@@ -222,10 +227,17 @@ public class MapsFragment extends Fragment {
                     .position(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation())
                     .title(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getAddress()));
         }
+        for(int i = 0; i < ContainerAndGlobal.getCharging_station_favorites().size(); i++)
+        {
+            googleMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .position(ContainerAndGlobal.getCharging_station_favorites().get(i).getLocation())
+                    .title(ContainerAndGlobal.getCharging_station_favorites().get(i).getAddress()));
+        }
     }
 
     /**
-     * Marking a charging station as defective
+     * Mark a charging station as defective
      * @param marker from clicked location in google map
      * @return true if marker exists & the same location of charging station exists
      */
