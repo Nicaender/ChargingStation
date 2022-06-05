@@ -229,6 +229,7 @@ public class ContainerAndGlobal {
         }
         else
         {
+            chargingStationList.add(index, input);
             if(currentLocation != null && calculateLength(input.getLocation(), currentLocation) < filterRange)
             {
                 input.setFiltered(true);
@@ -236,7 +237,6 @@ public class ContainerAndGlobal {
             }
             else
                 input.setFiltered(false);
-            chargingStationList.add(index, input);
         }
         return 1;
     }
@@ -308,27 +308,27 @@ public class ContainerAndGlobal {
                 (String) chargingstation.get("Straße"),
                 (String) chargingstation.get("Hausnummer"),
                 (String) chargingstation.get("Adresszusatz"),
-                (int) Integer.parseInt(chargingstation.get("Postleitzahl").toString()),
+                Integer.parseInt(chargingstation.get("Postleitzahl").toString()),
                 (String) chargingstation.get("Ort"),
                 (String) chargingstation.get("Bundesland"),
                 (String) chargingstation.get("Kreis/kreisfreie Stadt"),
-                (double) Double.parseDouble(chargingstation.get("Breitengrad").toString().replace(",",".")),
-                (double) Double.parseDouble(chargingstation.get("Längengrad").toString().replace(",",".")),
+                Double.parseDouble(chargingstation.get("Breitengrad").toString().replace(",",".")),
+                Double.parseDouble(chargingstation.get("Längengrad").toString().replace(",",".")),
                 (String) chargingstation.get("Inbetriebnahmedatum"),
-                (double) Double.parseDouble(chargingstation.get("Anschlussleistung").toString().replace(",",".")),
+                Double.parseDouble(chargingstation.get("Anschlussleistung").toString().replace(",",".")),
                 (String) chargingstation.get("Art der Ladeeinrichung"),
-                (int) Integer.parseInt(chargingstation.get("Anzahl Ladepunkte").toString()),
+                Integer.parseInt(chargingstation.get("Anzahl Ladepunkte").toString()),
                 (String) chargingstation.get("Steckertypen1"),
-                (double) Double.parseDouble(chargingstation.get("P1 [kW]").toString().replace(",",".")),
+                Double.parseDouble(chargingstation.get("P1 [kW]").toString().replace(",",".")),
                 (String) chargingstation.get("Public Key1"),
                 (String) chargingstation.get("Steckertypen2"),
-                (chargingstation.get("P2 [kW]").toString().isEmpty() ? 0.0  : (double) Double.parseDouble(chargingstation.get("P2 [kW]").toString().replace(",","."))),
+                (chargingstation.get("P2 [kW]").toString().isEmpty() ? 0.0  : Double.parseDouble(chargingstation.get("P2 [kW]").toString().replace(",","."))),
                 (String) chargingstation.get("Public Key2"),
                 (String) chargingstation.get("Steckertypen3"),
-                (chargingstation.get("P3 [kW]").toString().isEmpty() ? 0.0  : (double) Double.parseDouble(chargingstation.get("P3 [kW]").toString().replace(",","."))) ,
+                (chargingstation.get("P3 [kW]").toString().isEmpty() ? 0.0  : Double.parseDouble(chargingstation.get("P3 [kW]").toString().replace(",","."))) ,
                 (String) chargingstation.get("Public Key3"),
                 (String) chargingstation.get("Steckertypen4"),
-                (chargingstation.get("P4 [kW]").toString().isEmpty() ? 0.0  : (double) Double.parseDouble(chargingstation.get("P4 [kW]").toString().replace(",","."))),
+                (chargingstation.get("P4 [kW]").toString().isEmpty() ? 0.0  : Double.parseDouble(chargingstation.get("P4 [kW]").toString().replace(",","."))),
                 (String) chargingstation.get("Public Key4")
         );
 

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
+import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Favorite;
 
@@ -226,6 +227,7 @@ public class MapsFragment extends Fragment {
         googleMap.clear();
         for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
         {
+            ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
             if(ContainerAndGlobal.getChargingStationList().get(i).isFiltered())
                 googleMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
