@@ -12,24 +12,24 @@
         tools:ignore="UselessParent">
 
         <Button
-            android:id="@+id/button_back_login_techniker"
+            android:id="@+id/buttonBackLoginTechniker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="@string/back" />
 
         <EditText
-            android:id="@+id/edittext_username"
+            android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_above="@id/edittext_password"
+            android:layout_above="@id/editTextPassword"
             android:hint="@string/username"
             android:autofillHints="@string/username"
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/edittext_password"
+            android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -38,11 +38,11 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/button_confirm_login_techniker"
+            android:id="@+id/buttonConfirmLoginTechniker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_below="@id/edittext_password"
+            android:layout_below="@id/editTextPassword"
             android:text="@string/login" />
 
         <TextView

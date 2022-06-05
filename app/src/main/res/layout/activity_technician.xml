@@ -12,13 +12,13 @@
         tools:ignore="UselessParent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_defective_list"
+            android:id="@+id/rvDefectiveList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/button_back_techniker" />
+            android:layout_below="@id/buttonBackTechniker" />
 
         <Button
-            android:id="@+id/button_back_techniker"
+            android:id="@+id/buttonBackTechniker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"

@@ -10,7 +10,7 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/button_radius_confirm" />
+        android:layout_above="@id/buttonViewRadiusConfirm" />
 
     <TextView
         android:id="@+id/textview_radius"
@@ -64,7 +64,7 @@
         tools:ignore="ContentDescription" />
 
     <Button
-        android:id="@+id/button_radius_confirm"
+        android:id="@+id/buttonViewRadiusConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

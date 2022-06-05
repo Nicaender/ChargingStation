@@ -6,7 +6,7 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/textview_defective_address"
+        android:id="@+id/textViewDefectiveAdress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/address"
@@ -14,27 +14,27 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/textview_distance"
+        android:id="@+id/textViewDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_defective_address"
+        android:layout_below="@id/textViewDefectiveAdress"
         android:text="@string/distance"
         android:gravity="center_vertical"
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/textview_defective_reason"
+        android:id="@+id/textViewDefectiveReason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textview_defective_address"
-        android:layout_toLeftOf="@id/button_mark_to_repair"
+        android:layout_toRightOf="@id/textViewDefectiveAdress"
+        android:layout_toLeftOf="@id/buttonMarkToRepair"
         android:text="@string/reason"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/button_mark_to_repair"
+        android:id="@+id/buttonMarkToRepair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true" />

@@ -40,7 +40,7 @@ public class ReportActivity extends AppCompatActivity {
     {
         Defective tmp;
         int isFavorite = ContainerAndGlobal.searchInFavorites(ContainerAndGlobal.getReportedChargingStation().getLocation());
-        if(isFavorite != -1)
+        if(isFavorite == -1)
             tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.indexSearchInList(ContainerAndGlobal.getReportedChargingStation().getLocation()), null, et_additional_information.getText().toString());
         else
             tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), et_additional_information.getText().toString());

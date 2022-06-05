@@ -2,7 +2,6 @@ package com.nzse_chargingstation.app.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -49,14 +48,28 @@ public class MainActivity extends AppCompatActivity {
 
         requestLocationPermission();
 
+        String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
+        try {
+            JSONArray jsonarray = new JSONArray(jsonString);
+
+            for (int i = 0; i < jsonarray.length(); i++) {
+                JSONObject json_inside = jsonarray.getJSONObject(i);
+
+                ContainerAndGlobal.parseLadesaeuleObject(json_inside);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         // Initialization
-        BottomNavigationView bottom_nav_bar = findViewById(R.id.bottom_navbar);
-        bottom_nav_bar.setSelectedItemId(R.id.nav_maps);
+        BottomNavigationView bottom_nav_bar = findViewById(R.id.bottomNavbar);
+        bottom_nav_bar.setSelectedItemId(R.id.navMaps);
 
         // Saving state of our app
         // using SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 10);
 
         // When user reopens the app
         // after applying dark/light mode
@@ -66,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+        ContainerAndGlobal.setMaxViewRange(maxViewRange);
 
         if(ContainerAndGlobal.isChangedSetting())
         {
@@ -80,16 +94,16 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId())
             {
-                case R.id.nav_maps:
+                case R.id.navMaps:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
                     return true;
-                case R.id.nav_mycars:
+                case R.id.navMyCars:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myCarsFragment).commit();
                     return true;
-                case R.id.nav_favorites:
+                case R.id.navFavorites:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favoritesFragment).commit();
                     return true;
-                case R.id.nav_settings:
+                case R.id.navSettings:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
                     return true;
             }
@@ -116,26 +130,7 @@ public class MainActivity extends AppCompatActivity {
                         if (location != null) {
                             // Logic to handle location object
                             ContainerAndGlobal.setCurrentLocation(location);
-                            if(ContainerAndGlobal.isFirstTime())
-                            {
-                                ContainerAndGlobal.setFirstTime(false);
-                                String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
-                                try {
-                                    JSONArray jsonarray = new JSONArray(jsonString);
-
-                                    for (int i = 0; i < jsonarray.length(); i++) {
-                                        JSONObject json_inside = jsonarray.getJSONObject(i);
-
-                                        ContainerAndGlobal.parseLadesaeuleObject(json_inside);
-                                    }
-                                    ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                overridePendingTransition(0, 0);
-                                finish();
-                            }
+                            ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
                         }
                     });
         }

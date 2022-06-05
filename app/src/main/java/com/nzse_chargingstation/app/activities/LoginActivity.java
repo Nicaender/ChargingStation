@@ -12,25 +12,25 @@ import com.nzse_chargingstation.app.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button btn_back_login_techniker, btn_confirm_login_techniker;
-    EditText et_username, et_password;
+    Button btnBackLoginTechniker, btnConfirmLoginTechniker;
+    EditText etUsername, etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_back_login_techniker = findViewById(R.id.button_back_login_techniker);
-        btn_confirm_login_techniker = findViewById(R.id.button_confirm_login_techniker);
-        et_username = findViewById(R.id.edittext_username);
-        et_password = findViewById(R.id.edittext_password);
+        btnBackLoginTechniker = findViewById(R.id.buttonBackLoginTechniker);
+        btnConfirmLoginTechniker = findViewById(R.id.buttonConfirmLoginTechniker);
+        etUsername = findViewById(R.id.editTextUsername);
+        etPassword = findViewById(R.id.editTextPassword);
 
         // Go back to previous activity
-        btn_back_login_techniker.setOnClickListener(v -> finish());
+        btnBackLoginTechniker.setOnClickListener(v -> finish());
 
         // Implementation of button to log in to techniker site
-        btn_confirm_login_techniker.setOnClickListener(v -> {
-            if(et_username.getText().toString().equals("nicaender") && et_password.getText().toString().equals("nic123"))
+        btnConfirmLoginTechniker.setOnClickListener(v -> {
+            if(etUsername.getText().toString().equals("nicaender") && etPassword.getText().toString().equals("nic123"))
             {
                 Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), TechnicianActivity.class));

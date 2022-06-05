@@ -13,24 +13,24 @@ import com.nzse_chargingstation.app.classes.DefectiveAdapter;
 
 public class TechnicianActivity extends AppCompatActivity {
 
-    Button btn_back_techniker;
+    Button btnBackTechniker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technician);
 
-        RecyclerView recyclerView = findViewById(R.id.rv_defective_list);
+        RecyclerView recyclerView = findViewById(R.id.rvDefectiveList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
         DefectiveAdapter adapter = new DefectiveAdapter();
         recyclerView.setAdapter(adapter);
 
-        adapter.setDefective_list(ContainerAndGlobal.getDefectiveList());
+        adapter.setDefectiveList(ContainerAndGlobal.getDefectiveList());
 
-        btn_back_techniker = findViewById(R.id.button_back_techniker);
+        btnBackTechniker = findViewById(R.id.buttonBackTechniker);
 
-        btn_back_techniker.setOnClickListener(v -> finish());
+        btnBackTechniker.setOnClickListener(v -> finish());
     }
 }

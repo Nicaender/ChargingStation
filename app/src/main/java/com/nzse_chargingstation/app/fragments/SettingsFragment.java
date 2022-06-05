@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -19,7 +20,8 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 public class SettingsFragment extends Fragment {
 
-    Button btn_login_techniker, btn_darkmode;
+    Button btnLoginTechniker, btnDarkmode, btnViewRadiusConfirm;
+    EditText etViewRadiusValue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,28 +35,34 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btn_login_techniker =  view.findViewById(R.id.button_login_techniker);
-        btn_darkmode = view.findViewById(R.id.button_darkmode);
+        btnLoginTechniker =  view.findViewById(R.id.buttonLoginTechniker);
+        btnDarkmode = view.findViewById(R.id.buttonDarkMode);
+        btnViewRadiusConfirm = view.findViewById(R.id.buttonViewRadiusConfirm);
+        etViewRadiusValue = view.findViewById(R.id.editTextViewRadiusValue);
 
         // Saving state of our app
         // using SharedPreferences
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 10);
 
         // When user reopens the app
         // after applying dark/light mode
         if (isDarkModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            btn_darkmode.setText(R.string.disable_darkmode);
+            btnDarkmode.setText(R.string.disable_darkmode);
         }
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            btn_darkmode.setText(R.string.enable_darkmode);
+            btnDarkmode.setText(R.string.enable_darkmode);
         }
+        ContainerAndGlobal.setMaxViewRange(maxViewRange);
+
+        etViewRadiusValue.setText(String.valueOf(ContainerAndGlobal.getMaxViewRange()));
 
         // Implementation of dark mode button
-        btn_darkmode.setOnClickListener(v -> {
+        btnDarkmode.setOnClickListener(v -> {
             if (isDarkModeOn) {
                 // if dark mode is on it
                 // will turn it off
@@ -64,7 +72,7 @@ public class SettingsFragment extends Fragment {
                 editor.putBoolean("isDarkModeOn", false);
                 editor.apply();
                 // change text of Button
-                btn_darkmode.setText(R.string.enable_darkmode);
+                btnDarkmode.setText(R.string.enable_darkmode);
             }
             else {
                 // if dark mode is off
@@ -75,12 +83,19 @@ public class SettingsFragment extends Fragment {
                 editor.putBoolean("isDarkModeOn", true);
                 editor.apply();
                 // change text of Button
-                btn_darkmode.setText(R.string.disable_darkmode);
+                btnDarkmode.setText(R.string.disable_darkmode);
             }
             ContainerAndGlobal.setChangedSetting(true);
         });
 
         // Implementation of button to login site from techniker
-        btn_login_techniker.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
+        btnLoginTechniker.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
+
+        // Implementation of button to limit max view range in map
+        btnViewRadiusConfirm.setOnClickListener(v -> {
+            ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
+            editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
+            editor.apply();
+        });
     }
 }

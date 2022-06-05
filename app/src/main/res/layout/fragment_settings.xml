@@ -6,17 +6,65 @@
     tools:context=".fragments.SettingsFragment">
 
     <Button
-        android:id="@+id/button_login_techniker"
+        android:id="@+id/buttonLoginTechniker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/login_techniker_btn" />
 
     <Button
-        android:id="@+id/button_darkmode"
+        android:id="@+id/buttonDarkMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_above="@id/button_login_techniker" />
+        android:layout_above="@id/buttonLoginTechniker" />
+
+    <TextView
+        android:id="@+id/textViewViewRadius"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@id/buttonLoginTechniker"
+        android:layout_alignParentStart="true"
+        android:text="@string/view_radius"
+        android:textSize="35sp" />
+
+    <EditText
+        android:id="@+id/editTextViewRadiusValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textViewViewRadius"
+        android:layout_toLeftOf="@id/km"
+        android:layout_below="@id/buttonLoginTechniker"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:autofillHints=""
+        tools:ignore="LabelFor" />
+
+    <TextView
+        android:id="@+id/km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/buttonViewRadiusConfirm"
+        android:layout_below="@id/buttonLoginTechniker"
+        android:layout_marginLeft="10dp"
+        android:text="@string/km"
+        android:textSize="35sp" />
+
+    <Button
+        android:id="@+id/buttonViewRadiusConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonLoginTechniker"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/confirm"
+        tools:ignore="RelativeOverlap" />
 
 </RelativeLayout>

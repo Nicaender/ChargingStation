@@ -24,10 +24,10 @@ public class ContainerAndGlobal {
     private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
-    private static boolean firstTime = true;
     private static ChargingStation reportedChargingStation = null;
     private static Marker reportedMaker = null;
     private static boolean changedSetting = false;
+    private static int maxViewRange = 10;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
     public static ArrayList<ChargingStation> getChargingStationList() {
@@ -63,14 +63,6 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.currentLocation = currentLocation;
     }
 
-    public static boolean isFirstTime() {
-        return firstTime;
-    }
-
-    public static void setFirstTime(boolean firstTime) {
-        ContainerAndGlobal.firstTime = firstTime;
-    }
-
     public static ChargingStation getReportedChargingStation() {
         return reportedChargingStation;
     }
@@ -89,6 +81,14 @@ public class ContainerAndGlobal {
 
     public static void setChangedSetting(boolean changedSetting) {
         ContainerAndGlobal.changedSetting = changedSetting;
+    }
+
+    public static int getMaxViewRange() {
+        return maxViewRange;
+    }
+
+    public static void setMaxViewRange(int maxViewRange) {
+        ContainerAndGlobal.maxViewRange = maxViewRange;
     }
 
     /**
@@ -184,6 +184,10 @@ public class ContainerAndGlobal {
     {
         defectiveList.add(defective);
         reportedChargingStation = null;
+        if(defective.getDefectiveCs() == null)
+            favoriteList.remove(searchInFavorites(defective.getDefectiveFavorite().getFavoriteCs().getLocation()));
+        else
+            chargingStationList.remove(defective.getIndexInArray());
         reportedMaker.remove();
         reportedMaker = null;
     }

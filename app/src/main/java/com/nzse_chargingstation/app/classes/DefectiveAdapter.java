@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defectiveHolder> {
-    private List<Defective> defective_list = new ArrayList<>();
+    private List<Defective> defectiveList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -30,26 +30,35 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
-        Defective current_defective = defective_list.get(position);
-        holder.tv_defective_address.setText(current_defective.getDefectiveCs().getStrasse());
-        holder.tv_defective_reason.setText(current_defective.getReason());
-        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
-        holder.tv_distance.setText(tmp);
-        if(!current_defective.isMarked())
-            holder.btn_mark_to_repair.setText("Mark");
+        Defective currentDefective = defectiveList.get(position);
+        String distance;
+        if(currentDefective.getDefectiveCs() == null)
+        {
+            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveFavorite().getFavoriteCs().getStrasse());
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveFavorite().getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        }
         else
-            holder.btn_mark_to_repair.setText("Marked");
+        {
+            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse());
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        }
+        holder.tvDefectiveReason.setText(currentDefective.getReason());
+        holder.tvDistance.setText(distance);
+        if(!currentDefective.isMarked())
+            holder.btnMarkToRepair.setText("Mark");
+        else
+            holder.btnMarkToRepair.setText("Marked");
 
-        holder.btn_mark_to_repair.setOnClickListener(v -> {
-            if(!current_defective.isMarked())
+        holder.btnMarkToRepair.setOnClickListener(v -> {
+            if(!currentDefective.isMarked())
             {
-                current_defective.setMarked(true);
+                currentDefective.setMarked(true);
                 notifyItemChanged(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully marked", Toast.LENGTH_LONG).show();
             }
             else
             {
-                ContainerAndGlobal.removeDefective(current_defective);
+                ContainerAndGlobal.removeDefective(currentDefective);
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
             }
@@ -58,28 +67,28 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
 
     @Override
     public int getItemCount() {
-        return defective_list.size();
+        return defectiveList.size();
     }
 
-    public void setDefective_list(List<Defective> defectives)
+    public void setDefectiveList(List<Defective> defectives)
     {
-        this.defective_list = defectives;
+        this.defectiveList = defectives;
         notifyItemRangeChanged(0, defectives.size());
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
     class defectiveHolder extends RecyclerView.ViewHolder {
-        private final TextView tv_defective_address;
-        private final TextView tv_defective_reason;
-        private final TextView tv_distance;
-        private final Button btn_mark_to_repair;
+        private final TextView tvDefectiveAddress;
+        private final TextView tvDefectiveReason;
+        private final TextView tvDistance;
+        private final Button btnMarkToRepair;
 
         public defectiveHolder(@NonNull View itemView) {
             super(itemView);
-            tv_defective_address = itemView.findViewById(R.id.textview_defective_address);
-            tv_defective_reason = itemView.findViewById(R.id.textview_defective_reason);
-            tv_distance = itemView.findViewById(R.id.textview_distance);
-            btn_mark_to_repair = itemView.findViewById(R.id.button_mark_to_repair);
+            tvDefectiveAddress = itemView.findViewById(R.id.textViewDefectiveAdress);
+            tvDefectiveReason = itemView.findViewById(R.id.textViewDefectiveReason);
+            tvDistance = itemView.findViewById(R.id.textViewDistance);
+            btnMarkToRepair = itemView.findViewById(R.id.buttonMarkToRepair);
         }
     }
 
