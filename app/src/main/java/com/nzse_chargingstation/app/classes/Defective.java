@@ -1,35 +1,40 @@
 package com.nzse_chargingstation.app.classes;
 
 public class Defective {
-    private final ChargingStation defective_cs;
+    private final ChargingStation defectiveCs;
+    private final int indexInArray;
+    private final Favorite defectiveFavorite;
     private final String reason;
     private boolean marked = false;
-    private boolean isInFavorite = false;
 
-    public Defective(ChargingStation defective_cs, String reason, boolean isInFavorite) {
-        this.defective_cs = defective_cs;
+    public Defective(ChargingStation defectiveCs, int indexInArray, Favorite defectiveFavorite, String reason) {
+        this.defectiveCs = defectiveCs;
+        this.indexInArray = indexInArray;
+        this.defectiveFavorite = defectiveFavorite;
         this.reason = reason;
-        this.isInFavorite = isInFavorite;
     }
 
-    public ChargingStation getDefective_cs() {
-        return defective_cs;
+    public ChargingStation getDefectiveCs() {
+        return defectiveCs;
+    }
+
+    public int getIndexInArray() {
+        return indexInArray;
+    }
+
+    public Favorite getDefectiveFavorite() {
+        return defectiveFavorite;
     }
 
     public String getReason() {
         return reason;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isMarked() {
         return marked;
     }
 
     public void setMarked(boolean marked) {
         this.marked = marked;
-    }
-
-    public boolean isInFavorite() {
-        return isInFavorite;
     }
 }

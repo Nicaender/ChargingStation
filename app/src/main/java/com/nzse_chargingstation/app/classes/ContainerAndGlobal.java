@@ -2,7 +2,6 @@ package com.nzse_chargingstation.app.classes;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -17,15 +16,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ContainerAndGlobal {
 
-    private static ArrayList<ArrayList<ChargingStation>> chargingStationHashList = new ArrayList<>();
-    private static ArrayList<ArrayList<ChargingStation>> chargingStationHashListFiltered = new ArrayList<>();
-    private static ArrayList<ChargingStation> chargingStationFavorites = new ArrayList<>();
+    @SuppressWarnings("FieldMayBeFinal")
+    private static ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
+    @SuppressWarnings("FieldMayBeFinal")
+    private static ArrayList<Favorite> favoriteList = new ArrayList<>();
+    @SuppressWarnings("FieldMayBeFinal")
     private static ArrayList<Defective> defectiveList = new ArrayList<>();
-    private static ArrayList<Pair<ChargingStation, Integer>> fixedChargingStationBuffer = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
     private static boolean firstTime = true;
@@ -33,29 +32,29 @@ public class ContainerAndGlobal {
     private static Marker reportedMaker = null;
     private static boolean changedSetting = false;
     public static final DecimalFormat df = new DecimalFormat("#.##");
-    private static final int hashSize = 1000;
 
-    public static ArrayList<ArrayList<ChargingStation>> getChargingStationHashList() {
-        return chargingStationHashList;
+    public static ArrayList<ChargingStation> getChargingStationList() {
+        return chargingStationList;
     }
 
-    public static ArrayList<ArrayList<ChargingStation>> getChargingStationHashListFiltered() {
-        return chargingStationHashListFiltered;
-    }
-
-    public static ArrayList<ChargingStation> getChargingStationFavorites() {
-        return chargingStationFavorites;
+    public static ArrayList<Favorite> getFavoriteList() {
+        return favoriteList;
     }
 
     public static ArrayList<Defective> getDefectiveList() {
         return defectiveList;
     }
 
-    public static ArrayList<Pair<ChargingStation, Integer>> getFixedChargingStationBuffer() {
-        return fixedChargingStationBuffer;
-    }
-
     public static void setFilterRange(double filterRange) {
+        for(int i = 0; i < chargingStationList.size(); i++)
+        {
+            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < ContainerAndGlobal.filterRange)
+            {
+                chargingStationList.get(i).setFiltered(false);
+            }
+            else
+                break;
+        }
         ContainerAndGlobal.filterRange = filterRange;
     }
 
@@ -83,10 +82,6 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.reportedChargingStation = reportedChargingStation;
     }
 
-    public static Marker getReportedMaker() {
-        return reportedMaker;
-    }
-
     public static void setReportedMaker(Marker reportedMaker) {
         ContainerAndGlobal.reportedMaker = reportedMaker;
     }
@@ -104,127 +99,79 @@ public class ContainerAndGlobal {
      */
     public static void enableFilter()
     {
-        // keluarin dari filter
-        for(int i = 0; i < chargingStationHashListFiltered.size(); i++)
+        for(int i = 0; i < chargingStationList.size(); i++)
         {
-            for(int j = 0; j < chargingStationHashListFiltered.get(i).size(); j++)
+            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < filterRange)
             {
-                if(calculateLength(chargingStationHashListFiltered.get(i).get(j).getLocation(), currentLocation) > filterRange)
-                {
-                    chargingStationHashList.get(i).add(chargingStationHashListFiltered.get(i).get(j));
-                    chargingStationHashListFiltered.get(i).remove(j);
-                    j--;
-                }
-            }
-        }
-
-        // masukin ke filter
-        for(int i = 0; i < chargingStationHashList.size(); i++)
-        {
-            for(int j = 0; j < chargingStationHashList.get(i).size(); j++)
-            {
-                if(calculateLength(chargingStationHashList.get(i).get(j).getLocation(), currentLocation) < filterRange)
-                {
-                    chargingStationHashListFiltered.get(i).add(chargingStationHashList.get(i).get(j));
-                    chargingStationHashList.get(i).remove(j);
-                    j--;
-                }
-            }
-        }
-    }
-
-    /**
-     * check whether a charging station is already in a favorite
-     * @param input is the charging station that wants to be checked
-     * @return true if it is already or not found, return false if its not yet in favorite
-     */
-    public static boolean isAlreadyFavorite(ChargingStation input)
-    {
-        if(input == null)
-            return true;
-
-        for(int i = 0; i < chargingStationFavorites.size(); i++)
-        {
-            if(chargingStationFavorites.get(i).equals(input))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Add a charging station to favorites and remove it from normal list or remove it from
-     * favorites list and add it back to normal list
-     * @param input is the charging station that wants to be added
-     * @param add is a boolean, whether to add or to remove the charging station from favorites
-     * @return -1 = error, 1 = normal list, 2 = filtered list, 4 = fav list
-     */
-    public static int addOrRemoveFavorite(ChargingStation input, boolean add)
-    {
-        {
-            if(input == null)
-                return -1;
-
-            if(add)
-            {
-                if(addOrRemoveChargingStation(input, false) == 0)
-                chargingStationFavorites.add(input);
-                return 4;
+                chargingStationList.get(i).setFiltered(true);
             }
             else
-            {
-                for(int i = 0; i < chargingStationFavorites.size(); i++)
-                {
-                    if(chargingStationFavorites.get(i).equals(input))
-                    {
-                        chargingStationFavorites.remove(i);
-                        return addOrRemoveChargingStation(input, true);
-                        // return value whether it is filtered
-                    }
-                }
-            }
-
-            return -1;
+                return;
         }
     }
 
     /**
-     * Add a defective charging station to the defective list and remove it from normal list.
-     * Then set reported_charging_station to null. It can also remove a defective class from the
-     * defective array and add that charging station back to normal list
-     * @param input is the defective class that contains the charging station and the reason
-     * @param add is a boolean, whether to add or to remove the defective class
-     * @return -1 = error, 1 = normal list, 2 = filtered list, 3 = defective list, 4 = fav list
+     * Search charging station from all lists except defective list
+     * @param latLng is the coordination from a charging station
+     * @return the searched charging station
      */
-    public static int addOrRemoveDefective(Defective input, boolean add)
+    public static ChargingStation searchChargingStationEverywhere(LatLng latLng)
     {
-        if(input == null)
-            return -1;
-
-        if(add)
+        int indexNormal = indexSearchInList(latLng);
+        if(indexNormal == -1)
         {
-            defectiveList.add(input);
-            addOrRemoveChargingStation(input.getDefective_cs(), false);
-            reportedChargingStation = null;
-            reportedMaker.remove();
-            reportedMaker = null;
-            return 3;
+            return favoriteList.get(searchInFavorites(latLng)).getFavoriteCs();
         }
-        else
+        return chargingStationList.get(indexNormal);
+    }
+
+    /**
+     *
+     * @param latLng is the coordination from a charging station
+     * @return the index of that charging station from the list
+     */
+    public static int indexSearchInList(LatLng latLng)
+    {
+        //set first to first index
+        int first = 0;
+        //set last to last elements in array
+        int last=ContainerAndGlobal.getChargingStationList().size()-1;
+        //calculate mid of the array
+        int mid = (first + last)/2;
+        //while first and last do not overlap
+        while( first <= last ){
+            //if the mid < key, then key to be searched is in the first half of array
+            if ( calculateLength(ContainerAndGlobal.getChargingStationList().get(mid).getLocation(), currentLocation) < calculateLength(latLng, currentLocation) ){
+                first = mid + 1;
+            }else if ( calculateLength(ContainerAndGlobal.getChargingStationList().get(mid).getLocation(), currentLocation) == calculateLength(latLng, currentLocation) ){
+                return mid;
+            }else{
+                //the key is to be searched in the second half of the array
+                last = mid - 1;
+            }
+            mid = (first + last)/2;
+        }
+        for(int i = 0; i < chargingStationList.size(); i++)
         {
-            for(int i = 0; i < defectiveList.size(); i++)
+            if(chargingStationList.get(i).getLocation().equals(latLng))
+                return i;
+        }
+
+        return -1;
+    }
+
+    /**
+     *
+     * @param latLng is the coordinate from a charging station in google map
+     * @return -1 if it is not in favorite or it's index in favorite list
+     */
+    public static int searchInFavorites(LatLng latLng)
+    {
+        for(int i = 0; i < favoriteList.size(); i++)
+        {
+            if(favoriteList.get(i).getFavoriteCs().getLocation().equals(latLng))
             {
-                if(defectiveList.get(i).equals(input))
-                {
-                    defectiveList.remove(i);
-                    if(input.isInFavorite())
-                        return addOrRemoveFavorite(input.getDefective_cs(), true);
-                    return addOrRemoveChargingStation(input.getDefective_cs(), true);
-                    // return the value whether it is added to normal or filtered list or
-                    // favorite list
-                }
+                return i;
             }
         }
 
@@ -232,101 +179,66 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * Add a charging station to either the normal list or the filtered one using hash key by its
-     * address
-     * @param input is the charging station that wants to be removed or to be added
-     * @param add is the boolean, whether to add it or remove it
-     * @return -1 = error, 1 = normal list, 2 = filtered list, 0 = removed
+     *
+     * @param defective is a class consist of charging station, the reason, index, and whether
+     *                  it is in favorite or not
      */
-    public static int addOrRemoveChargingStation(ChargingStation input, boolean add)
+    public static void addDefective(Defective defective)
     {
-        if(input == null)
-            return -1;
+        defectiveList.add(defective);
+        reportedChargingStation = null;
+        reportedMaker.remove();
+        reportedMaker = null;
+    }
 
-        int key = hashing(input.getStrasse());
-        if(add)
+    /**
+     * remove the defective class from defective and automatically add to normal list or fav list
+     * @param defective is the defective that will be removed
+     */
+    public static void removeDefective(Defective defective)
+    {
+        for(int i = 0; i < defectiveList.size(); i++)
         {
-            while(key >= chargingStationHashList.size())
-                chargingStationHashList.add(new ArrayList<>());
-            while(key >= chargingStationHashListFiltered.size())
-                chargingStationHashListFiltered.add(new ArrayList<>());
-
-            if(currentLocation == null)
+            if(defectiveList.get(i).equals(defective))
             {
-                chargingStationHashList.get(key).add(input);
-            }
-            else
-            {
-                if(calculateLength(input.getLocation(), currentLocation) < filterRange)
+                defectiveList.remove(i);
+                if(defective.getDefectiveFavorite() != null)
                 {
-                    chargingStationHashListFiltered.get(key).add(input);
-                    return 2;
+                    ContainerAndGlobal.getFavoriteList().add(defective.getDefectiveFavorite());
                 }
                 else
                 {
-                    chargingStationHashList.get(key).add(input);
+                    addChargingStation(defective.getIndexInArray(), defective.getDefectiveCs());
                 }
-            }
-            return 1;
-        }
-        else
-        {
-            for(int i = 0; i < chargingStationHashList.get(key).size(); i++)
-            {
-                if(chargingStationHashList.get(key).get(i).equals(input))
-                {
-                    chargingStationHashList.get(key).remove(i);
-                    return 0;
-                }
-            }
-            for(int i = 0; i < chargingStationHashListFiltered.get(key).size(); i++)
-            {
-                if(chargingStationHashListFiltered.get(key).get(i).equals(input))
-                {
-                    chargingStationHashListFiltered.get(key).remove(i);
-                    return 0;
-                }
-            }
-            for(int i = 0; i < getChargingStationFavorites().size(); i++)
-            {
-                if(getChargingStationFavorites().get(i).equals(input))
-                {
-                    getChargingStationFavorites().remove(i);
-                    return 0;
-                }
+                return;
             }
         }
-
-        return -1;
     }
 
     /**
-     * Search for a charging station using its location and then hash
-     * @param marker the location of searched charging station
-     * @return charging station with the same location as the marker
+     * add a charging station based on index and automatically assign if it is filtered
+     * @param input is a charging station
+     * @param index is the previous index in array (-1 if it is a new charging station)
+     * @return 1 if it is not filtered, 2 if it is filtered
      */
-    public static ChargingStation searchChargingStation(Marker marker)
+    public static int addChargingStation(int index, ChargingStation input)
     {
-        int key = hashing(Objects.requireNonNull(marker.getTitle()));
-        if(key == -1)
-            return null;
-        for(int i = 0; i < chargingStationHashList.get(key).size(); i++)
+        if(index == -1)
         {
-            if(marker.getPosition().equals(chargingStationHashList.get(key).get(i).getLocation()))
-                return chargingStationHashList.get(key).get(i);
+            chargingStationList.add(input);
         }
-        for(int i = 0; i < chargingStationHashListFiltered.get(key).size(); i++)
+        else
         {
-            if(marker.getPosition().equals(chargingStationHashListFiltered.get(key).get(i).getLocation()))
-                return chargingStationHashListFiltered.get(key).get(i);
+            if(currentLocation != null && calculateLength(input.getLocation(), currentLocation) < filterRange)
+            {
+                input.setFiltered(true);
+                return 2;
+            }
+            else
+                input.setFiltered(false);
+            chargingStationList.add(index, input);
         }
-        for(int i = 0; i < chargingStationFavorites.size(); i++)
-        {
-            if(marker.getPosition().equals(chargingStationFavorites.get(i).getLocation()))
-                return chargingStationFavorites.get(i);
-        }
-
-        return null;
+        return 1;
     }
 
     /**
@@ -420,22 +332,6 @@ public class ContainerAndGlobal {
                 (String) chargingstation.get("Public Key4")
         );
 
-        addOrRemoveChargingStation(tmpChargingStation, true);
-    }
-
-    /**
-     * convert from string into an integer (hashing)
-     * @param name is the string that will be converted into an int
-     * @return position of the item inside 2 dimensional array
-     */
-    public static int hashing(String name)
-    {
-        double result = -1;
-        for(int i = 0; i < name.length(); i++)
-        {
-            result = result + (int) name.charAt(i);
-        }
-
-        return (int) (result % hashSize);
+        chargingStationList.add(tmpChargingStation);
     }
 }

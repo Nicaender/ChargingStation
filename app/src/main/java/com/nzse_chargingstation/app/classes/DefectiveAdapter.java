@@ -32,9 +32,9 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     @Override
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
         Defective current_defective = defective_list.get(position);
-        holder.tv_defective_address.setText(current_defective.getDefective_cs().getStrasse());
+        holder.tv_defective_address.setText(current_defective.getDefectiveCs().getStrasse());
         holder.tv_defective_reason.setText(current_defective.getReason());
-        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         holder.tv_distance.setText(tmp);
         if(!current_defective.isMarked())
             holder.btn_mark_to_repair.setText("Mark");
@@ -50,8 +50,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
             }
             else
             {
-                int value = ContainerAndGlobal.addOrRemoveDefective(current_defective, false);
-                ContainerAndGlobal.getFixedChargingStationBuffer().add(new Pair<>(current_defective.getDefective_cs(), value));
+                ContainerAndGlobal.removeDefective(current_defective);
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
             }

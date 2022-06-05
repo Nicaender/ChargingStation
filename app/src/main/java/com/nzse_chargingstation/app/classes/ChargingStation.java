@@ -86,6 +86,7 @@ public class ChargingStation {
     private final double p4;
     private final String pk4;
     private final LatLng location;
+    private boolean isFiltered = false;
 
     public String getBetreiber() {
         return betreiber;
@@ -193,5 +194,13 @@ public class ChargingStation {
 
     public LatLng getLocation() {
         return location;
+    }
+
+    public boolean isFiltered() {
+        return isFiltered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        isFiltered = filtered;
     }
 }

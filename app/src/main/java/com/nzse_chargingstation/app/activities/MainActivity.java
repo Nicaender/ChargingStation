@@ -14,6 +14,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
@@ -23,6 +24,9 @@ import com.nzse_chargingstation.app.fragments.SettingsFragment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Collection;
+import java.util.Collections;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         ContainerAndGlobal.parseLadesaeuleObject(json_inside);
                                     }
+                                    ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

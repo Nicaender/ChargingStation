@@ -38,10 +38,13 @@ public class ReportActivity extends AppCompatActivity {
 
     private void add_defective()
     {
-        Defective tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), et_additional_information.getText().toString(), ContainerAndGlobal.isAlreadyFavorite(ContainerAndGlobal.getReportedChargingStation()));
-        if(ContainerAndGlobal.addOrRemoveDefective(tmp, true) == -1)
-            return;
-
+        Defective tmp;
+        int isFavorite = ContainerAndGlobal.searchInFavorites(ContainerAndGlobal.getReportedChargingStation().getLocation());
+        if(isFavorite != -1)
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.indexSearchInList(ContainerAndGlobal.getReportedChargingStation().getLocation()), null, et_additional_information.getText().toString());
+        else
+            tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), et_additional_information.getText().toString());
+        ContainerAndGlobal.addDefective(tmp);
         finish();
         Toast.makeText(this, "Charging station successfully reported", Toast.LENGTH_LONG).show();
     }
