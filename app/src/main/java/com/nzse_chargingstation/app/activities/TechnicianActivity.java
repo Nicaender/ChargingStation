@@ -27,7 +27,7 @@ public class TechnicianActivity extends AppCompatActivity {
         DefectiveAdapter adapter = new DefectiveAdapter();
         recyclerView.setAdapter(adapter);
 
-        adapter.setDefective_list(ContainerAndGlobal.getDefective_list());
+        adapter.setDefective_list(ContainerAndGlobal.getDefectiveList());
 
         btn_back_techniker = findViewById(R.id.button_back_techniker);
 

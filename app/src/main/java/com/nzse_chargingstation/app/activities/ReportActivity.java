@@ -29,7 +29,7 @@ public class ReportActivity extends AppCompatActivity {
         et_additional_information = findViewById(R.id.edittext_additional_information);
 
         tv_charging_station_address.setText("-");
-        tv_charging_station_address.setText(ContainerAndGlobal.getReported_charging_station().getStrasse());
+        tv_charging_station_address.setText(ContainerAndGlobal.getReportedChargingStation().getStrasse());
 
         btn_report_back.setOnClickListener(v -> finish());
 
@@ -38,8 +38,8 @@ public class ReportActivity extends AppCompatActivity {
 
     private void add_defective()
     {
-        Defective tmp = new Defective(ContainerAndGlobal.getReported_charging_station(), et_additional_information.getText().toString());
-        if(!ContainerAndGlobal.add_or_remove_defective(tmp, true))
+        Defective tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), et_additional_information.getText().toString(), ContainerAndGlobal.isAlreadyFavorite(ContainerAndGlobal.getReportedChargingStation()));
+        if(ContainerAndGlobal.addOrRemoveDefective(tmp, true) == -1)
             return;
 
         finish();

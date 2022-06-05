@@ -14,12 +14,15 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nzse_chargingstation.app.R;
-import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.MyCarsFragment;
 import com.nzse_chargingstation.app.fragments.SettingsFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -111,10 +114,22 @@ public class MainActivity extends AppCompatActivity {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            ContainerAndGlobal.setCurrent_location(location);
-                            if(ContainerAndGlobal.isFirst_time())
+                            ContainerAndGlobal.setCurrentLocation(location);
+                            if(ContainerAndGlobal.isFirstTime())
                             {
-                                ContainerAndGlobal.setFirst_time(false);
+                                ContainerAndGlobal.setFirstTime(false);
+                                String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
+                                try {
+                                    JSONArray jsonarray = new JSONArray(jsonString);
+
+                                    for (int i = 0; i < jsonarray.length(); i++) {
+                                        JSONObject json_inside = jsonarray.getJSONObject(i);
+
+                                        ContainerAndGlobal.parseLadesaeuleObject(json_inside);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 overridePendingTransition(0, 0);
                                 finish();

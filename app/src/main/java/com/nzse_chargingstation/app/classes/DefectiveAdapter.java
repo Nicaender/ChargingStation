@@ -1,6 +1,7 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.annotation.SuppressLint;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         Defective current_defective = defective_list.get(position);
         holder.tv_defective_address.setText(current_defective.getDefective_cs().getStrasse());
         holder.tv_defective_reason.setText(current_defective.getReason());
-        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrent_location())) + " KM";
+        String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         holder.tv_distance.setText(tmp);
         if(!current_defective.isMarked())
             holder.btn_mark_to_repair.setText("Mark");
@@ -49,7 +50,8 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
             }
             else
             {
-                ContainerAndGlobal.add_or_remove_defective(current_defective, false);
+                int value = ContainerAndGlobal.addOrRemoveDefective(current_defective, false);
+                ContainerAndGlobal.getFixedChargingStationBuffer().add(new Pair<>(current_defective.getDefective_cs(), value));
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
             }

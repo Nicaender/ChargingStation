@@ -4,16 +4,16 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class ChargingStation {
 
-    public ChargingStation(String strasse,
-                           double latitude,
-                           double longitude,
-                           String betreiber,
+    public ChargingStation(String betreiber,
+                           String strasse,
                            String hausnummer,
                            String adresszusatz,
                            int postleitzahl,
                            String ort,
                            String bundesland,
                            String kreis_kreisfreie_stadt,
+                           double breitengrad,
+                           double längengrad,
                            String inbetriebnahmedatum,
                            double anschlussleitung,
                            String artDerLadeeinrichtung,
@@ -30,16 +30,16 @@ public class ChargingStation {
                            String steckertypen4,
                            double p4,
                            String pk4) {
-
-        this.strasse = strasse;
-        this.location = new LatLng(latitude, longitude);
         this.betreiber = betreiber;
+        this.strasse = strasse;
         this.hausnummer = hausnummer;
         this.adresszusatz = adresszusatz;
         this.postleitzahl = postleitzahl;
         this.ort = ort;
         this.bundesland = bundesland;
         this.kreis_kreisfreie_stadt = kreis_kreisfreie_stadt;
+        this.breitengrad = breitengrad;
+        this.längengrad = längengrad;
         this.inbetriebnahmedatum = inbetriebnahmedatum;
         this.anschlussleitung = anschlussleitung;
         this.artDerLadeeinrichtung = artDerLadeeinrichtung;
@@ -56,17 +56,19 @@ public class ChargingStation {
         this.steckertypen4 = steckertypen4;
         this.p4 = p4;
         this.pk4 = pk4;
+        this.location = new LatLng(this.breitengrad, this.längengrad);
     }
 
-    private final String strasse;
-    private final LatLng location;
     private final String betreiber;
+    private final String strasse;
     private final String hausnummer;
     private final String adresszusatz;
     private final int postleitzahl;
     private final String ort;
     private final String bundesland;
     private final String kreis_kreisfreie_stadt;
+    private final double breitengrad;
+    private final double längengrad;
     private final String inbetriebnahmedatum;
     private final double anschlussleitung;
     private final String artDerLadeeinrichtung;
@@ -83,17 +85,14 @@ public class ChargingStation {
     private final String steckertypen4;
     private final double p4;
     private final String pk4;
-
-    public String getStrasse() {
-        return strasse;
-    }
-
-    public LatLng getLocation() {
-        return location;
-    }
+    private final LatLng location;
 
     public String getBetreiber() {
         return betreiber;
+    }
+
+    public String getStrasse() {
+        return strasse;
     }
 
     public String getHausnummer() {
@@ -118,6 +117,14 @@ public class ChargingStation {
 
     public String getKreis_kreisfreie_stadt() {
         return kreis_kreisfreie_stadt;
+    }
+
+    public double getBreitengrad() {
+        return breitengrad;
+    }
+
+    public double getLängengrad() {
+        return längengrad;
     }
 
     public String getInbetriebnahmedatum() {
@@ -182,5 +189,9 @@ public class ChargingStation {
 
     public String getPk4() {
         return pk4;
+    }
+
+    public LatLng getLocation() {
+        return location;
     }
 }
