@@ -13,7 +13,7 @@ public class ChargingStation {
                            String bundesland,
                            String kreis_kreisfreie_stadt,
                            double breitengrad,
-                           double längengrad,
+                           @SuppressWarnings("NonAsciiCharacters") double längengrad,
                            String inbetriebnahmedatum,
                            double anschlussleitung,
                            String artDerLadeeinrichtung,
@@ -68,6 +68,7 @@ public class ChargingStation {
     private final String bundesland;
     private final String kreis_kreisfreie_stadt;
     private final double breitengrad;
+    @SuppressWarnings("NonAsciiCharacters")
     private final double längengrad;
     private final String inbetriebnahmedatum;
     private final double anschlussleitung;
@@ -124,6 +125,7 @@ public class ChargingStation {
         return breitengrad;
     }
 
+    @SuppressWarnings("NonAsciiCharacters")
     public double getLängengrad() {
         return längengrad;
     }

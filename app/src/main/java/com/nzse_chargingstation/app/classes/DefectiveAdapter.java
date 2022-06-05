@@ -1,7 +1,6 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.annotation.SuppressLint;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,9 +67,12 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         notifyItemRangeChanged(0, defectives.size());
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     class defectiveHolder extends RecyclerView.ViewHolder {
-        private TextView tv_defective_address, tv_defective_reason, tv_distance;
-        private Button btn_mark_to_repair;
+        private final TextView tv_defective_address;
+        private final TextView tv_defective_reason;
+        private final TextView tv_distance;
+        private final Button btn_mark_to_repair;
 
         public defectiveHolder(@NonNull View itemView) {
             super(itemView);

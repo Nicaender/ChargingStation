@@ -19,12 +19,9 @@ import java.util.ArrayList;
 
 public class ContainerAndGlobal {
 
-    @SuppressWarnings("FieldMayBeFinal")
-    private static ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
-    @SuppressWarnings("FieldMayBeFinal")
-    private static ArrayList<Favorite> favoriteList = new ArrayList<>();
-    @SuppressWarnings("FieldMayBeFinal")
-    private static ArrayList<Defective> defectiveList = new ArrayList<>();
+    private static final ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
+    private static final ArrayList<Favorite> favoriteList = new ArrayList<>();
+    private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
     private static boolean firstTime = true;
