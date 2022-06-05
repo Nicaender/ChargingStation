@@ -29,7 +29,7 @@ public class ReportActivity extends AppCompatActivity {
         et_additional_information = findViewById(R.id.edittext_additional_information);
 
         tv_charging_station_address.setText("-");
-        tv_charging_station_address.setText(ContainerAndGlobal.getReported_charging_station().getAddress());
+        tv_charging_station_address.setText(ContainerAndGlobal.getReported_charging_station().getStrasse());
 
         btn_report_back.setOnClickListener(v -> finish());
 

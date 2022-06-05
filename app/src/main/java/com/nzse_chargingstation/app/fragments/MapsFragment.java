@@ -218,21 +218,21 @@ public class MapsFragment extends Fragment {
         {
             googleMap.addMarker(new MarkerOptions()
                     .position(ContainerAndGlobal.getCharging_station_list().get(i).getLocation())
-                    .title(ContainerAndGlobal.getCharging_station_list().get(i).getAddress()));
+                    .title(ContainerAndGlobal.getCharging_station_list().get(i).getStrasse()));
         }
         for(int i = 0; i < ContainerAndGlobal.getCharging_station_list_filtered().size(); i++)
         {
             googleMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .position(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getLocation())
-                    .title(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getAddress()));
+                    .title(ContainerAndGlobal.getCharging_station_list_filtered().get(i).getStrasse()));
         }
         for(int i = 0; i < ContainerAndGlobal.getCharging_station_favorites().size(); i++)
         {
             googleMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                     .position(ContainerAndGlobal.getCharging_station_favorites().get(i).getLocation())
-                    .title(ContainerAndGlobal.getCharging_station_favorites().get(i).getAddress()));
+                    .title(ContainerAndGlobal.getCharging_station_favorites().get(i).getStrasse()));
         }
     }
 

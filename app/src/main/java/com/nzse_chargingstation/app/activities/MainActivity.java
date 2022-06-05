@@ -114,12 +114,6 @@ public class MainActivity extends AppCompatActivity {
                             ContainerAndGlobal.setCurrent_location(location);
                             if(ContainerAndGlobal.isFirst_time())
                             {
-                                ChargingStation test_subject_1 = new ChargingStation("Hochschule Darmstadt", 49.86625273516996, 8.640257820411557);
-                                ChargingStation test_subject_2 = new ChargingStation("KFC Weiterstadt", 49.905710, 8.581990);
-                                ChargingStation test_subject_3 = new ChargingStation("Media Campus", 49.902004957188076, 8.854893065467536);
-                                ContainerAndGlobal.getCharging_station_list().add(test_subject_1);
-                                ContainerAndGlobal.getCharging_station_list().add(test_subject_2);
-                                ContainerAndGlobal.getCharging_station_list().add(test_subject_3);
                                 ContainerAndGlobal.setFirst_time(false);
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 overridePendingTransition(0, 0);

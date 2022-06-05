@@ -31,7 +31,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     @Override
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
         Defective current_defective = defective_list.get(position);
-        holder.tv_defective_address.setText(current_defective.getDefective_cs().getAddress());
+        holder.tv_defective_address.setText(current_defective.getDefective_cs().getStrasse());
         holder.tv_defective_reason.setText(current_defective.getReason());
         String tmp = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(current_defective.getDefective_cs().getLocation(), ContainerAndGlobal.getCurrent_location())) + " KM";
         holder.tv_distance.setText(tmp);
