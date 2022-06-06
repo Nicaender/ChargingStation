@@ -14,26 +14,26 @@ import com.nzse_chargingstation.app.classes.Defective;
 
 public class ReportActivity extends AppCompatActivity {
 
-    Button btn_report_back, btn_report_confirm;
-    TextView tv_charging_station_address;
-    EditText et_additional_information;
+    Button btnReportBack, btnReportConfirm;
+    TextView tvChargingStationAddress;
+    EditText etAdditionalInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
-        btn_report_back = findViewById(R.id.button_report_back);
-        btn_report_confirm = findViewById(R.id.button_report_confirm);
-        tv_charging_station_address = findViewById(R.id.textview_charging_station_address);
-        et_additional_information = findViewById(R.id.edittext_additional_information);
+        btnReportBack = findViewById(R.id.buttonReportBack);
+        btnReportConfirm = findViewById(R.id.buttonReportConfirm);
+        tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
+        etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
 
-        tv_charging_station_address.setText("-");
-        tv_charging_station_address.setText(ContainerAndGlobal.getReportedChargingStation().getStrasse());
+        tvChargingStationAddress.setText("-");
+        tvChargingStationAddress.setText(ContainerAndGlobal.getReportedChargingStation().getStrasse());
 
-        btn_report_back.setOnClickListener(v -> finish());
+        btnReportBack.setOnClickListener(v -> finish());
 
-        btn_report_confirm.setOnClickListener(v -> add_defective());
+        btnReportConfirm.setOnClickListener(v -> add_defective());
     }
 
     private void add_defective()
@@ -41,9 +41,9 @@ public class ReportActivity extends AppCompatActivity {
         Defective tmp;
         int isFavorite = ContainerAndGlobal.searchInFavorites(ContainerAndGlobal.getReportedChargingStation().getLocation());
         if(isFavorite == -1)
-            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.indexSearchInList(ContainerAndGlobal.getReportedChargingStation().getLocation()), null, et_additional_information.getText().toString());
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.indexSearchInList(ContainerAndGlobal.getReportedChargingStation().getLocation()), null, etAdditionalInformation.getText().toString());
         else
-            tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), et_additional_information.getText().toString());
+            tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), etAdditionalInformation.getText().toString());
         ContainerAndGlobal.addDefective(tmp);
         finish();
         Toast.makeText(this, "Charging station successfully reported", Toast.LENGTH_LONG).show();

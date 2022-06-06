@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 public class SettingsFragment extends Fragment {
 
-    Button btnLoginTechniker, btnDarkmode, btnViewRadiusConfirm;
+    Button btnLoginTechniker, btnDarkmode;
     EditText etViewRadiusValue;
 
     @Override
@@ -37,7 +38,6 @@ public class SettingsFragment extends Fragment {
 
         btnLoginTechniker =  view.findViewById(R.id.buttonLoginTechniker);
         btnDarkmode = view.findViewById(R.id.buttonDarkMode);
-        btnViewRadiusConfirm = view.findViewById(R.id.buttonViewRadiusConfirm);
         etViewRadiusValue = view.findViewById(R.id.editTextViewRadiusValue);
 
         // Saving state of our app
@@ -92,10 +92,16 @@ public class SettingsFragment extends Fragment {
         btnLoginTechniker.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
 
         // Implementation of button to limit max view range in map
-        btnViewRadiusConfirm.setOnClickListener(v -> {
-            ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
-            editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
-            editor.apply();
+        etViewRadiusValue.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Perform action on key press
+                ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
+                editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
+                editor.apply();
+                return true;
+            }
+            return false;
         });
     }
 }

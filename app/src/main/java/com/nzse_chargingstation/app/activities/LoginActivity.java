@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +29,25 @@ public class LoginActivity extends AppCompatActivity {
 
         // Go back to previous activity
         btnBackLoginTechniker.setOnClickListener(v -> finish());
+
+        etPassword.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Perform action on key press
+                if(etUsername.getText().toString().equals("nicaender") && etPassword.getText().toString().equals("nic123"))
+                {
+                    Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getApplicationContext(), TechnicianActivity.class));
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_LONG).show();
+                }
+                return true;
+            }
+            return false;
+        });
 
         // Implementation of button to log in to techniker site
         btnConfirmLoginTechniker.setOnClickListener(v -> {

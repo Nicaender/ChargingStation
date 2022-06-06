@@ -28,4 +28,8 @@
     <string name="distance">Distance</string>
     <string name="view_radius">View Radius:</string>
     <string name="remove_from_favorite">Remove from favorite</string>
+    <string name="notinfavorite">Not in favorites</string>
+    <string name="infavorite">In favorites</string>
+    <string name="decrement_radius">Decrement radius</string>
+    <string name="increment_radius">Increment radius</string>
 </resources>
