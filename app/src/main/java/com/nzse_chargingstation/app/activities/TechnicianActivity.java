@@ -10,6 +10,8 @@ import android.widget.Button;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.DefectiveAdapter;
+import com.nzse_chargingstation.app.classes.DefectiveDistanceComparator;
+import com.nzse_chargingstation.app.classes.FavoriteDistanceComparator;
 
 public class TechnicianActivity extends AppCompatActivity {
 
@@ -19,6 +21,8 @@ public class TechnicianActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technician);
+
+        ContainerAndGlobal.getDefectiveList().sort(new DefectiveDistanceComparator());
 
         RecyclerView recyclerView = findViewById(R.id.rvDefectiveList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

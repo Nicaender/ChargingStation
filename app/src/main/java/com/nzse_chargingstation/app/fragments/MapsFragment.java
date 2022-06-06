@@ -79,17 +79,27 @@ public class MapsFragment extends Fragment {
                     Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(indexCs), indexCs);
                     ContainerAndGlobal.getChargingStationList().remove(indexCs);
                     ContainerAndGlobal.getFavoriteList().add(tmp);
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    googleMap.addMarker(new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                            .position(tmp.getFavoriteCs().getLocation())
+                            .title(tmp.getFavoriteCs().getStrasse()));
                 }
                 else
                 {
                     int filtered = ContainerAndGlobal.addChargingStation(ContainerAndGlobal.getFavoriteList().get(index).getIndexInArray(), ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs());
                     if(filtered == 2)
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
+                                .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
                     else if(filtered == 1)
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+                        googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+                                .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
+                                .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
                     ContainerAndGlobal.getFavoriteList().remove(index);
                 }
+                marker.remove();
             });
 
             googleMap.setOnInfoWindowLongClickListener(marker -> {
