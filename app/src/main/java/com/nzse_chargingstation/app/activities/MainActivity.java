@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(ContainerAndGlobal.isFirstTime())
         {
-            requestLocationPermission();
             String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
             try {
                 JSONArray jsonarray = new JSONArray(jsonString);
@@ -64,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             }
             ContainerAndGlobal.setFirstTime(false);
         }
+
+        requestLocationPermission();
 
         // Initialization
         BottomNavigationView bottom_nav_bar = findViewById(R.id.bottomNavbar);
