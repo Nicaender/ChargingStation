@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
+import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Favorite;
 
@@ -42,6 +43,8 @@ public class MapsFragment extends Fragment {
     private ImageButton imgBtnReport;
     private Marker clickedMarker;
     private static int radiusValue = 0;
+    private Thread markerThread;
+    private boolean stopThread = false, updateMarker = false, forceUpdate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,11 @@ public class MapsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        stopThread = false;
+        updateMarker = false;
+        forceUpdate = false;
+        threadInitialize();
 
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -99,27 +107,25 @@ public class MapsFragment extends Fragment {
                     Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(indexCs), indexCs);
                     ContainerAndGlobal.getChargingStationList().remove(indexCs);
                     ContainerAndGlobal.getFavoriteList().add(tmp);
-                    googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                            .position(tmp.getFavoriteCs().getLocation())
-                            .title(tmp.getFavoriteCs().getStrasse()));
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    if(ContainerAndGlobal.searchInFavorites(marker.getPosition()) != -1)
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                    else
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
                 }
                 else
                 {
                     int filtered = ContainerAndGlobal.addChargingStation(ContainerAndGlobal.getFavoriteList().get(index).getIndexInArray(), ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs());
                     if(filtered == 2)
-                        googleMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
-                                .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     else if(filtered == 1)
-                        googleMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-                                .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
-                                .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                     ContainerAndGlobal.getFavoriteList().remove(index);
+                    if(ContainerAndGlobal.searchInFavorites(marker.getPosition()) != -1)
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                    else
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
                 }
-                marker.remove();
             });
 
             googleMap.setOnInfoWindowLongClickListener(marker -> {
@@ -140,7 +146,10 @@ public class MapsFragment extends Fragment {
             });
 
             enableMyLocation();
-            addCSToMaps();
+            markerThread.start();
+            if(updateMarker)
+                forceUpdate = true;
+            updateMarker = true;
             if(ContainerAndGlobal.getCurrentLocation() != null)
             {
                 LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
@@ -197,8 +206,9 @@ public class MapsFragment extends Fragment {
             if(googleMap.isMyLocationEnabled())
             {
                 ContainerAndGlobal.setFilterRange(radiusValue);
-                ContainerAndGlobal.enableFilter();
-                addCSToMaps();
+                if(updateMarker)
+                    forceUpdate = true;
+                updateMarker = true;
             }
             else
                 Toast.makeText(getContext(), "Location is unknown", Toast.LENGTH_LONG).show();
@@ -220,8 +230,9 @@ public class MapsFragment extends Fragment {
             if(googleMap.isMyLocationEnabled())
             {
                 ContainerAndGlobal.setFilterRange(radiusValue);
-                ContainerAndGlobal.enableFilter();
-                addCSToMaps();
+                if(updateMarker)
+                    forceUpdate = true;
+                updateMarker = true;
             }
             else
                 Toast.makeText(getContext(), "Location is unknown", Toast.LENGTH_LONG).show();
@@ -236,27 +247,25 @@ public class MapsFragment extends Fragment {
                 Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(indexCs), indexCs);
                 ContainerAndGlobal.getChargingStationList().remove(indexCs);
                 ContainerAndGlobal.getFavoriteList().add(tmp);
-                googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                        .position(tmp.getFavoriteCs().getLocation())
-                        .title(tmp.getFavoriteCs().getStrasse()));
+                clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                if(ContainerAndGlobal.searchInFavorites(clickedMarker.getPosition()) != -1)
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                else
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
             }
             else
             {
                 int filtered = ContainerAndGlobal.addChargingStation(ContainerAndGlobal.getFavoriteList().get(index).getIndexInArray(), ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs());
                 if(filtered == 2)
-                    googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                            .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
-                            .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 else if(filtered == 1)
-                    googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-                            .position(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getLocation())
-                            .title(ContainerAndGlobal.getFavoriteList().get(index).getFavoriteCs().getStrasse()));
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                 ContainerAndGlobal.getFavoriteList().remove(index);
+                if(ContainerAndGlobal.searchInFavorites(clickedMarker.getPosition()) != -1)
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                else
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
             }
-            clickedMarker.remove();
         });
 
         // Implementation of report button
@@ -272,18 +281,33 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        if(updateMarker)
+            forceUpdate = true;
+        updateMarker = true;
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        stopThread = true;
+        try {
+            markerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        stopThread = true;
+        try {
+            markerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -307,35 +331,6 @@ public class MapsFragment extends Fragment {
     }
 
     /**
-     * Clear all markers on map and then loop for adding all charging stations as marker in map.
-     */
-    private void addCSToMaps() {
-        googleMap.clear();
-        for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
-        {
-            if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getChargingStationList().get(i).getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
-                break;
-            if(ContainerAndGlobal.getChargingStationList().get(i).isFiltered())
-                googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        .position(ContainerAndGlobal.getChargingStationList().get(i).getLocation())
-                        .title(ContainerAndGlobal.getChargingStationList().get(i).getStrasse()));
-            else
-                googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-                        .position(ContainerAndGlobal.getChargingStationList().get(i).getLocation())
-                        .title(ContainerAndGlobal.getChargingStationList().get(i).getStrasse()));
-        }
-        for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
-        {
-            googleMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                    .position(ContainerAndGlobal.getFavoriteList().get(i).getFavoriteCs().getLocation())
-                    .title(ContainerAndGlobal.getFavoriteList().get(i).getFavoriteCs().getStrasse()));
-        }
-    }
-
-    /**
      * Mark a charging station as defective
      * @param marker from clicked location in google map
      * @return true if marker exists & the same location of charging station exists
@@ -345,9 +340,81 @@ public class MapsFragment extends Fragment {
     {
         ContainerAndGlobal.setReportedChargingStation(ContainerAndGlobal.searchChargingStationEverywhere(marker.getPosition()));
         if(ContainerAndGlobal.getReportedChargingStation() != null)
-        {
-            ContainerAndGlobal.setReportedMaker(marker);
-        }
+            ContainerAndGlobal.setReportedMarker(marker);
         return ContainerAndGlobal.getReportedChargingStation() != null;
+    }
+
+    /**
+     * Initialize a thread function
+     */
+    private void threadInitialize()
+    {
+        markerThread = new Thread(() -> {
+            while(true)
+            {
+                if(stopThread)
+                    return;
+                if(!updateMarker)
+                {
+                    try {
+                        //noinspection BusyWait
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    forceUpdate = false;
+                    requireActivity().runOnUiThread(() -> googleMap.clear());
+                    for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(forceUpdate)
+                            break;
+                        Favorite tmp = ContainerAndGlobal.getFavoriteList().get(i);
+                        requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                                .position(tmp.getFavoriteCs().getLocation())
+                                .title(tmp.getFavoriteCs().getStrasse())));
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(forceUpdate)
+                            break;
+                        ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
+                        if(ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+                            break;
+                        if(tmp.isFiltered())
+                            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                    .position(tmp.getLocation())
+                                    .title(tmp.getStrasse())));
+                        else
+                            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                                    .position(tmp.getLocation())
+                                    .title(tmp.getStrasse())));
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(!forceUpdate)
+                        updateMarker = false;
+                }
+            }
+        });
     }
 }

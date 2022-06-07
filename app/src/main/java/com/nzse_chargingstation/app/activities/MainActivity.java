@@ -48,17 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
         requestLocationPermission();
 
-        String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
-        try {
-            JSONArray jsonarray = new JSONArray(jsonString);
+        if(ContainerAndGlobal.isFirstTime())
+        {
+            String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
+            try {
+                JSONArray jsonarray = new JSONArray(jsonString);
 
-            for (int i = 0; i < jsonarray.length(); i++) {
-                JSONObject json_inside = jsonarray.getJSONObject(i);
+                for (int i = 0; i < jsonarray.length(); i++) {
+                    JSONObject json_inside = jsonarray.getJSONObject(i);
 
-                ContainerAndGlobal.parseLadesaeuleObject(json_inside);
+                    ContainerAndGlobal.parseLadesaeuleObject(json_inside);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            ContainerAndGlobal.setFirstTime(false);
         }
 
         // Initialization

@@ -25,8 +25,9 @@ public class ContainerAndGlobal {
     private static double filterRange = 0;
     private static Location currentLocation = null;
     private static ChargingStation reportedChargingStation = null;
-    private static Marker reportedMaker = null;
+    private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
+    private static boolean firstTime = true;
     private static int maxViewRange = 10;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -45,12 +46,14 @@ public class ContainerAndGlobal {
     public static void setFilterRange(double filterRange) {
         for(int i = 0; i < chargingStationList.size(); i++)
         {
-            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < ContainerAndGlobal.filterRange)
+            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < filterRange)
             {
-                chargingStationList.get(i).setFiltered(false);
+                chargingStationList.get(i).setFiltered(true);
             }
-            else
+            else if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) > Math.max(filterRange, ContainerAndGlobal.filterRange))
                 break;
+            else
+                chargingStationList.get(i).setFiltered(false);
         }
         ContainerAndGlobal.filterRange = filterRange;
     }
@@ -71,8 +74,8 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.reportedChargingStation = reportedChargingStation;
     }
 
-    public static void setReportedMaker(Marker reportedMaker) {
-        ContainerAndGlobal.reportedMaker = reportedMaker;
+    public static void setReportedMarker(Marker reportedMarker) {
+        ContainerAndGlobal.reportedMarker = reportedMarker;
     }
 
     public static boolean isChangedSetting() {
@@ -83,28 +86,20 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.changedSetting = changedSetting;
     }
 
+    public static boolean isFirstTime() {
+        return firstTime;
+    }
+
+    public static void setFirstTime(boolean firstTime) {
+        ContainerAndGlobal.firstTime = firstTime;
+    }
+
     public static int getMaxViewRange() {
         return maxViewRange;
     }
 
     public static void setMaxViewRange(int maxViewRange) {
         ContainerAndGlobal.maxViewRange = maxViewRange;
-    }
-
-    /**
-     * Enabling filter whether a charging station is within range or not
-     */
-    public static void enableFilter()
-    {
-        for(int i = 0; i < chargingStationList.size(); i++)
-        {
-            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < filterRange)
-            {
-                chargingStationList.get(i).setFiltered(true);
-            }
-            else
-                return;
-        }
     }
 
     /**
@@ -188,8 +183,8 @@ public class ContainerAndGlobal {
             favoriteList.remove(searchInFavorites(defective.getDefectiveFavorite().getFavoriteCs().getLocation()));
         else
             chargingStationList.remove(defective.getIndexInArray());
-        reportedMaker.remove();
-        reportedMaker = null;
+        reportedMarker.remove();
+        reportedMarker = null;
     }
 
     /**
