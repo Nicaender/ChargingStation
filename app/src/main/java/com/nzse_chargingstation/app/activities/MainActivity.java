@@ -47,10 +47,9 @@ public class MainActivity extends AppCompatActivity {
         // get current location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        requestLocationPermission();
-
         if(ContainerAndGlobal.isFirstTime())
         {
+            requestLocationPermission();
             String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
             try {
                 JSONArray jsonarray = new JSONArray(jsonString);

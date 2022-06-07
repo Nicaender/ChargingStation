@@ -359,7 +359,7 @@ public class MapsFragment extends Fragment {
                 {
                     try {
                         //noinspection BusyWait
-                        Thread.sleep(1);
+                        Thread.sleep(0, 100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -381,7 +381,7 @@ public class MapsFragment extends Fragment {
                                 .title(tmp.getFavoriteCs().getStrasse())));
                         try {
                             //noinspection BusyWait
-                            Thread.sleep(1);
+                            Thread.sleep(0, 100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -407,7 +407,7 @@ public class MapsFragment extends Fragment {
                                     .title(tmp.getStrasse())));
                         try {
                             //noinspection BusyWait
-                            Thread.sleep(1);
+                            Thread.sleep(0, 100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

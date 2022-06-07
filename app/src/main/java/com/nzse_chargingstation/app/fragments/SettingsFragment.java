@@ -1,5 +1,7 @@
 package com.nzse_chargingstation.app.fragments;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -99,6 +102,8 @@ public class SettingsFragment extends Fragment {
                 ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
                 editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
                 editor.apply();
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etViewRadiusValue.getWindowToken(), 0);
                 return true;
             }
             return false;
