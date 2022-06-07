@@ -2,6 +2,7 @@ package com.nzse_chargingstation.app.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -134,7 +135,14 @@ public class MainActivity extends AppCompatActivity {
                         if (location != null) {
                             // Logic to handle location object
                             ContainerAndGlobal.setCurrentLocation(location);
-                            ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
+                            if(ContainerAndGlobal.isFirstTimeGPSEnabled())
+                            {
+                                ContainerAndGlobal.setFirstTimeGPSEnabled(false);
+                                ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
+                                startActivity(new Intent(this, MainActivity.class));
+                                overridePendingTransition(0, 0);
+                                finish();
+                            }
                         }
                     });
         }

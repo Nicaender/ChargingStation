@@ -35,12 +35,18 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         if(currentDefective.getDefectiveCs() == null)
         {
             holder.tvDefectiveAddress.setText(currentDefective.getDefectiveFavorite().getFavoriteCs().getStrasse());
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveFavorite().getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            if(ContainerAndGlobal.getCurrentLocation() != null)
+                distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveFavorite().getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            else
+                distance = "Unknown distance";
         }
         else
         {
             holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse());
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            if(ContainerAndGlobal.getCurrentLocation() != null)
+                distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            else
+                distance = "Unknown distance";
         }
         holder.tvDefectiveReason.setText(currentDefective.getReason());
         holder.tvDistance.setText(distance);

@@ -28,6 +28,7 @@ public class ContainerAndGlobal {
     private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
+    private static boolean firstTimeGPSEnabled = true;
     private static int maxViewRange = 10;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -94,6 +95,14 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.firstTime = firstTime;
     }
 
+    public static boolean isFirstTimeGPSEnabled() {
+        return firstTimeGPSEnabled;
+    }
+
+    public static void setFirstTimeGPSEnabled(boolean firstTimeGPSEnabled) {
+        ContainerAndGlobal.firstTimeGPSEnabled = firstTimeGPSEnabled;
+    }
+
     public static int getMaxViewRange() {
         return maxViewRange;
     }
@@ -124,6 +133,14 @@ public class ContainerAndGlobal {
      */
     public static int indexSearchInList(LatLng latLng)
     {
+        if(currentLocation == null)
+        {
+            for(int i = 0; i < chargingStationList.size(); i++)
+            {
+                if(chargingStationList.get(i).getLocation().equals(latLng))
+                    return i;
+            }
+        }
         //set first to first index
         int first = 0;
         //set last to last elements in array
@@ -143,12 +160,6 @@ public class ContainerAndGlobal {
             }
             mid = (first + last)/2;
         }
-        for(int i = 0; i < chargingStationList.size(); i++)
-        {
-            if(chargingStationList.get(i).getLocation().equals(latLng))
-                return i;
-        }
-
         return -1;
     }
 

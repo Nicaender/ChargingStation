@@ -30,7 +30,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
     public void onBindViewHolder(@NonNull favoriteHolder holder, int position) {
         Favorite currentFavorite = favoriteList.get(position);
         holder.tvFavoriteAddress.setText(currentFavorite.getFavoriteCs().getStrasse());
-        String distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentFavorite.getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        String distance;
+        if(ContainerAndGlobal.getCurrentLocation() != null)
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentFavorite.getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        else
+            distance = "Unknown distance";
         holder.tvDistance.setText(distance);
 
         holder.btnUnfavorite.setOnClickListener(v -> {

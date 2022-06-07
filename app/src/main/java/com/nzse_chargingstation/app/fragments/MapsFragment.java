@@ -150,13 +150,14 @@ public class MapsFragment extends Fragment {
             if(updateMarker)
                 forceUpdate = true;
             updateMarker = true;
-            if(ContainerAndGlobal.getCurrentLocation() != null)
-            {
-                LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                float zoomLevel = (float) 15.0;
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
-            }
 
+            LatLng start;
+            if(ContainerAndGlobal.getCurrentLocation() != null)
+                start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+            else
+                start = new LatLng(49.8728, 8.6512);
+            float zoomLevel = (float) 15.0;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
 /*
             Here are the approximate zoom levels and what they do :
             1: World
@@ -392,7 +393,7 @@ public class MapsFragment extends Fragment {
                         if(forceUpdate)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                        if(ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
                             break;
                         if(tmp.isFiltered())
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
