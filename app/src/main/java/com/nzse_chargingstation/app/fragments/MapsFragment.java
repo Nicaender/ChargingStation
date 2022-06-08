@@ -107,6 +107,7 @@ public class MapsFragment extends Fragment {
                     Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(indexCs), indexCs);
                     ContainerAndGlobal.getChargingStationList().remove(indexCs);
                     ContainerAndGlobal.getFavoriteList().add(tmp);
+                    ContainerAndGlobal.saveData(true, requireContext());
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                     if(ContainerAndGlobal.searchInFavorites(marker.getPosition()) != -1)
                         imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
@@ -121,6 +122,7 @@ public class MapsFragment extends Fragment {
                     else if(filtered == 1)
                         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                     ContainerAndGlobal.getFavoriteList().remove(index);
+                    ContainerAndGlobal.saveData(true, requireContext());
                     if(ContainerAndGlobal.searchInFavorites(marker.getPosition()) != -1)
                         imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                     else
@@ -248,6 +250,7 @@ public class MapsFragment extends Fragment {
                 Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(indexCs), indexCs);
                 ContainerAndGlobal.getChargingStationList().remove(indexCs);
                 ContainerAndGlobal.getFavoriteList().add(tmp);
+                ContainerAndGlobal.saveData(true, requireContext());
                 clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 if(ContainerAndGlobal.searchInFavorites(clickedMarker.getPosition()) != -1)
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
@@ -262,6 +265,7 @@ public class MapsFragment extends Fragment {
                 else if(filtered == 1)
                     clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                 ContainerAndGlobal.getFavoriteList().remove(index);
+                ContainerAndGlobal.saveData(true, requireContext());
                 if(ContainerAndGlobal.searchInFavorites(clickedMarker.getPosition()) != -1)
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 else
@@ -378,7 +382,7 @@ public class MapsFragment extends Fragment {
                         requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
                                 .position(tmp.getFavoriteCs().getLocation())
-                                .title(tmp.getFavoriteCs().getStrasse())));
+                                .title(tmp.getFavoriteCs().getStrasse() + ' ' + tmp.getFavoriteCs().getHausnummer())));
                         try {
                             //noinspection BusyWait
                             Thread.sleep(0, 100);
@@ -399,12 +403,12 @@ public class MapsFragment extends Fragment {
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                                     .position(tmp.getLocation())
-                                    .title(tmp.getStrasse())));
+                                    .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
                         else
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                                     .position(tmp.getLocation())
-                                    .title(tmp.getStrasse())));
+                                    .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
                         try {
                             //noinspection BusyWait
                             Thread.sleep(0, 100);

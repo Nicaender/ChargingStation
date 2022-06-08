@@ -28,8 +28,8 @@ public class ReportActivity extends AppCompatActivity {
         tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
         etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
 
-        tvChargingStationAddress.setText("-");
-        tvChargingStationAddress.setText(ContainerAndGlobal.getReportedChargingStation().getStrasse());
+        String name = ContainerAndGlobal.getReportedChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getReportedChargingStation().getHausnummer();
+        tvChargingStationAddress.setText(name);
 
         btnReportBack.setOnClickListener(v -> finish());
 
@@ -45,6 +45,7 @@ public class ReportActivity extends AppCompatActivity {
         else
             tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), etAdditionalInformation.getText().toString());
         ContainerAndGlobal.addDefective(tmp);
+        ContainerAndGlobal.saveData(false, getApplicationContext());
         finish();
         Toast.makeText(this, "Charging station successfully reported", Toast.LENGTH_LONG).show();
     }

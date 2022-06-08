@@ -29,7 +29,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
     @Override
     public void onBindViewHolder(@NonNull favoriteHolder holder, int position) {
         Favorite currentFavorite = favoriteList.get(position);
-        holder.tvFavoriteAddress.setText(currentFavorite.getFavoriteCs().getStrasse());
+        String name = currentFavorite.getFavoriteCs().getStrasse() + ' ' + currentFavorite.getFavoriteCs().getHausnummer();
+        holder.tvFavoriteAddress.setText(name);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
             distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentFavorite.getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
@@ -41,6 +42,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
             int index = ContainerAndGlobal.searchInFavorites(currentFavorite.getFavoriteCs().getLocation());
             ContainerAndGlobal.getFavoriteList().remove(index);
             ContainerAndGlobal.addChargingStation(currentFavorite.getIndexInArray(), currentFavorite.getFavoriteCs());
+            ContainerAndGlobal.saveData(true, v.getContext());
             notifyItemRemoved(holder.getAdapterPosition());
             Toast.makeText(v.getContext(), "Removed from favorites", Toast.LENGTH_LONG).show();
         });

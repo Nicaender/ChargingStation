@@ -1,7 +1,5 @@
 package com.nzse_chargingstation.app.activities;
 
-import static android.content.ContentValues.TAG;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,7 +17,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nzse_chargingstation.app.R;
-import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
@@ -206,19 +203,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("ApplySharedPref")
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(ContainerAndGlobal.getFavoriteList());
-
-        editor.putString("FavoriteList", json);
-        editor.commit();
-        json = gson.toJson(ContainerAndGlobal.getDefectiveList());
-        editor.putString("DefectiveList", json);
-        editor.commit();
+        ContainerAndGlobal.saveData(true, getApplicationContext());
+        ContainerAndGlobal.saveData(false, getApplicationContext());
     }
 }

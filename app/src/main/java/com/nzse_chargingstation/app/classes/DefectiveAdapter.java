@@ -34,7 +34,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         String distance;
         if(currentDefective.getDefectiveCs() == null)
         {
-            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveFavorite().getFavoriteCs().getStrasse());
+            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveFavorite().getFavoriteCs().getStrasse() + ' ' + currentDefective.getDefectiveFavorite().getFavoriteCs().getHausnummer());
             if(ContainerAndGlobal.getCurrentLocation() != null)
                 distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveFavorite().getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
             else
@@ -42,7 +42,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         }
         else
         {
-            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse());
+            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer());
             if(ContainerAndGlobal.getCurrentLocation() != null)
                 distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
             else
@@ -65,6 +65,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
             else
             {
                 ContainerAndGlobal.removeDefective(currentDefective);
+                ContainerAndGlobal.saveData(false, v.getContext());
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
             }

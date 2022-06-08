@@ -1,10 +1,13 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -343,5 +346,28 @@ public class ContainerAndGlobal {
         );
 
         chargingStationList.add(tmpChargingStation);
+    }
+
+    /**
+     * A function to save the data from favorite list or defective list to sharedpreferences
+     * @param favorite is a boolean, whether it is a favorite or defective
+     */
+    public static void saveData(boolean favorite, Context context)
+    {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json;
+        if(favorite)
+        {
+            json = gson.toJson(ContainerAndGlobal.getFavoriteList());
+            editor.putString("FavoriteList", json);
+        }
+        else
+        {
+            json = gson.toJson(ContainerAndGlobal.getDefectiveList());
+            editor.putString("DefectiveList", json);
+        }
+        editor.apply();
     }
 }
