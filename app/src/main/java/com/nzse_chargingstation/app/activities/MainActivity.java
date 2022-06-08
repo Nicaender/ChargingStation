@@ -209,4 +209,10 @@ public class MainActivity extends AppCompatActivity {
         ContainerAndGlobal.saveData(true, getApplicationContext());
         ContainerAndGlobal.saveData(false, getApplicationContext());
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
