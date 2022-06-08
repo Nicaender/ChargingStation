@@ -1,10 +1,13 @@
 package com.nzse_chargingstation.app.activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +16,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
+import com.nzse_chargingstation.app.classes.Favorite;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.MyCarsFragment;
@@ -24,6 +31,9 @@ import com.nzse_chargingstation.app.fragments.SettingsFragment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -60,6 +70,24 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            Gson gson = new Gson();
+            String json = sharedPrefs.getString(TAG, "");
+            Type type = new TypeToken<List<Favorite>>() {}.getType();
+            List<Favorite> arrayList = gson.fromJson(json, type);
+            if(arrayList != null)
+            {
+                for(int i = 0; i < arrayList.size(); i++)
+                {
+                    int index = ContainerAndGlobal.indexSearchInList(arrayList.get(i).getFavoriteCs().getLocation());
+                    if(index != -1)
+                    {
+                        Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(index), index);
+                        ContainerAndGlobal.getChargingStationList().remove(index);
+                        ContainerAndGlobal.getFavoriteList().add(tmp);
+                    }
+                }
             }
             ContainerAndGlobal.setFirstTime(false);
         }
@@ -149,5 +177,18 @@ public class MainActivity extends AppCompatActivity {
         else {
             EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
         }
+    }
+
+    @SuppressLint("ApplySharedPref")
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(ContainerAndGlobal.getFavoriteList());
+
+        editor.putString(TAG, json);
+        editor.commit();
     }
 }

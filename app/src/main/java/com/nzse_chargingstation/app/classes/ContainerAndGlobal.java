@@ -129,7 +129,7 @@ public class ContainerAndGlobal {
     /**
      *
      * @param latLng is the coordination from a charging station
-     * @return the index of that charging station from the list
+     * @return the index of that charging station from the list, else -1
      */
     public static int indexSearchInList(LatLng latLng)
     {
@@ -140,6 +140,7 @@ public class ContainerAndGlobal {
                 if(chargingStationList.get(i).getLocation().equals(latLng))
                     return i;
             }
+            return -1;
         }
         //set first to first index
         int first = 0;
