@@ -195,7 +195,9 @@ public class ContainerAndGlobal {
             favoriteList.remove(searchInFavorites(defective.getDefectiveFavorite().getFavoriteCs().getLocation()));
         else
             chargingStationList.remove(defective.getIndexInArray());
-        reportedMarker.remove();
+
+        if(reportedMarker != null)
+            reportedMarker.remove();
         reportedMarker = null;
     }
 
