@@ -22,7 +22,8 @@ public class TechnicianActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technician);
 
-        ContainerAndGlobal.getDefectiveList().sort(new DefectiveDistanceComparator());
+        if(ContainerAndGlobal.getCurrentLocation() != null)
+            ContainerAndGlobal.getDefectiveList().sort(new DefectiveDistanceComparator());
 
         RecyclerView recyclerView = findViewById(R.id.rvDefectiveList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

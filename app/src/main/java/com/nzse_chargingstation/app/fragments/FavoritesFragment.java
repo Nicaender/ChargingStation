@@ -29,7 +29,8 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ContainerAndGlobal.getFavoriteList().sort(new FavoriteDistanceComparator());
+        if(ContainerAndGlobal.getCurrentLocation() != null)
+            ContainerAndGlobal.getFavoriteList().sort(new FavoriteDistanceComparator());
         RecyclerView recyclerView = view.findViewById(R.id.rvFavoriteList);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
