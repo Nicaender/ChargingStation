@@ -19,12 +19,12 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.nzse_chargingstation.app.R;
-import com.nzse_chargingstation.app.activities.LoginActivity;
+import com.nzse_chargingstation.app.activities.TechnicianActivity;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 public class SettingsFragment extends Fragment {
 
-    Button btnLoginTechniker, btnDarkmode;
+    Button btnTechnicianSite, btnDarkmode;
     EditText etViewRadiusValue;
 
     @Override
@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnLoginTechniker =  view.findViewById(R.id.buttonLoginTechniker);
+        btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
         btnDarkmode = view.findViewById(R.id.buttonDarkMode);
         etViewRadiusValue = view.findViewById(R.id.editTextViewRadiusValue);
 
@@ -92,7 +92,7 @@ public class SettingsFragment extends Fragment {
         });
 
         // Implementation of button to login site from techniker
-        btnLoginTechniker.setOnClickListener(v -> startActivity(new Intent(getActivity(), LoginActivity.class)));
+        btnTechnicianSite.setOnClickListener(v -> startActivity(new Intent(getActivity(), TechnicianActivity.class)));
 
         // Implementation of button to limit max view range in map
         etViewRadiusValue.setOnKeyListener((v, keyCode, event) -> {
