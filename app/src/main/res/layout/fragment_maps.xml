@@ -15,55 +15,38 @@
         android:id="@+id/textViewRadius"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="5dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:text="@string/radius"
         android:textSize="35sp"
         android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/textViewRadiusValue"
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/spinnerRadiusValue"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:layout_toRightOf="@id/textViewRadius"
-        android:textSize="35sp"
-        android:textColor="@color/black"/>
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:dropDownWidth="70dp"
+        app:ms_dropdown_max_height="200dp" />
 
     <TextView
         android:id="@+id/textViewKM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/textViewRadiusValue"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/spinnerRadiusValue"
         android:layout_marginLeft="10dp"
         android:text="@string/km"
         android:textSize="35sp"
         android:textColor="@color/black"/>
-
-    <ImageButton
-        android:id="@+id/imageButtonArrowUp"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/textViewKM"
-        app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24"
-        android:contentDescription="@string/increment_radius" />
-
-    <ImageButton
-        android:id="@+id/imageButtonArrowDown"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toRightOf="@id/textViewKM"
-        android:layout_below="@id/imageButtonArrowUp"
-        app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24"
-        android:contentDescription="@string/decrement_radius" />
 
     <ImageButton
         android:id="@+id/imageButtonFavorite"
@@ -84,6 +67,5 @@
         android:src="@drawable/ic_baseline_report_24"
         android:visibility="gone"
         android:contentDescription="@string/infavorite" />
-
 
 </RelativeLayout>

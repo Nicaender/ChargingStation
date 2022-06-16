@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,22 +29,23 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
 import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
+import java.util.ArrayList;
+
 public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
-    private TextView tvRadiusValue, tvRadius, tvKM;
-    private ImageButton imgBtnArrowUp;
-    private ImageButton imgBtnArrowDown;
+    private TextView tvRadius, tvKM;
     private ImageButton imgBtnFavorite;
     private ImageButton imgBtnReport;
+    private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
-    private static int radiusValue = 0;
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false;
 
@@ -87,11 +91,9 @@ public class MapsFragment extends Fragment {
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 else
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-                tvRadiusValue.setVisibility(GONE);
                 tvRadius.setVisibility(GONE);
                 tvKM.setVisibility(GONE);
-                imgBtnArrowUp.setVisibility(GONE);
-                imgBtnArrowDown.setVisibility(GONE);
+                spRadiusValue.setVisibility(GONE);
                 imgBtnFavorite.setVisibility(View.VISIBLE);
                 imgBtnReport.setVisibility(View.VISIBLE);
 
@@ -136,11 +138,9 @@ public class MapsFragment extends Fragment {
             });
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
-                tvRadiusValue.setVisibility(View.VISIBLE);
                 tvRadius.setVisibility(View.VISIBLE);
                 tvKM.setVisibility(View.VISIBLE);
-                imgBtnArrowUp.setVisibility(View.VISIBLE);
-                imgBtnArrowDown.setVisibility(View.VISIBLE);
+                spRadiusValue.setVisibility(View.VISIBLE);
                 imgBtnFavorite.setVisibility(GONE);
                 imgBtnReport.setVisibility(GONE);
             });
@@ -174,63 +174,24 @@ public class MapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvRadiusValue = view.findViewById(R.id.textViewRadiusValue);
         tvRadius = view.findViewById(R.id.textViewRadius);
         tvKM = view.findViewById(R.id.textViewKM);
-        imgBtnArrowUp = view.findViewById(R.id.imageButtonArrowUp);
-        imgBtnArrowDown = view.findViewById(R.id.imageButtonArrowDown);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
+        spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
 
-        // Setting the start value of filter range
-        if(radiusValue < 10)
+        ArrayList<String> items = new ArrayList<>();
+        for(int i = 0; i < 100; i++)
         {
-            String tmp = "0" + radiusValue;
-            tvRadiusValue.setText(tmp);
+            items.add(String.valueOf(i));
         }
-        else
-            tvRadiusValue.setText(String.valueOf(radiusValue));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+        spRadiusValue.setAdapter(adapter);
 
-        // Implementation of increment from radius_value
-        imgBtnArrowUp.setOnClickListener(v -> {
-            if(radiusValue < 99)
-            {
-                radiusValue++;
-                if(radiusValue < 10)
-                {
-                    String tmp = "0" + radiusValue;
-                    tvRadiusValue.setText(tmp);
-                }
-                else
-                    tvRadiusValue.setText(String.valueOf(radiusValue));
-            }
+        spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
             if(googleMap.isMyLocationEnabled())
             {
-                ContainerAndGlobal.setFilterRange(radiusValue);
-                if(updateMarker)
-                    forceUpdate = true;
-                updateMarker = true;
-            }
-            else
-                Toast.makeText(getContext(), "Location is unknown", Toast.LENGTH_LONG).show();
-        });
-
-        // Implementation of decrement from radius_value
-        imgBtnArrowDown.setOnClickListener(v -> {
-            if(radiusValue > 0)
-            {
-                radiusValue--;
-                if(radiusValue < 10)
-                {
-                    String tmp = "0" + radiusValue;
-                    tvRadiusValue.setText(tmp);
-                }
-                else
-                    tvRadiusValue.setText(String.valueOf(radiusValue));
-            }
-            if(googleMap.isMyLocationEnabled())
-            {
-                ContainerAndGlobal.setFilterRange(radiusValue);
+                ContainerAndGlobal.setFilterRange(position);
                 if(updateMarker)
                     forceUpdate = true;
                 updateMarker = true;
