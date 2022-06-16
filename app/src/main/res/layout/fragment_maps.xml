@@ -11,61 +11,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/textViewRadius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/imageViewRadius"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="5dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:text="@string/radius"
-        android:textSize="35sp"
-        android:textColor="@color/black"/>
+        android:layout_toLeftOf="@id/spinnerRadiusValue"
+        android:src="@drawable/ic_baseline_remove_red_eye_24"
+        android:contentDescription="@string/no_description" />
 
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/spinnerRadiusValue"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
-        android:layout_toRightOf="@id/textViewRadius"
+        android:layout_marginRight="20dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:dropDownWidth="70dp"
-        app:ms_dropdown_max_height="200dp" />
-
-    <TextView
-        android:id="@+id/textViewKM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/spinnerRadiusValue"
-        android:layout_marginLeft="10dp"
-        android:text="@string/km"
-        android:textSize="35sp"
+        app:ms_dropdown_max_height="200dp"
         android:textColor="@color/black"/>
 
     <ImageButton
         android:id="@+id/imageButtonFavorite"
-        android:layout_width="150dp"
-        android:layout_height="61dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="25dp"
+        android:background="@null"
+        android:scaleX="2"
+        android:scaleY="2"
         android:src="@drawable/ic_baseline_favorite_border_24"
-        android:visibility="gone"
         android:contentDescription="@string/notinfavorite" />
 
     <ImageButton
         android:id="@+id/imageButtonReport"
-        android:layout_width="150dp"
-        android:layout_height="61dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toRightOf="@id/imageButtonFavorite"
+        android:background="@null"
+        android:scaleX="2"
+        android:scaleY="2"
         android:src="@drawable/ic_baseline_report_24"
-        android:visibility="gone"
         android:contentDescription="@string/infavorite" />
 
 </RelativeLayout>

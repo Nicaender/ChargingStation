@@ -3,6 +3,7 @@ package com.nzse_chargingstation.app.fragments;
 import static android.view.View.GONE;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,11 +11,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,13 +40,14 @@ public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
-    private TextView tvRadius, tvKM;
+    private ImageView imgViewRadius;
     private ImageButton imgBtnFavorite;
     private ImageButton imgBtnReport;
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false;
+    private int favoriteX, reportX, spinnerX, eyeX;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,11 +91,23 @@ public class MapsFragment extends Fragment {
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 else
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-                tvRadius.setVisibility(GONE);
-                tvKM.setVisibility(GONE);
-                spRadiusValue.setVisibility(GONE);
-                imgBtnFavorite.setVisibility(View.VISIBLE);
-                imgBtnReport.setVisibility(View.VISIBLE);
+                if(imgBtnFavorite.getVisibility() == View.GONE)
+                {
+                    imgBtnFavorite.setVisibility(View.VISIBLE);
+                    imgBtnReport.setVisibility(View.VISIBLE);
+                }
+                ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", favoriteX);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", reportX);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", 1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", 1000f);
+                animation.setDuration(250);
+                animation.start();
 
                 return false;
             });
@@ -138,11 +150,18 @@ public class MapsFragment extends Fragment {
             });
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
-                tvRadius.setVisibility(View.VISIBLE);
-                tvKM.setVisibility(View.VISIBLE);
-                spRadiusValue.setVisibility(View.VISIBLE);
-                imgBtnFavorite.setVisibility(GONE);
-                imgBtnReport.setVisibility(GONE);
+                ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", eyeX);
+                animation.setDuration(250);
+                animation.start();
             });
 
             enableMyLocation();
@@ -174,16 +193,28 @@ public class MapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvRadius = view.findViewById(R.id.textViewRadius);
-        tvKM = view.findViewById(R.id.textViewKM);
+        imgViewRadius =  view.findViewById(R.id.imageViewRadius);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
+        favoriteX = (int) imgBtnFavorite.getTranslationX();
+        reportX = (int) imgBtnReport.getTranslationX();
+        eyeX = (int) imgViewRadius.getTranslationX();
+        spinnerX = (int) spRadiusValue.getTranslationX();
+
+        imgBtnFavorite.setVisibility(GONE);
+        imgBtnReport.setVisibility(GONE);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
+        animation.setDuration(250);
+        animation.start();
+        animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+        animation.setDuration(250);
+        animation.start();
 
         ArrayList<String> items = new ArrayList<>();
         for(int i = 0; i < 100; i++)
         {
-            items.add(String.valueOf(i));
+            items.add(i + " KM");
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         spRadiusValue.setAdapter(adapter);
