@@ -236,4 +236,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void switchFragment(int option)
+    {
+        if(option == 0)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+        else if(option == 1)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myCarsFragment).commit();
+        else if(option == 2)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favoritesFragment).commit();
+        else
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
+    }
 }

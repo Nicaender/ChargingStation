@@ -28,6 +28,7 @@ public class ContainerAndGlobal {
     private static double filterRange = 0;
     private static Location currentLocation = null;
     private static ChargingStation reportedChargingStation = null;
+    private static LatLng zoomToHere = null;
     private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
@@ -76,6 +77,14 @@ public class ContainerAndGlobal {
 
     public static void setReportedChargingStation(ChargingStation reportedChargingStation) {
         ContainerAndGlobal.reportedChargingStation = reportedChargingStation;
+    }
+
+    public static LatLng getZoomToHere() {
+        return zoomToHere;
+    }
+
+    public static void setZoomToHere(LatLng zoomToHere) {
+        ContainerAndGlobal.zoomToHere = zoomToHere;
     }
 
     public static void setReportedMarker(Marker reportedMarker) {

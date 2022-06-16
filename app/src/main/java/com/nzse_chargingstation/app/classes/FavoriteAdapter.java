@@ -1,5 +1,6 @@
 package com.nzse_chargingstation.app.classes;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favoriteHolder> {
+
+    public FavoriteAdapter(Context context)
+    {
+        this.mContext = context;
+    }
     private List<ChargingStation> favoriteList = new ArrayList<>();
+    private Context mContext;
 
     @NonNull
     @Override
@@ -28,20 +36,20 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
 
     @Override
     public void onBindViewHolder(@NonNull favoriteHolder holder, int position) {
-        ChargingStation currentFavorite = favoriteList.get(position);
-        String name = currentFavorite.getStrasse() + ' ' + currentFavorite.getHausnummer();
+        holder.myCS = favoriteList.get(position);
+        String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         holder.tvFavoriteAddress.setText(name);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentFavorite.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = "Unknown distance";
         holder.tvDistance.setText(distance);
 
         holder.btnUnfavorite.setOnClickListener(v -> {
-            int index = ContainerAndGlobal.indexSearchFavorites(currentFavorite.getLocation());
+            int index = ContainerAndGlobal.indexSearchFavorites(holder.myCS.getLocation());
             ContainerAndGlobal.getFavoriteList().remove(index);
-            ContainerAndGlobal.addChargingStation(currentFavorite.getMyIndex(), currentFavorite);
+            ContainerAndGlobal.addChargingStation(holder.myCS.getMyIndex(), holder.myCS);
             ContainerAndGlobal.saveData(true, v.getContext());
             notifyItemRemoved(holder.getAdapterPosition());
             Toast.makeText(v.getContext(), "Removed from favorites", Toast.LENGTH_LONG).show();
@@ -64,6 +72,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         private final TextView tvFavoriteAddress;
         private final TextView tvDistance;
         private final Button btnUnfavorite;
+        private ChargingStation myCS;
 
         public favoriteHolder(View itemView)
         {
@@ -71,6 +80,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
             tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAdress);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             btnUnfavorite = itemView.findViewById(R.id.buttonUnfavorite);
+
+            itemView.setOnClickListener(v -> {
+                ContainerAndGlobal.setZoomToHere(myCS.getLocation());
+                ((MainActivity)mContext).switchFragment(0);
+            });
         }
     }
 }

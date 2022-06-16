@@ -19,7 +19,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/spinnerRadiusValue"
+        android:layout_alignParentStart="true"
         android:src="@drawable/ic_baseline_remove_red_eye_24"
         android:contentDescription="@string/no_description" />
 
@@ -28,9 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@id/imageViewRadius"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
         app:ms_dropdown_max_height="200dp"

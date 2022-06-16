@@ -102,10 +102,10 @@ public class MapsFragment extends Fragment {
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", reportX);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", 1000f);
+                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", 1000f);
+                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", -1000f);
                 animation.setDuration(250);
                 animation.start();
 
@@ -170,13 +170,22 @@ public class MapsFragment extends Fragment {
                 forceUpdate = true;
             updateMarker = true;
 
+            float zoomLevel = (float) 15.0;
             LatLng start;
+
             if(ContainerAndGlobal.getCurrentLocation() != null)
                 start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
             else
                 start = new LatLng(49.8728, 8.6512);
-            float zoomLevel = (float) 15.0;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
+
+            if(ContainerAndGlobal.getZoomToHere() != null)
+            {
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToHere()));
+                ContainerAndGlobal.setZoomToHere(null);
+            }
+
+            mMap.getUiSettings().setZoomControlsEnabled(true);
 /*
             Here are the approximate zoom levels and what they do :
             1: World
