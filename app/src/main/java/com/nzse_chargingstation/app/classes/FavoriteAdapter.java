@@ -47,6 +47,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         holder.tvDistance.setText(distance);
 
         holder.btnUnfavorite.setOnClickListener(v -> {
+            holder.btnUnfavorite.setClickable(false);
             int index = ContainerAndGlobal.indexSearchFavorites(holder.myCS.getLocation());
             ContainerAndGlobal.getFavoriteList().remove(index);
             ContainerAndGlobal.addChargingStation(holder.myCS.getMyIndex(), holder.myCS);

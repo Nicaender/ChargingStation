@@ -184,8 +184,6 @@ public class MapsFragment extends Fragment {
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToHere()));
                 ContainerAndGlobal.setZoomToHere(null);
             }
-
-            mMap.getUiSettings().setZoomControlsEnabled(true);
 /*
             Here are the approximate zoom levels and what they do :
             1: World

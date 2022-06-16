@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     SettingsFragment settingsFragment = new SettingsFragment();
     private FusedLocationProviderClient fusedLocationClient;
 
+    private BottomNavigationView bottom_nav_bar;
+
     private final int REQUEST_LOCATION_PERMISSION = 1;
 
     @SuppressLint({"NonConstantResourceId", "MissingPermission"})
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
 
         // Initialization
-        BottomNavigationView bottom_nav_bar = findViewById(R.id.bottomNavbar);
+        bottom_nav_bar = findViewById(R.id.bottomNavbar);
         bottom_nav_bar.setSelectedItemId(R.id.navMaps);
 
         // Saving state of our app
@@ -100,11 +102,12 @@ public class MainActivity extends AppCompatActivity {
 
         if(ContainerAndGlobal.isChangedSetting())
         {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
+            bottom_nav_bar.setSelectedItemId(R.id.navSettings);
             ContainerAndGlobal.setChangedSetting(false);
         }
         else
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+
 
         // Implementation of bottom navigation bar
         bottom_nav_bar.setOnItemSelectedListener(item -> {
@@ -240,12 +243,12 @@ public class MainActivity extends AppCompatActivity {
     public void switchFragment(int option)
     {
         if(option == 0)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+            bottom_nav_bar.setSelectedItemId(R.id.navMaps);
         else if(option == 1)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myCarsFragment).commit();
+            bottom_nav_bar.setSelectedItemId(R.id.navMyCars);
         else if(option == 2)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favoritesFragment).commit();
+            bottom_nav_bar.setSelectedItemId(R.id.navFavorites);
         else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
+            bottom_nav_bar.setSelectedItemId(R.id.navSettings);
     }
 }
