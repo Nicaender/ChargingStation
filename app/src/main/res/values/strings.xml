@@ -33,4 +33,6 @@
     <string name="decrement_radius">Decrement radius</string>
     <string name="increment_radius">Increment radius</string>
     <string name="technician_site">Technician site</string>
+    <string name="no_description">No description</string>
+    <string name="input_additional_information">Input additional information</string>
 </resources>
