@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class ContainerAndGlobal {
 
     private static final ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
-    private static final ArrayList<Favorite> favoriteList = new ArrayList<>();
+    private static final ArrayList<ChargingStation> favoriteList = new ArrayList<>();
     private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
@@ -39,7 +39,7 @@ public class ContainerAndGlobal {
         return chargingStationList;
     }
 
-    public static ArrayList<Favorite> getFavoriteList() {
+    public static ArrayList<ChargingStation> getFavoriteList() {
         return favoriteList;
     }
 
@@ -115,55 +115,18 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * Search charging station from all lists except defective list
-     * @param latLng is the coordination from a charging station
-     * @return the searched charging station
-     */
-    public static ChargingStation searchChargingStationEverywhere(LatLng latLng)
-    {
-        int indexNormal = indexSearchInList(latLng);
-        if(indexNormal == -1)
-        {
-            return favoriteList.get(searchInFavorites(latLng)).getFavoriteCs();
-        }
-        return chargingStationList.get(indexNormal);
-    }
-
-    /**
      *
      * @param latLng is the coordination from a charging station
      * @return the index of that charging station from the list, else -1
      */
-    public static int indexSearchInList(LatLng latLng)
+    public static int indexSearchChargingStation(LatLng latLng)
     {
-        if(currentLocation == null)
+        for(int i = 0; i < chargingStationList.size(); i++)
         {
-            for(int i = 0; i < chargingStationList.size(); i++)
-            {
-                if(chargingStationList.get(i).getLocation().equals(latLng))
-                    return i;
-            }
-            return -1;
+            if(chargingStationList.get(i).getLocation().equals(latLng))
+                return i;
         }
-        //set first to first index
-        int first = 0;
-        //set last to last elements in array
-        int last=ContainerAndGlobal.getChargingStationList().size()-1;
-        //calculate mid of the array
-        int mid = (first + last)/2;
-        //while first and last do not overlap
-        while( first <= last ){
-            //if the mid < key, then key to be searched is in the first half of array
-            if ( calculateLength(ContainerAndGlobal.getChargingStationList().get(mid).getLocation(), currentLocation) < calculateLength(latLng, currentLocation) ){
-                first = mid + 1;
-            }else if ( calculateLength(ContainerAndGlobal.getChargingStationList().get(mid).getLocation(), currentLocation) == calculateLength(latLng, currentLocation) ){
-                return mid;
-            }else{
-                //the key is to be searched in the second half of the array
-                last = mid - 1;
-            }
-            mid = (first + last)/2;
-        }
+
         return -1;
     }
 
@@ -172,32 +135,70 @@ public class ContainerAndGlobal {
      * @param latLng is the coordinate from a charging station in google map
      * @return -1 if it is not in favorite or it's index in favorite list
      */
-    public static int searchInFavorites(LatLng latLng)
+    public static int indexSearchFavorites(LatLng latLng)
     {
         for(int i = 0; i < favoriteList.size(); i++)
         {
-            if(favoriteList.get(i).getFavoriteCs().getLocation().equals(latLng))
-            {
+            if(favoriteList.get(i).getLocation().equals(latLng))
                 return i;
-            }
         }
 
         return -1;
     }
 
     /**
-     *
-     * @param defective is a class consist of charging station, the reason, index, and whether
-     *                  it is in favorite or not
+     * Search charging station from all lists except defective list
+     * @param latLng is the coordination from a charging station
+     * @return the searched charging station
+     */
+    public static ChargingStation searchChargingStationEverywhere(LatLng latLng)
+    {
+        int indexNormal = indexSearchChargingStation(latLng);
+        if(indexNormal == -1)
+            indexNormal = indexSearchFavorites(latLng);
+        else
+            return chargingStationList.get(indexNormal);
+        return favoriteList.get(indexNormal);
+    }
+
+    /**
+     * add a charging station based on index and automatically assign if it is filtered
+     * @param input is a charging station
+     * @param index is the previous index in array (-1 if it is a new charging station)
+     * @return 1 if it is not filtered, 2 if it is filtered
+     */
+    public static int addChargingStation(int index, ChargingStation input)
+    {
+        if(index == -1)
+        {
+            chargingStationList.add(input);
+        }
+        else
+        {
+            chargingStationList.add((int)index, input);
+            if(currentLocation != null && calculateLength(input.getLocation(), currentLocation) < filterRange)
+            {
+                input.setFiltered(true);
+                return 2;
+            }
+            else
+                input.setFiltered(false);
+        }
+        return 1;
+    }
+
+    /**
+     * Add defective charging station and remove it from the normal or favorite list
+     * @param defective is the defective class
      */
     public static void addDefective(Defective defective)
     {
         defectiveList.add(defective);
         reportedChargingStation = null;
-        if(defective.getDefectiveCs() == null)
-            favoriteList.remove(searchInFavorites(defective.getDefectiveFavorite().getFavoriteCs().getLocation()));
+        if(defective.isFavorite())
+            favoriteList.remove(ContainerAndGlobal.indexSearchFavorites(defective.getDefectiveCs().getLocation()));
         else
-            chargingStationList.remove(defective.getIndexInArray());
+            chargingStationList.remove(defective.getDefectiveCs().getMyIndex());
 
         if(reportedMarker != null)
             reportedMarker.remove();
@@ -215,43 +216,17 @@ public class ContainerAndGlobal {
             if(defectiveList.get(i).equals(defective))
             {
                 defectiveList.remove(i);
-                if(defective.getDefectiveFavorite() != null)
+                if(defective.isFavorite())
                 {
-                    ContainerAndGlobal.getFavoriteList().add(defective.getDefectiveFavorite());
+                    ContainerAndGlobal.getFavoriteList().add(defective.getDefectiveCs());
                 }
                 else
                 {
-                    addChargingStation(defective.getIndexInArray(), defective.getDefectiveCs());
+                    addChargingStation(defective.getDefectiveCs().getMyIndex(), defective.getDefectiveCs());
                 }
                 return;
             }
         }
-    }
-
-    /**
-     * add a charging station based on index and automatically assign if it is filtered
-     * @param input is a charging station
-     * @param index is the previous index in array (-1 if it is a new charging station)
-     * @return 1 if it is not filtered, 2 if it is filtered
-     */
-    public static int addChargingStation(int index, ChargingStation input)
-    {
-        if(index == -1)
-        {
-            chargingStationList.add(input);
-        }
-        else
-        {
-            chargingStationList.add(index, input);
-            if(currentLocation != null && calculateLength(input.getLocation(), currentLocation) < filterRange)
-            {
-                input.setFiltered(true);
-                return 2;
-            }
-            else
-                input.setFiltered(false);
-        }
-        return 1;
     }
 
     /**
@@ -345,6 +320,7 @@ public class ContainerAndGlobal {
                 (String) chargingstation.get("Public Key4")
         );
 
+        tmpChargingStation.setMyIndex(chargingStationList.size());
         chargingStationList.add(tmpChargingStation);
     }
 

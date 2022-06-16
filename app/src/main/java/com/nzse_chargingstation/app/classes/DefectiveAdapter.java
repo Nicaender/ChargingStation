@@ -32,22 +32,11 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
         Defective currentDefective = defectiveList.get(position);
         String distance;
-        if(currentDefective.getDefectiveCs() == null)
-        {
-            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveFavorite().getFavoriteCs().getStrasse() + ' ' + currentDefective.getDefectiveFavorite().getFavoriteCs().getHausnummer());
-            if(ContainerAndGlobal.getCurrentLocation() != null)
-                distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveFavorite().getFavoriteCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
-            else
-                distance = "Unknown distance";
-        }
+        holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer());
+        if(ContainerAndGlobal.getCurrentLocation() != null)
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
-        {
-            holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer());
-            if(ContainerAndGlobal.getCurrentLocation() != null)
-                distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
-            else
-                distance = "Unknown distance";
-        }
+            distance = "Unknown distance";
         holder.tvDefectiveReason.setText(currentDefective.getReason());
         holder.tvDistance.setText(distance);
         if(!currentDefective.isMarked())

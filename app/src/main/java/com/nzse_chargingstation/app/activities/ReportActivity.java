@@ -39,11 +39,11 @@ public class ReportActivity extends AppCompatActivity {
     private void add_defective()
     {
         Defective tmp;
-        int isFavorite = ContainerAndGlobal.searchInFavorites(ContainerAndGlobal.getReportedChargingStation().getLocation());
+        int isFavorite = ContainerAndGlobal.indexSearchFavorites(ContainerAndGlobal.getReportedChargingStation().getLocation());
         if(isFavorite == -1)
-            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.indexSearchInList(ContainerAndGlobal.getReportedChargingStation().getLocation()), null, etAdditionalInformation.getText().toString());
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), false, etAdditionalInformation.getText().toString());
         else
-            tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(isFavorite), etAdditionalInformation.getText().toString());
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), true, etAdditionalInformation.getText().toString());
         ContainerAndGlobal.addDefective(tmp);
         ContainerAndGlobal.saveData(false, getApplicationContext());
         finish();

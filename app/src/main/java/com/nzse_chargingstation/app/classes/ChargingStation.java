@@ -88,6 +88,7 @@ public class ChargingStation {
     private final String pk4;
     private final LatLng location;
     private boolean isFiltered = false;
+    private int myIndex = -1;
 
     public String getBetreiber() {
         return betreiber;
@@ -204,5 +205,13 @@ public class ChargingStation {
 
     public void setFiltered(boolean filtered) {
         isFiltered = filtered;
+    }
+
+    public int getMyIndex() {
+        return myIndex;
+    }
+
+    public void setMyIndex(int myIndex) {
+        this.myIndex = myIndex;
     }
 }

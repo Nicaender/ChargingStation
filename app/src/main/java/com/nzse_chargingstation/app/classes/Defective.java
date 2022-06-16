@@ -2,15 +2,13 @@ package com.nzse_chargingstation.app.classes;
 
 public class Defective {
     private final ChargingStation defectiveCs;
-    private final int indexInArray;
-    private final Favorite defectiveFavorite;
+    private final boolean favorite;
     private final String reason;
     private boolean marked = false;
 
-    public Defective(ChargingStation defectiveCs, int indexInArray, Favorite defectiveFavorite, String reason) {
+    public Defective(ChargingStation defectiveCs, boolean favorite, String reason) {
         this.defectiveCs = defectiveCs;
-        this.indexInArray = indexInArray;
-        this.defectiveFavorite = defectiveFavorite;
+        this.favorite = favorite;
         this.reason = reason;
     }
 
@@ -18,12 +16,8 @@ public class Defective {
         return defectiveCs;
     }
 
-    public int getIndexInArray() {
-        return indexInArray;
-    }
-
-    public Favorite getDefectiveFavorite() {
-        return defectiveFavorite;
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public String getReason() {

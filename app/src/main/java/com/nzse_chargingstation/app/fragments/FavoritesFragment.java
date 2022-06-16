@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.FavoriteAdapter;
-import com.nzse_chargingstation.app.classes.FavoriteDistanceComparator;
 
 public class FavoritesFragment extends Fragment {
 
@@ -30,7 +30,7 @@ public class FavoritesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            ContainerAndGlobal.getFavoriteList().sort(new FavoriteDistanceComparator());
+            ContainerAndGlobal.getFavoriteList().sort(new ChargingStationDistanceComparator());
         RecyclerView recyclerView = view.findViewById(R.id.rvFavoriteList);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);

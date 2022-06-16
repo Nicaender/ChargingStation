@@ -17,10 +17,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
-import com.nzse_chargingstation.app.classes.Favorite;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.MyCarsFragment;
@@ -69,50 +69,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            Gson gson = new Gson();
-            String json = sharedPrefs.getString("FavoriteList", "");
-            Type type = new TypeToken<List<Favorite>>() {}.getType();
-            List<Favorite> favoriteList = gson.fromJson(json, type);
-            if(favoriteList != null)
-            {
-                for(int i = 0; i < favoriteList.size(); i++)
-                {
-                    int index = ContainerAndGlobal.indexSearchInList(favoriteList.get(i).getFavoriteCs().getLocation());
-                    if(index != -1)
-                    {
-                        Favorite tmp = new Favorite(ContainerAndGlobal.getChargingStationList().get(index), index);
-                        ContainerAndGlobal.getChargingStationList().remove(index);
-                        ContainerAndGlobal.getFavoriteList().add(tmp);
-                    }
-                }
-            }
-            json = sharedPrefs.getString("DefectiveList", "");
-            type = new TypeToken<List<Defective>>() {}.getType();
-            List<Defective> defectiveList = gson.fromJson(json, type);
-            if(defectiveList != null)
-            {
-                for(int i = 0; i < defectiveList.size(); i++)
-                {
-                    int index;
-                    Defective tmp;
-                    if(defectiveList.get(i).getDefectiveCs() != null)
-                    {
-                        index = ContainerAndGlobal.indexSearchInList(defectiveList.get(i).getDefectiveCs().getLocation());
-                        tmp = new Defective(ContainerAndGlobal.getChargingStationList().get(index), index, defectiveList.get(i).getDefectiveFavorite(), defectiveList.get(i).getReason());
-                    }
-                    else
-                    {
-                        index = ContainerAndGlobal.indexSearchInList(defectiveList.get(i).getDefectiveFavorite().getFavoriteCs().getLocation());
-                        Favorite tmpFav = new Favorite(ContainerAndGlobal.getChargingStationList().get(index), index);
-                        ContainerAndGlobal.getChargingStationList().remove(index);
-                        ContainerAndGlobal.getFavoriteList().add(tmpFav);
-                        index = ContainerAndGlobal.searchInFavorites(defectiveList.get(i).getDefectiveFavorite().getFavoriteCs().getLocation());
-                        tmp = new Defective(null, -1, ContainerAndGlobal.getFavoriteList().get(index), defectiveList.get(i).getReason());
-                    }
-                    ContainerAndGlobal.addDefective(tmp);
-                }
-            }
+            getOldFavoritesAndDefective();
             ContainerAndGlobal.setFirstTime(false);
         }
 
@@ -190,7 +147,21 @@ public class MainActivity extends AppCompatActivity {
                             if(ContainerAndGlobal.isFirstTimeGPSEnabled())
                             {
                                 ContainerAndGlobal.setFirstTimeGPSEnabled(false);
+                                while(!ContainerAndGlobal.getDefectiveList().isEmpty())
+                                {
+                                    ContainerAndGlobal.removeDefective(ContainerAndGlobal.getDefectiveList().get(0));
+                                }
+                                while(!ContainerAndGlobal.getFavoriteList().isEmpty())
+                                {
+                                    ContainerAndGlobal.addChargingStation(-1, ContainerAndGlobal.getFavoriteList().get(0));
+                                    ContainerAndGlobal.getFavoriteList().remove(0);
+                                }
                                 ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
+                                for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
+                                {
+                                    ContainerAndGlobal.getChargingStationList().get(i).setMyIndex(i);
+                                }
+                                getOldFavoritesAndDefective();
                                 startActivity(new Intent(this, MainActivity.class));
                                 overridePendingTransition(0, 0);
                                 finish();
@@ -214,5 +185,47 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    private void getOldFavoritesAndDefective()
+    {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString("FavoriteList", "");
+        Type type = new TypeToken<List<ChargingStation>>() {}.getType();
+        List<ChargingStation> oldFavorites = gson.fromJson(json, type);
+        if(oldFavorites != null)
+        {
+            for(int i = 0; i < oldFavorites.size(); i++)
+            {
+                int index = ContainerAndGlobal.indexSearchChargingStation(oldFavorites.get(i).getLocation());
+                if(index != -1)
+                {
+                    ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(index));
+                    ContainerAndGlobal.getChargingStationList().remove(index);
+                }
+            }
+        }
+        json = sharedPrefs.getString("DefectiveList", "");
+        type = new TypeToken<List<Defective>>() {}.getType();
+        List<Defective> oldDefectives = gson.fromJson(json, type);
+        if(oldDefectives != null)
+        {
+            for(int i = 0; i < oldDefectives.size(); i++)
+            {
+                int index = ContainerAndGlobal.indexSearchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
+                Defective tmp;
+                if(oldDefectives.get(i).isFavorite())
+                {
+                    ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(index));
+                    ContainerAndGlobal.getChargingStationList().remove(index);
+                    index = ContainerAndGlobal.indexSearchFavorites(oldDefectives.get(i).getDefectiveCs().getLocation());
+                    tmp = new Defective(ContainerAndGlobal.getFavoriteList().get(index), true, oldDefectives.get(i).getReason());
+                }
+                else
+                    tmp = new Defective(ContainerAndGlobal.getChargingStationList().get(index), false, oldDefectives.get(i).getReason());
+                ContainerAndGlobal.addDefective(tmp);
+            }
+        }
     }
 }

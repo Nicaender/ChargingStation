@@ -11,7 +11,6 @@ import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.DefectiveAdapter;
 import com.nzse_chargingstation.app.classes.DefectiveDistanceComparator;
-import com.nzse_chargingstation.app.classes.FavoriteDistanceComparator;
 
 public class TechnicianActivity extends AppCompatActivity {
 
