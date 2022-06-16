@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +38,8 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity {
+
+    private long pressedTime;
 
     MapsFragment mapsFragment = new MapsFragment();
     MyCarsFragment myCarsFragment = new MyCarsFragment();
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         // using SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 10);
+        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 25);
 
         // When user reopens the app
         // after applying dark/light mode
@@ -183,8 +186,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
     }
 
     private void getOldFavoritesAndDefective()
