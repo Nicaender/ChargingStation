@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.ReportActivity;
+import com.nzse_chargingstation.app.activities.SearchActivity;
 import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
@@ -132,7 +133,7 @@ public class MapsFragment extends Fragment {
                     if(filtered == 2)
                         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     else if(filtered == 1)
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                     ContainerAndGlobal.getFavoriteList().remove(index);
                     ContainerAndGlobal.saveData(true, requireContext());
                     if(ContainerAndGlobal.indexSearchFavorites(marker.getPosition()) != -1)
@@ -179,10 +180,10 @@ public class MapsFragment extends Fragment {
                 start = new LatLng(49.8728, 8.6512);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
 
-            if(ContainerAndGlobal.getZoomToHere() != null)
+            if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
             {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToHere()));
-                ContainerAndGlobal.setZoomToHere(null);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
+                ContainerAndGlobal.setZoomToThisChargingStation(null);
             }
 /*
             Here are the approximate zoom levels and what they do :
@@ -203,6 +204,7 @@ public class MapsFragment extends Fragment {
         imgViewRadius =  view.findViewById(R.id.imageViewRadius);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
+        ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
         favoriteX = (int) imgBtnFavorite.getTranslationX();
         reportX = (int) imgBtnReport.getTranslationX();
@@ -259,7 +261,7 @@ public class MapsFragment extends Fragment {
                 if(filtered == 2)
                     clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 else if(filtered == 1)
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 ContainerAndGlobal.getFavoriteList().remove(index);
                 ContainerAndGlobal.saveData(true, requireContext());
                 if(ContainerAndGlobal.indexSearchFavorites(clickedMarker.getPosition()) != -1)
@@ -276,6 +278,9 @@ public class MapsFragment extends Fragment {
 
             startActivity(new Intent(getActivity(), ReportActivity.class));
         });
+
+        // Implementation of search button
+        imgBtnSearch.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchActivity.class)));
     }
 
     @Override
@@ -285,6 +290,16 @@ public class MapsFragment extends Fragment {
         if(updateMarker)
             forceUpdate = true;
         updateMarker = true;
+        if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
+        {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
+            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+                googleMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        .position(ContainerAndGlobal.getZoomToThisChargingStation().getLocation())
+                        .title(ContainerAndGlobal.getZoomToThisChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStation().getHausnummer()));
+            ContainerAndGlobal.setZoomToThisChargingStation(null);
+        }
     }
 
     @Override
@@ -402,7 +417,7 @@ public class MapsFragment extends Fragment {
                                     .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
                         else
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                                     .position(tmp.getLocation())
                                     .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
                         try {

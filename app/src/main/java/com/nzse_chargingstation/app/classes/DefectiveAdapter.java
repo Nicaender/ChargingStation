@@ -81,7 +81,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
 
         public defectiveHolder(@NonNull View itemView) {
             super(itemView);
-            tvDefectiveAddress = itemView.findViewById(R.id.textViewDefectiveAdress);
+            tvDefectiveAddress = itemView.findViewById(R.id.textViewDefectiveAddress);
             tvDefectiveReason = itemView.findViewById(R.id.textViewDefectiveReason);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             btnMarkToRepair = itemView.findViewById(R.id.buttonMarkToRepair);

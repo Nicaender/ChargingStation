@@ -6,7 +6,7 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/textViewDefectiveAdress"
+        android:id="@+id/textViewDefectiveAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/address"
@@ -18,7 +18,7 @@
         android:id="@+id/textViewDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewDefectiveAdress"
+        android:layout_below="@id/textViewDefectiveAddress"
         android:text="@string/distance"
         android:gravity="center_vertical"
         android:layout_margin="10dp"
@@ -28,7 +28,7 @@
         android:id="@+id/textViewDefectiveReason"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textViewDefectiveAdress"
+        android:layout_toRightOf="@id/textViewDefectiveAddress"
         android:layout_toLeftOf="@id/buttonMarkToRepair"
         android:text="@string/reason"
         android:gravity="center_vertical"

@@ -24,7 +24,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         this.mContext = context;
     }
     private List<ChargingStation> favoriteList = new ArrayList<>();
-    private Context mContext;
+    private final Context mContext;
 
     @NonNull
     @Override
@@ -78,12 +78,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         public favoriteHolder(View itemView)
         {
             super(itemView);
-            tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAdress);
+            tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAddress);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             btnUnfavorite = itemView.findViewById(R.id.buttonUnfavorite);
 
             itemView.setOnClickListener(v -> {
-                ContainerAndGlobal.setZoomToHere(myCS.getLocation());
+                ContainerAndGlobal.setZoomToThisChargingStation(myCS);
                 ((MainActivity)mContext).switchFragment(0);
             });
         }

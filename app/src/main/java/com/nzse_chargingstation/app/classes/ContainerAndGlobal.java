@@ -24,11 +24,12 @@ public class ContainerAndGlobal {
 
     private static final ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
     private static final ArrayList<ChargingStation> favoriteList = new ArrayList<>();
+    private static final ArrayList<ChargingStation> filteredList = new ArrayList<>();
     private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
     private static ChargingStation reportedChargingStation = null;
-    private static LatLng zoomToHere = null;
+    private static ChargingStation zoomToThisChargingStation = null;
     private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
@@ -42,6 +43,10 @@ public class ContainerAndGlobal {
 
     public static ArrayList<ChargingStation> getFavoriteList() {
         return favoriteList;
+    }
+
+    public static ArrayList<ChargingStation> getFilteredList() {
+        return filteredList;
     }
 
     public static ArrayList<Defective> getDefectiveList() {
@@ -79,12 +84,12 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.reportedChargingStation = reportedChargingStation;
     }
 
-    public static LatLng getZoomToHere() {
-        return zoomToHere;
+    public static ChargingStation getZoomToThisChargingStation() {
+        return zoomToThisChargingStation;
     }
 
-    public static void setZoomToHere(LatLng zoomToHere) {
-        ContainerAndGlobal.zoomToHere = zoomToHere;
+    public static void setZoomToThisChargingStation(ChargingStation zoomToThisChargingStation) {
+        ContainerAndGlobal.zoomToThisChargingStation = zoomToThisChargingStation;
     }
 
     public static void setReportedMarker(Marker reportedMarker) {
