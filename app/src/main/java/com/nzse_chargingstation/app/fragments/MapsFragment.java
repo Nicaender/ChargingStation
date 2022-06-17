@@ -5,9 +5,12 @@ import static android.view.View.GONE;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -79,6 +83,10 @@ public class MapsFragment extends Fragment {
 
         mMapView.getMapAsync(mMap -> {
             googleMap = mMap;
+            SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+            final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+            if(isDarkModeOn)
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
 
             googleMap.setOnMarkerClickListener(marker -> {
                 // Triggered when user click any marker on the map
@@ -290,15 +298,15 @@ public class MapsFragment extends Fragment {
         if(updateMarker)
             forceUpdate = true;
         updateMarker = true;
-        if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
+        if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
         {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
-            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation()));
+            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
                 googleMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .position(ContainerAndGlobal.getZoomToThisChargingStation().getLocation())
-                        .title(ContainerAndGlobal.getZoomToThisChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStation().getHausnummer()));
-            ContainerAndGlobal.setZoomToThisChargingStation(null);
+                        .position(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation())
+                        .title(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStationOnPause().getHausnummer()));
+            ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
         }
     }
 

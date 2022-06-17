@@ -27,7 +27,7 @@
     <string name="address">Address</string>
     <string name="distance">Distance</string>
     <string name="view_radius">View Radius:</string>
-    <string name="remove_from_favorite">Remove from favorite</string>
+    <string name="remove">Remove</string>
     <string name="notinfavorite">Not in favorites</string>
     <string name="infavorite">In favorites</string>
     <string name="decrement_radius">Decrement radius</string>
@@ -35,4 +35,5 @@
     <string name="technician_site">Technician site</string>
     <string name="no_description">No description</string>
     <string name="input_additional_information">Input additional information</string>
+    <string name="search_here">Search here</string>
 </resources>

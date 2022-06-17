@@ -77,7 +77,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             tvDistance = itemView.findViewById(R.id.textViewDistance);
 
             itemView.setOnClickListener(v -> {
-                ContainerAndGlobal.setZoomToThisChargingStation(myCS);
+                ContainerAndGlobal.setZoomToThisChargingStationOnPause(myCS);
                 ((Activity)mContext).finish();
             });
         }

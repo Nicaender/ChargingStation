@@ -26,6 +26,8 @@ public class SearchActivity extends AppCompatActivity {
         SearchView svChargingStation;
         svChargingStation = findViewById(R.id.searchViewChargingStation);
 
+        svChargingStation.performClick();
+
         // Implementation of search bar
         RecyclerView recyclerView = findViewById(R.id.rvSearchList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

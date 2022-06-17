@@ -30,6 +30,7 @@ public class ContainerAndGlobal {
     private static Location currentLocation = null;
     private static ChargingStation reportedChargingStation = null;
     private static ChargingStation zoomToThisChargingStation = null;
+    private static ChargingStation zoomToThisChargingStationOnPause = null;
     private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
@@ -90,6 +91,14 @@ public class ContainerAndGlobal {
 
     public static void setZoomToThisChargingStation(ChargingStation zoomToThisChargingStation) {
         ContainerAndGlobal.zoomToThisChargingStation = zoomToThisChargingStation;
+    }
+
+    public static ChargingStation getZoomToThisChargingStationOnPause() {
+        return zoomToThisChargingStationOnPause;
+    }
+
+    public static void setZoomToThisChargingStationOnPause(ChargingStation zoomToThisChargingStationOnPause) {
+        ContainerAndGlobal.zoomToThisChargingStationOnPause = zoomToThisChargingStationOnPause;
     }
 
     public static void setReportedMarker(Marker reportedMarker) {
@@ -189,7 +198,7 @@ public class ContainerAndGlobal {
         }
         else
         {
-            chargingStationList.add((int)index, input);
+            chargingStationList.add(index, input);
             if(currentLocation != null && calculateLength(input.getLocation(), currentLocation) < filterRange)
             {
                 input.setFiltered(true);

@@ -30,8 +30,9 @@
         android:id="@+id/buttonUnfavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remove_from_favorite"
+        android:text="@string/remove"
         android:layout_margin="10dp"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/buttonBackgroundColor"/>
 
 </RelativeLayout>

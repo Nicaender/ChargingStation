@@ -10,14 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/technician_site" />
+        android:text="@string/technician_site"
+        android:backgroundTint="@color/buttonBackgroundColor"/>
 
     <Button
         android:id="@+id/buttonDarkMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_above="@id/buttonTechnicianSite" />
+        android:layout_above="@id/buttonTechnicianSite"
+        android:backgroundTint="@color/buttonBackgroundColor"/>
 
     <TextView
         android:id="@+id/textViewViewRadius"

@@ -10,5 +10,7 @@
 
     <!-- for Dark mode -->
     <color name="backgroundColor">#212121</color>
+    <color name="invertedBackgroundColor">#FCFCFC</color>
+    <color name="buttonBackgroundColor">#4174CD</color>
     <color name="textColor">#FFFFFF</color>
 </resources>
