@@ -80,4 +80,18 @@
         android:contentDescription="@string/no_description"
         app:tint="@color/invertedBackgroundColor" />
 
+    <ImageButton
+        android:id="@+id/imageButtonMyLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="25dp"
+        android:background="@null"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:src="@drawable/ic_baseline_my_location_24"
+        android:contentDescription="@string/no_description"
+        app:tint="@color/invertedBackgroundColor" />
+
 </RelativeLayout>

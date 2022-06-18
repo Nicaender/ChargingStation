@@ -47,11 +47,12 @@ public class MapsFragment extends Fragment {
     private ImageView imgViewRadius;
     private ImageButton imgBtnFavorite;
     private ImageButton imgBtnReport;
+    private ImageButton imgBtnMyLocation;
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Thread markerThread;
-    private boolean stopThread = false, updateMarker = false, forceUpdate = false;
-    private int favoriteX, reportX, spinnerX, eyeX;
+    private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
+    private int favoriteX, reportX, spinnerX, eyeX, locationX;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,8 @@ public class MapsFragment extends Fragment {
             if(isDarkModeOn)
                 googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
 
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
             googleMap.setOnMarkerClickListener(marker -> {
                 // Triggered when user click any marker on the map
                 clickedMarker = marker;
@@ -117,6 +120,9 @@ public class MapsFragment extends Fragment {
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", -1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", 1000f);
                 animation.setDuration(250);
                 animation.start();
 
@@ -164,6 +170,16 @@ public class MapsFragment extends Fragment {
                 animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", eyeX);
                 animation.setDuration(250);
                 animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", locationX);
+                animation.setDuration(250);
+                animation.start();
+            });
+
+            googleMap.setOnCameraIdleListener(() -> updateLocationUI = true);
+
+            googleMap.setOnCameraMoveListener(() -> {
+                if(updateLocationUI)
+                    imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_location_searching_24", "drawable", requireContext().getPackageName()));
             });
 
             enableMyLocation();
@@ -211,12 +227,14 @@ public class MapsFragment extends Fragment {
         imgViewRadius =  view.findViewById(R.id.imageViewRadius);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
+        imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
         ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
         favoriteX = (int) imgBtnFavorite.getTranslationX();
         reportX = (int) imgBtnReport.getTranslationX();
         eyeX = (int) imgViewRadius.getTranslationX();
         spinnerX = (int) spRadiusValue.getTranslationX();
+        locationX = (int) imgBtnMyLocation.getTranslationX();
 
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
@@ -275,6 +293,15 @@ public class MapsFragment extends Fragment {
                 return;
 
             startActivity(new Intent(getActivity(), ReportActivity.class));
+        });
+
+        // Implementation of custom my location
+        imgBtnMyLocation.setOnClickListener(v -> {
+            float zoomLevel = (float) 15.0;
+            LatLng tmp = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tmp, zoomLevel));
+            imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
+            updateLocationUI = false;
         });
 
         // Implementation of search button
