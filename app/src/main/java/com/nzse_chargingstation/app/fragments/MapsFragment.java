@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,10 +95,13 @@ public class MapsFragment extends Fragment {
                 else
                     marker.setSnippet("Distance: unknown");
 
-                if(ContainerAndGlobal.indexSearchFavorites(marker.getPosition()) != -1)
+                ChargingStation markedCs = ContainerAndGlobal.searchChargingStation(marker.getPosition());
+
+                if(ContainerAndGlobal.isInFavorite(markedCs))
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 else
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+
                 if(imgBtnFavorite.getVisibility() == View.GONE)
                 {
                     imgBtnFavorite.setVisibility(View.VISIBLE);
@@ -122,33 +124,24 @@ public class MapsFragment extends Fragment {
             });
 
             googleMap.setOnInfoWindowClickListener(marker -> {
-                int index = ContainerAndGlobal.indexSearchFavorites(marker.getPosition());
-                if(index == -1) // -1 means that charging station is not in favorite list
+                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(marker.getPosition());
+                if(ContainerAndGlobal.isInFavorite(tmp))
                 {
-                    int indexCs = ContainerAndGlobal.indexSearchChargingStation(marker.getPosition());
-                    ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(indexCs));
-                    ContainerAndGlobal.getChargingStationList().remove(indexCs);
-                    ContainerAndGlobal.saveData(true, requireContext());
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                    if(ContainerAndGlobal.indexSearchFavorites(marker.getPosition()) != -1)
-                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                    ContainerAndGlobal.removeFavorite(tmp);
+                    assert tmp != null;
+                    if(tmp.isFiltered())
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     else
-                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
                 }
                 else
                 {
-                    int filtered = ContainerAndGlobal.addChargingStation(ContainerAndGlobal.getFavoriteList().get(index).getMyIndex(), ContainerAndGlobal.getFavoriteList().get(index));
-                    if(filtered == 2)
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    else if(filtered == 1)
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                    ContainerAndGlobal.getFavoriteList().remove(index);
-                    ContainerAndGlobal.saveData(true, requireContext());
-                    if(ContainerAndGlobal.indexSearchFavorites(marker.getPosition()) != -1)
-                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-                    else
-                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+                    ContainerAndGlobal.addFavorite(tmp);
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 }
+                ContainerAndGlobal.saveData(true, requireContext());
             });
 
             googleMap.setOnInfoWindowLongClickListener(marker -> {
@@ -250,33 +243,24 @@ public class MapsFragment extends Fragment {
 
         // Implementation of favorite button
         imgBtnFavorite.setOnClickListener(v -> {
-            int index = ContainerAndGlobal.indexSearchFavorites(clickedMarker.getPosition());
-            if(index == -1) // -1 means that charging station is not in favorite list
+            ChargingStation tmp = ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition());
+            if(ContainerAndGlobal.isInFavorite(tmp))
             {
-                int indexCs = ContainerAndGlobal.indexSearchChargingStation(clickedMarker.getPosition());
-                ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(indexCs));
-                ContainerAndGlobal.getChargingStationList().remove(indexCs);
-                ContainerAndGlobal.saveData(true, requireContext());
-                clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                if(ContainerAndGlobal.indexSearchFavorites(clickedMarker.getPosition()) != -1)
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                ContainerAndGlobal.removeFavorite(tmp);
+                assert tmp != null;
+                if(tmp.isFiltered())
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 else
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
             }
             else
             {
-                int filtered = ContainerAndGlobal.addChargingStation(ContainerAndGlobal.getFavoriteList().get(index).getMyIndex(), ContainerAndGlobal.getFavoriteList().get(index));
-                if(filtered == 2)
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                else if(filtered == 1)
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                ContainerAndGlobal.getFavoriteList().remove(index);
-                ContainerAndGlobal.saveData(true, requireContext());
-                if(ContainerAndGlobal.indexSearchFavorites(clickedMarker.getPosition()) != -1)
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-                else
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+                ContainerAndGlobal.addFavorite(tmp);
+                clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
             }
+            ContainerAndGlobal.saveData(true, requireContext());
         });
 
         // Implementation of report button
@@ -356,7 +340,7 @@ public class MapsFragment extends Fragment {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean reportChargingStation(Marker marker)
     {
-        ContainerAndGlobal.setReportedChargingStation(ContainerAndGlobal.searchChargingStationEverywhere(marker.getPosition()));
+        ContainerAndGlobal.setReportedChargingStation(ContainerAndGlobal.searchChargingStation(marker.getPosition()));
         if(ContainerAndGlobal.getReportedChargingStation() != null)
             ContainerAndGlobal.setReportedMarker(marker);
         return ContainerAndGlobal.getReportedChargingStation() != null;
@@ -410,7 +394,7 @@ public class MapsFragment extends Fragment {
                         if(forceUpdate)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange() || !tmp.isShowMarker())
                             break;
                         if(tmp.isFiltered())
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()

@@ -153,21 +153,7 @@ public class MainActivity extends AppCompatActivity {
                             if(ContainerAndGlobal.isFirstTimeGPSEnabled())
                             {
                                 ContainerAndGlobal.setFirstTimeGPSEnabled(false);
-                                while(!ContainerAndGlobal.getDefectiveList().isEmpty())
-                                {
-                                    ContainerAndGlobal.removeDefective(ContainerAndGlobal.getDefectiveList().get(0));
-                                }
-                                while(!ContainerAndGlobal.getFavoriteList().isEmpty())
-                                {
-                                    ContainerAndGlobal.addChargingStation(-1, ContainerAndGlobal.getFavoriteList().get(0));
-                                    ContainerAndGlobal.getFavoriteList().remove(0);
-                                }
                                 ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
-                                for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
-                                {
-                                    ContainerAndGlobal.getChargingStationList().get(i).setMyIndex(i);
-                                }
-                                getOldFavoritesAndDefective();
                                 startActivity(new Intent(this, MainActivity.class));
                                 overridePendingTransition(0, 0);
                                 finish();
@@ -206,38 +192,14 @@ public class MainActivity extends AppCompatActivity {
         Type type = new TypeToken<List<ChargingStation>>() {}.getType();
         List<ChargingStation> oldFavorites = gson.fromJson(json, type);
         if(oldFavorites != null)
-        {
             for(int i = 0; i < oldFavorites.size(); i++)
-            {
-                int index = ContainerAndGlobal.indexSearchChargingStation(oldFavorites.get(i).getLocation());
-                if(index != -1)
-                {
-                    ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(index));
-                    ContainerAndGlobal.getChargingStationList().remove(index);
-                }
-            }
-        }
+                ContainerAndGlobal.addFavorite(oldFavorites.get(i));
         json = sharedPrefs.getString("DefectiveList", "");
         type = new TypeToken<List<Defective>>() {}.getType();
         List<Defective> oldDefectives = gson.fromJson(json, type);
         if(oldDefectives != null)
-        {
             for(int i = 0; i < oldDefectives.size(); i++)
-            {
-                int index = ContainerAndGlobal.indexSearchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
-                Defective tmp;
-                if(oldDefectives.get(i).isFavorite())
-                {
-                    ContainerAndGlobal.getFavoriteList().add(ContainerAndGlobal.getChargingStationList().get(index));
-                    ContainerAndGlobal.getChargingStationList().remove(index);
-                    index = ContainerAndGlobal.indexSearchFavorites(oldDefectives.get(i).getDefectiveCs().getLocation());
-                    tmp = new Defective(ContainerAndGlobal.getFavoriteList().get(index), true, oldDefectives.get(i).getReason());
-                }
-                else
-                    tmp = new Defective(ContainerAndGlobal.getChargingStationList().get(index), false, oldDefectives.get(i).getReason());
-                ContainerAndGlobal.addDefective(tmp);
-            }
-        }
+                ContainerAndGlobal.addDefective(oldDefectives.get(i));
     }
 
     public void switchFragment(int option)

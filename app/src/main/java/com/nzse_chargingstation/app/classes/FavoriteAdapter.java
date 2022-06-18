@@ -48,9 +48,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
 
         holder.btnUnfavorite.setOnClickListener(v -> {
             holder.btnUnfavorite.setClickable(false);
-            int index = ContainerAndGlobal.indexSearchFavorites(holder.myCS.getLocation());
-            ContainerAndGlobal.getFavoriteList().remove(index);
-            ContainerAndGlobal.addChargingStation(holder.myCS.getMyIndex(), holder.myCS);
+            ContainerAndGlobal.removeFavorite(holder.myCS);
             ContainerAndGlobal.saveData(true, v.getContext());
             notifyItemRemoved(holder.getAdapterPosition());
             Toast.makeText(v.getContext(), "Removed from favorites", Toast.LENGTH_LONG).show();
