@@ -389,7 +389,6 @@ public class MapsFragment extends Fragment {
                     }
                     for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
                     {
-                        int a = ContainerAndGlobal.getChargingStationList().size();
                         if(stopThread)
                             return;
                         if(forceUpdate)
