@@ -85,7 +85,7 @@ public class MapsFragment extends Fragment {
             SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
             final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
             if(isDarkModeOn)
-                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
 
             googleMap.setOnMarkerClickListener(marker -> {
                 // Triggered when user click any marker on the map
@@ -179,17 +179,17 @@ public class MapsFragment extends Fragment {
                 start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
             else
                 start = new LatLng(49.8728, 8.6512);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
 
             if(ContainerAndGlobal.getLastCameraPosition() != null)
             {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
                 ContainerAndGlobal.setLastCameraPosition(null);
             }
 
             if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
             {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
                 ContainerAndGlobal.setZoomToThisChargingStation(null);
             }
 /*
