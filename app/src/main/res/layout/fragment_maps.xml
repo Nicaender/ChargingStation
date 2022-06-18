@@ -92,7 +92,7 @@
         android:background="@null"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@drawable/ic_baseline_my_location_24"
+        android:src="@drawable/ic_baseline_location_searching_24"
         android:contentDescription="@string/no_description"
         app:tint="@color/invertedBackgroundColor" />
 

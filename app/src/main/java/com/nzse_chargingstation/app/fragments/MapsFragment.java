@@ -200,6 +200,8 @@ public class MapsFragment extends Fragment {
             if(ContainerAndGlobal.getLastCameraPosition() != null)
             {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
+                if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getCurrentLocation()) < 0.1)
+                    imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
                 ContainerAndGlobal.setLastCameraPosition(null);
             }
 
