@@ -11,6 +11,6 @@
     <!-- for Light mode -->
     <color name="backgroundColor">#FCFCFC</color>
     <color name="invertedBackgroundColor">#212121</color>
-    <color name="buttonBackgroundColor">#4174CD</color>
+    <color name="buttonBackgroundColor">#0259D3</color>
     <color name="textColor">#000000</color>
 </resources>
