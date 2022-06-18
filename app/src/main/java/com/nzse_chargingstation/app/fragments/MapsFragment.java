@@ -389,13 +389,16 @@ public class MapsFragment extends Fragment {
                     }
                     for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
                     {
+                        int a = ContainerAndGlobal.getChargingStationList().size();
                         if(stopThread)
                             return;
                         if(forceUpdate)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange() || !tmp.isShowMarker())
+                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
                             break;
+                        if(!tmp.isShowMarker())
+                            continue;
                         if(tmp.isFiltered())
                             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))

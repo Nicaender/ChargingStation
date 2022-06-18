@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ContainerAndGlobal.isFirstTime())
         {
+            ContainerAndGlobal.setFirstTime(false);
             String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
             try {
                 JSONArray jsonarray = new JSONArray(jsonString);
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             getOldFavoritesAndDefective();
-            ContainerAndGlobal.setFirstTime(false);
         }
 
         requestLocationPermission();
@@ -193,13 +193,20 @@ public class MainActivity extends AppCompatActivity {
         List<ChargingStation> oldFavorites = gson.fromJson(json, type);
         if(oldFavorites != null)
             for(int i = 0; i < oldFavorites.size(); i++)
-                ContainerAndGlobal.addFavorite(oldFavorites.get(i));
+            {
+                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getLocation());
+                ContainerAndGlobal.addFavorite(tmp);
+            }
         json = sharedPrefs.getString("DefectiveList", "");
         type = new TypeToken<List<Defective>>() {}.getType();
         List<Defective> oldDefectives = gson.fromJson(json, type);
         if(oldDefectives != null)
             for(int i = 0; i < oldDefectives.size(); i++)
-                ContainerAndGlobal.addDefective(oldDefectives.get(i));
+            {
+                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
+                Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
+                ContainerAndGlobal.addDefective(defectiveTmp);
+            }
     }
 
     public void switchFragment(int option)
