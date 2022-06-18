@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:iconifiedByDefault="false"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:queryHint="@string/search_here"
         android:backgroundTint="@color/backgroundColor"/>
 
@@ -19,6 +19,7 @@
         android:id="@+id/rvSearchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
         android:layout_below="@id/searchViewChargingStation" />
 
 </RelativeLayout>
