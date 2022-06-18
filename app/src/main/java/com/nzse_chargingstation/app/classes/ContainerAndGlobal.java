@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ public class ContainerAndGlobal {
     private static boolean firstTime = true;
     private static boolean firstTimeGPSEnabled = true;
     private static int maxViewRange = 10;
+    private static CameraPosition lastCameraPosition = null;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
     public static ArrayList<ChargingStation> getChargingStationList() {
@@ -135,6 +137,14 @@ public class ContainerAndGlobal {
 
     public static void setMaxViewRange(int maxViewRange) {
         ContainerAndGlobal.maxViewRange = maxViewRange;
+    }
+
+    public static CameraPosition getLastCameraPosition() {
+        return lastCameraPosition;
+    }
+
+    public static void setLastCameraPosition(CameraPosition lastCameraPosition) {
+        ContainerAndGlobal.lastCameraPosition = lastCameraPosition;
     }
 
     /**

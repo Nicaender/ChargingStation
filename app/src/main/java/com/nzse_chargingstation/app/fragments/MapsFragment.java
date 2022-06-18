@@ -181,6 +181,12 @@ public class MapsFragment extends Fragment {
                 start = new LatLng(49.8728, 8.6512);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
 
+            if(ContainerAndGlobal.getLastCameraPosition() != null)
+            {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
+                ContainerAndGlobal.setLastCameraPosition(null);
+            }
+
             if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
             {
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
@@ -303,6 +309,8 @@ public class MapsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(googleMap != null)
+            ContainerAndGlobal.setLastCameraPosition(googleMap.getCameraPosition());
         mMapView.onDestroy();
         stopThread = true;
         try {
