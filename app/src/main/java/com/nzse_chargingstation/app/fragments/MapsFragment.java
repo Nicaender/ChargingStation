@@ -65,6 +65,9 @@ public class MapsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        stopThread = false;
+        updateMarker = false;
+        forceUpdate = false;
         threadInitialize();
 
         mMapView = rootView.findViewById(R.id.mapView);
