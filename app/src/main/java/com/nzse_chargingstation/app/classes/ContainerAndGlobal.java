@@ -26,6 +26,7 @@ public class ContainerAndGlobal {
     private static final ArrayList<ChargingStation> chargingStationList = new ArrayList<>();
     private static final ArrayList<ChargingStation> favoriteList = new ArrayList<>();
     private static final ArrayList<ChargingStation> filteredList = new ArrayList<>();
+    private static final ArrayList<ChargingStation> markedList = new ArrayList<>();
     private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
@@ -50,6 +51,10 @@ public class ContainerAndGlobal {
 
     public static ArrayList<ChargingStation> getFilteredList() {
         return filteredList;
+    }
+
+    public static ArrayList<ChargingStation> getMarkedList() {
+        return markedList;
     }
 
     public static ArrayList<Defective> getDefectiveList() {

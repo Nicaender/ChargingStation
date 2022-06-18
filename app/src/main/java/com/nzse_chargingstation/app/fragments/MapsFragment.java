@@ -314,19 +314,15 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        if(updateMarker)
-            forceUpdate = true;
-        updateMarker = true;
         if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
         {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation()));
-            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
-                googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .position(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation())
-                        .title(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStationOnPause().getHausnummer()));
+            ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
             ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
         }
+        if(updateMarker)
+            forceUpdate = true;
+        updateMarker = true;
     }
 
     @Override
@@ -406,6 +402,24 @@ public class MapsFragment extends Fragment {
                 {
                     forceUpdate = false;
                     requireActivity().runOnUiThread(() -> googleMap.clear());
+                    for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(forceUpdate)
+                            break;
+                        ChargingStation tmp = ContainerAndGlobal.getMarkedList().get(i);
+                        requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .position(tmp.getLocation())
+                                .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(0, 100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
                     {
                         if(stopThread)
