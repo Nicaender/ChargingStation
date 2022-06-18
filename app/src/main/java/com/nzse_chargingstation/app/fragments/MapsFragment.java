@@ -178,7 +178,7 @@ public class MapsFragment extends Fragment {
             googleMap.setOnCameraIdleListener(() -> updateLocationUI = true);
 
             googleMap.setOnCameraMoveListener(() -> {
-                if(updateLocationUI)
+                if(updateLocationUI && ContainerAndGlobal.getCurrentLocation() != null)
                     imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_location_searching_24", "drawable", requireContext().getPackageName()));
             });
 
@@ -295,6 +295,8 @@ public class MapsFragment extends Fragment {
             startActivity(new Intent(getActivity(), ReportActivity.class));
         });
 
+        if(ContainerAndGlobal.getCurrentLocation() == null)
+            imgBtnMyLocation.setVisibility(GONE);
         // Implementation of custom my location
         imgBtnMyLocation.setOnClickListener(v -> {
             float zoomLevel = (float) 15.0;
