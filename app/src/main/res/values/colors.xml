@@ -10,7 +10,7 @@
 
     <!-- for Light mode -->
     <color name="background_color">@color/gray_white</color>
-    <color name="nav_color">@color/white</color>
+    <color name="nav_color">@color/medium_green</color>
     <color name="inverted_background_color">@color/black</color>
     <color name="text_color">@color/black</color>
     <color name="button_background_color">@color/medium_green</color>
