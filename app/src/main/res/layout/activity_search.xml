@@ -3,17 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".activities.SearchActivity">
+
+    <Button
+        android:id="@+id/buttonSearchBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/button_background_color"
+        android:textColor="@color/button_text_color"
+        android:text="@string/back"/>
 
     <SearchView
         android:id="@+id/searchViewChargingStation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/buttonSearchBack"
         android:background="@color/white"
         android:iconifiedByDefault="false"
         android:layout_margin="10dp"
         android:queryHint="@string/search_here"
-        android:backgroundTint="@color/backgroundColor"/>
+        android:backgroundTint="@color/background_color"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchList"

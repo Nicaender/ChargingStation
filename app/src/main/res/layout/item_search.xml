@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/background_color">
 
-    <TextView
-        android:id="@+id/textViewSearchAddress"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/address"
-        android:layout_alignParentStart="true"
-        android:gravity="center_vertical"
         android:layout_margin="10dp"
-        android:textSize="20sp"
-        android:layout_toLeftOf="@id/textViewDistance" />
+        android:background="@drawable/item_curved">
 
-    <TextView
-        android:id="@+id/textViewDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:text="@string/distance"
-        android:gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textViewSearchAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_toLeftOf="@id/textViewDistance" />
+
+        <TextView
+            android:id="@+id/textViewDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/distance"
+            android:gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

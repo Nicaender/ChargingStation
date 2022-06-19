@@ -1,6 +1,8 @@
 package com.nzse_chargingstation.app.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,8 +27,13 @@ public class SearchActivity extends AppCompatActivity {
 
         SearchView svChargingStation;
         svChargingStation = findViewById(R.id.searchViewChargingStation);
+        Button btnSearchBack;
+        btnSearchBack = findViewById(R.id.buttonSearchBack);
 
         svChargingStation.performClick();
+
+        // Implementation of back button
+        btnSearchBack.setOnClickListener(v -> finish());
 
         // Implementation of search bar
         RecyclerView recyclerView = findViewById(R.id.rvSearchList);

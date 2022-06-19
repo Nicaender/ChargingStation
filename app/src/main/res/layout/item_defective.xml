@@ -2,44 +2,60 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/background_color">
 
-    <TextView
-        android:id="@+id/textViewDefectiveAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/address"
-        android:gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/textViewDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewDefectiveAddress"
-        android:text="@string/distance"
-        android:gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/textViewDefectiveReason"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textViewDefectiveAddress"
-        android:layout_toLeftOf="@id/buttonMarkToRepair"
-        android:text="@string/reason"
-        android:gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/buttonMarkToRepair"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_alignParentEnd="true"
-        android:backgroundTint="@color/buttonBackgroundColor"/>
+        android:background="@drawable/item_curved">
+
+        <TextView
+            android:id="@+id/textViewDefectiveAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="@color/recycler_view_text_color"
+            android:textStyle="bold"
+            android:text="@string/address" />
+
+        <TextView
+            android:id="@+id/textViewDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/textViewDefectiveAddress"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="@color/recycler_view_text_color"
+            android:textStyle="bold"
+            android:text="@string/distance" />
+
+        <TextView
+            android:id="@+id/textViewDefectiveReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/textViewDistance"
+            android:layout_toLeftOf="@id/buttonMarkToRepair"
+            android:layout_alignParentStart="true"
+            android:textSize="14sp"
+            android:textColor="@color/recycler_view_text_color"
+            android:text="@string/reason" />
+
+        <Button
+            android:id="@+id/buttonMarkToRepair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/button_background_color"
+            android:textColor="@color/button_text_color"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

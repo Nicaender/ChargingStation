@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".fragments.SettingsFragment">
 
     <Button
@@ -10,9 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/technician_site"
         android:layout_marginHorizontal="10dp"
-        android:backgroundTint="@color/buttonBackgroundColor"/>
+        android:backgroundTint="@color/button_background_color"
+        android:textColor="@color/button_text_color"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="@string/technician_site"/>
 
     <Button
         android:id="@+id/buttonDarkMode"
@@ -21,7 +25,10 @@
         android:layout_centerInParent="true"
         android:layout_above="@id/buttonTechnicianSite"
         android:layout_marginHorizontal="10dp"
-        android:backgroundTint="@color/buttonBackgroundColor"/>
+        android:backgroundTint="@color/button_background_color"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/button_text_color"/>
 
     <TextView
         android:id="@+id/textViewViewRadius"
@@ -34,6 +41,7 @@
         android:layout_alignParentStart="true"
         android:text="@string/view_radius"
         android:layout_marginLeft="10dp"
+        android:textColor="@color/text_color"
         android:textSize="35sp" />
 
     <EditText
@@ -46,6 +54,7 @@
         android:ems="10"
         android:inputType="numberSigned"
         android:autofillHints=""
+        android:textColor="@color/text_color"
         tools:ignore="LabelFor" />
 
     <TextView
@@ -58,6 +67,7 @@
         android:layout_below="@id/buttonTechnicianSite"
         android:layout_marginLeft="10dp"
         android:text="@string/km"
+        android:textColor="@color/text_color"
         android:textSize="35sp" />
 
 </RelativeLayout>

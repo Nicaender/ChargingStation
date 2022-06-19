@@ -9,8 +9,12 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- for Dark mode -->
-    <color name="backgroundColor">#212121</color>
-    <color name="invertedBackgroundColor">#FCFCFC</color>
-    <color name="buttonBackgroundColor">#4174CD</color>
-    <color name="textColor">#FFFFFF</color>
+    <color name="background_color">@color/midnight_blue</color>
+    <color name="nav_color">@color/black</color>
+    <color name="inverted_background_color">@color/white</color>
+    <color name="text_color">@color/white</color>
+    <color name="button_background_color">@color/dark_cloudy_blue</color>
+    <color name="item_background_color">@color/darker_cloudy_blue</color>
+    <color name="button_text_color">@color/white</color>
+    <color name="recycler_view_text_color">@color/white</color>
 </resources>

@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     SettingsFragment settingsFragment = new SettingsFragment();
     private FusedLocationProviderClient fusedLocationClient;
 
-    private BottomNavigationView bottom_nav_bar;
+    private BottomNavigationView bottomNavBar;
 
     private final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         requestLocationPermission();
 
         // Initialization
-        bottom_nav_bar = findViewById(R.id.bottomNavbar);
-        bottom_nav_bar.setSelectedItemId(R.id.navMaps);
+        bottomNavBar = findViewById(R.id.bottomNavbar);
+        bottomNavBar.setSelectedItemId(R.id.navMaps);
 
         // Saving state of our app
         // using SharedPreferences
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ContainerAndGlobal.isChangedSetting())
         {
-            bottom_nav_bar.setSelectedItemId(R.id.navSettings);
+            bottomNavBar.setSelectedItemId(R.id.navSettings);
             ContainerAndGlobal.setChangedSetting(false);
         }
         else
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Implementation of bottom navigation bar
-        bottom_nav_bar.setOnItemSelectedListener(item -> {
+        bottomNavBar.setOnItemSelectedListener(item -> {
 
             switch (item.getItemId())
             {
@@ -212,12 +212,12 @@ public class MainActivity extends AppCompatActivity {
     public void switchFragment(int option)
     {
         if(option == 0)
-            bottom_nav_bar.setSelectedItemId(R.id.navMaps);
+            bottomNavBar.setSelectedItemId(R.id.navMaps);
         else if(option == 1)
-            bottom_nav_bar.setSelectedItemId(R.id.navMyCars);
+            bottomNavBar.setSelectedItemId(R.id.navMyCars);
         else if(option == 2)
-            bottom_nav_bar.setSelectedItemId(R.id.navFavorites);
+            bottomNavBar.setSelectedItemId(R.id.navFavorites);
         else
-            bottom_nav_bar.setSelectedItemId(R.id.navSettings);
+            bottomNavBar.setSelectedItemId(R.id.navSettings);
     }
 }

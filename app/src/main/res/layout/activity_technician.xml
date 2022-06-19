@@ -3,27 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_container"
+    android:background="@color/background_color"
     tools:context=".activities.TechnicianActivity">
 
-    <RelativeLayout
-        android:id="@+id/fragment_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDefectiveList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        android:layout_marginHorizontal="10dp"
+        android:layout_below="@id/buttonBackTechniker" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDefectiveList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_below="@id/buttonBackTechniker" />
-
-        <Button
-            android:id="@+id/buttonBackTechniker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/back" />
-    </RelativeLayout>
+    <Button
+        android:id="@+id/buttonBackTechniker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:backgroundTint="@color/button_background_color"
+        android:textColor="@color/button_text_color"
+        android:text="@string/back" />
 
 </RelativeLayout>

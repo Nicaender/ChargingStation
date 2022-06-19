@@ -4,9 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.314" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/button_curved.xml" value="0.3975" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/ic_baseline_electrical_services_24.xml" value="0.4315" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.5435" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/ic_launcher_background.xml" value="0.314" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/item_curved.xml" value="0.212" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/drawable/spinner_curved.xml" value="0.3975" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/activity_favorites.xml" value="0.541025641025641" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/activity_getting_data.xml" value="0.55" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/activity_loading.xml" value="0.55" />
@@ -24,9 +27,11 @@
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/fragment_my_cars.xml" value="0.3109375" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/fragment_settings.xml" value="0.3109375" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/item_defective.xml" value="0.4125" />
-        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/item_favorite.xml" value="0.67" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/item_favorite.xml" value="0.548621190130624" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/layout/item_search.xml" value="0.5489583333333333" />
         <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/menu/bottom_navbar.xml" value="0.3109375" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/mipmap-anydpi-v26/electric_car.xml" value="0.3975" />
+        <entry key="..\:/Users/nican/AndroidStudioProjects/NZSE_Chargingstation/app/src/main/res/mipmap-anydpi-v26/electric_car_round.xml" value="0.3975" />
       </map>
     </option>
   </component>

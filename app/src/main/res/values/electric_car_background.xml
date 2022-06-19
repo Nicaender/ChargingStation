@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="electric_car_background">#3A3DE3</color>
+    <color name="electric_car_background">@color/medium_green</color>
 </resources>

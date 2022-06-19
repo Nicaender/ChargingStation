@@ -9,8 +9,22 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- for Light mode -->
-    <color name="backgroundColor">#FCFCFC</color>
-    <color name="invertedBackgroundColor">#212121</color>
-    <color name="buttonBackgroundColor">#0259D3</color>
-    <color name="textColor">#000000</color>
+    <color name="background_color">@color/gray_white</color>
+    <color name="nav_color">@color/white</color>
+    <color name="inverted_background_color">@color/black</color>
+    <color name="text_color">@color/black</color>
+    <color name="button_background_color">@color/medium_green</color>
+    <color name="item_background_color">@color/white</color>
+    <color name="button_text_color">@color/white</color>
+    <color name="recycler_view_text_color">@color/medium_green</color>
+
+    <!-- Custom Color -->
+    <color name="light_green">#75F0B5</color>
+    <color name="medium_green">#26AD65</color>
+    <color name="midnight_blue">#0D0E19</color>
+    <color name="dark_cloudy_blue">#282d45</color>
+    <color name="darker_cloudy_blue">#1e2133</color>
+    <color name="gray_white">#f7f7f7</color>
+
+
 </resources>

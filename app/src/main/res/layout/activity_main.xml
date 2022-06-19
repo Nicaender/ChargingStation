@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".activities.MainActivity">
 
     <FrameLayout
@@ -19,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navbar"
-        android:background="?android:attr/windowBackground"/>
+        app:itemTextColor="@color/text_color"
+        app:itemIconTint="@color/text_color"
+        android:background="@color/nav_color"/>
 
 </RelativeLayout>
