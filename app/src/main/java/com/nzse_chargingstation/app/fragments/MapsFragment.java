@@ -207,7 +207,7 @@ public class MapsFragment extends Fragment {
 
             if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
             {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStation().getLocation()));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), zoomLevel));
                 ContainerAndGlobal.setZoomToThisChargingStation(null);
             }
 /*
@@ -318,7 +318,8 @@ public class MapsFragment extends Fragment {
         mMapView.onResume();
         if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
         {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation()));
+            float zoomLevel = (float) 15.0;
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
             ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
             ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
         }
