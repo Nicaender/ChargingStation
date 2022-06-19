@@ -36,6 +36,9 @@ public class ReportActivity extends AppCompatActivity {
         btnReportConfirm.setOnClickListener(v -> add_defective());
     }
 
+    /**
+     * Adding a new defective charging station
+     */
     private void add_defective()
     {
         Defective tmp;

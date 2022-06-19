@@ -139,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    /**
+     * A function to request the user location, and what to do when location is acquired
+     */
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
     public void requestLocationPermission() {
@@ -184,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
         pressedTime = System.currentTimeMillis();
     }
 
+    /**
+     * Importing favorites and defectives from shared preferences
+     */
     private void getOldFavoritesAndDefective()
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -209,6 +215,10 @@ public class MainActivity extends AppCompatActivity {
             }
     }
 
+    /**
+     * A function ro switch the fragment from inside a fragment
+     * @param option is the option, which fragment to be changed
+     */
     public void switchFragment(int option)
     {
         if(option == 0)

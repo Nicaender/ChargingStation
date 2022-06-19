@@ -60,6 +60,10 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filtering the list that contains the word from the searched words
+     * @param text is the current searched address
+     */
     private void filter(String text)
     {
         // creating a new array list to filter our data.
