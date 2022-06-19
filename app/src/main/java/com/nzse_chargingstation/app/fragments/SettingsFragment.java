@@ -100,6 +100,14 @@ public class SettingsFragment extends Fragment {
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 // Perform action on key press
                 ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
+                for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
+                {
+                    if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getMarkedList().get(i).getLocation(), ContainerAndGlobal.getCurrentLocation()) < ContainerAndGlobal.getMaxViewRange())
+                    {
+                        ContainerAndGlobal.getMarkedList().remove(i);
+                        i--;
+                    }
+                }
                 editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
                 editor.apply();
                 InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);

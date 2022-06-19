@@ -173,11 +173,27 @@ public class ContainerAndGlobal {
      * @param chargingStation is the class that wants to be checked
      * @return true if it is in favorite, else false
      */
-    public  static boolean isInFavorite(ChargingStation chargingStation)
+    public static boolean isInFavorite(ChargingStation chargingStation)
     {
         for(int i = 0; i < favoriteList.size(); i++)
         {
             if(favoriteList.get(i).equals(chargingStation))
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Search a charging station in the marked list
+     * @param chargingStation is the class that wants to be checked
+     * @return true if it is in marked list, else false
+     */
+    public static boolean isInMarkedList(ChargingStation chargingStation)
+    {
+        for(int i = 0; i < markedList.size(); i++)
+        {
+            if(markedList.get(i).equals(chargingStation))
                 return true;
         }
 

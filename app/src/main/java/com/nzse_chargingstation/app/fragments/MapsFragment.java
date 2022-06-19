@@ -320,12 +320,18 @@ public class MapsFragment extends Fragment {
         {
             float zoomLevel = (float) 15.0;
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
-            ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+            if(ContainerAndGlobal.getCurrentLocation() != null && // Check if location is turned on or it is outside the max view range and is not already in marked list
+                    ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange() &&
+                            !ContainerAndGlobal.isInMarkedList(ContainerAndGlobal.getZoomToThisChargingStationOnPause()))
+            {
+                googleMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        .position(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation())
+                        .title(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStationOnPause().getHausnummer()));
+                ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+            }
             ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
         }
-        if(updateMarker)
-            forceUpdate = true;
-        updateMarker = true;
     }
 
     @Override
