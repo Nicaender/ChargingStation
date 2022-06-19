@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment {
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 25);
+        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 5);
 
         // When user reopens the app
         // after applying dark/light mode

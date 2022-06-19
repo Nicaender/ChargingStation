@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         // using SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 25);
+        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 5);
 
         // When user reopens the app
         // after applying dark/light mode
