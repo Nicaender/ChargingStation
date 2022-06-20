@@ -25,7 +25,6 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 public class SettingsFragment extends Fragment {
 
     Button btnTechnicianSite, btnDarkmode;
-    EditText etViewRadiusValue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,14 +40,12 @@ public class SettingsFragment extends Fragment {
 
         btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
         btnDarkmode = view.findViewById(R.id.buttonDarkMode);
-        etViewRadiusValue = view.findViewById(R.id.editTextViewRadiusValue);
 
         // Saving state of our app
         // using SharedPreferences
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxChargingStations = sharedPreferences.getInt("maxChargingStations", 100);
 
         // When user reopens the app
         // after applying dark/light mode
@@ -60,9 +57,6 @@ public class SettingsFragment extends Fragment {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             btnDarkmode.setText(R.string.enable_darkmode);
         }
-        ContainerAndGlobal.setMaxViewChargingStation(maxChargingStations);
-
-        etViewRadiusValue.setText(String.valueOf(ContainerAndGlobal.getMaxViewChargingStation()));
 
         // Implementation of dark mode button
         btnDarkmode.setOnClickListener(v -> {
@@ -93,28 +87,5 @@ public class SettingsFragment extends Fragment {
 
         // Implementation of button to login site from techniker
         btnTechnicianSite.setOnClickListener(v -> startActivity(new Intent(getActivity(), TechnicianActivity.class)));
-
-        // Implementation of button to limit max view range in map
-        etViewRadiusValue.setOnKeyListener((v, keyCode, event) -> {
-            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                // Perform action on key press
-                ContainerAndGlobal.setMaxViewChargingStation(Integer.parseInt(etViewRadiusValue.getText().toString()));
-                for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
-                {
-                    if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) > ContainerAndGlobal.getMaxViewChargingStation())
-                    {
-                        ContainerAndGlobal.getMarkedList().remove(i);
-                        i--;
-                    }
-                }
-                editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
-                editor.apply();
-                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(etViewRadiusValue.getWindowToken(), 0);
-                return true;
-            }
-            return false;
-        });
     }
 }

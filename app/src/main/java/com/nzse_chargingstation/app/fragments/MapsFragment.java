@@ -323,17 +323,7 @@ public class MapsFragment extends Fragment {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
-                .setItems(maxView, (dialog, which) -> {
-                    if(ContainerAndGlobal.getMaxViewChargingStation() == Integer.parseInt(maxView[which]))
-                        return;
-                    ContainerAndGlobal.setMaxViewChargingStation(Integer.parseInt(maxView[which]));
-                    if(updateMarker)
-                        forceUpdate = true;
-                    updateMarker = true;
-                    final SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
-                    editor.apply();
-                });
+                .setItems(maxView, (dialog, which) -> limitMaxChargingStation(Integer.parseInt(maxView[which])));
         AlertDialog dialog = builder.create();
         imgViewRadius.setOnClickListener(v -> dialog.show());
     }
@@ -506,5 +496,30 @@ public class MapsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Limiting charging stations shown on the map excluding favorites and marked list
+     * @param limit is the total charging station that should be shown
+     */
+    private void limitMaxChargingStation(int limit)
+    {
+        if(ContainerAndGlobal.getMaxViewChargingStation() == limit)
+            return;
+        ContainerAndGlobal.setMaxViewChargingStation(limit);
+        for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
+        {
+            if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) > ContainerAndGlobal.getMaxViewChargingStation())
+            {
+                ContainerAndGlobal.getMarkedList().remove(i);
+                i--;
+            }
+        }
+        if(updateMarker)
+            forceUpdate = true;
+        updateMarker = true;
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
+        editor.apply();
     }
 }

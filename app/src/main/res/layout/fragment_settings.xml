@@ -30,44 +30,4 @@
         android:textSize="16sp"
         android:textColor="@color/button_text_color"/>
 
-    <TextView
-        android:id="@+id/textViewViewRadius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_below="@id/buttonTechnicianSite"
-        android:layout_alignParentStart="true"
-        android:text="@string/view_radius"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/text_color"
-        android:textSize="35sp" />
-
-    <EditText
-        android:id="@+id/editTextViewRadiusValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textViewViewRadius"
-        android:layout_toLeftOf="@id/textViewKM"
-        android:layout_below="@id/buttonTechnicianSite"
-        android:ems="10"
-        android:inputType="numberSigned"
-        android:autofillHints=""
-        android:textColor="@color/text_color"
-        tools:ignore="LabelFor" />
-
-    <TextView
-        android:id="@+id/textViewKM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/buttonTechnicianSite"
-        android:layout_marginLeft="10dp"
-        android:text="@string/km"
-        android:textColor="@color/text_color"
-        android:textSize="35sp" />
-
 </RelativeLayout>
