@@ -288,6 +288,8 @@ public class ContainerAndGlobal {
      */
     public static double calculateLength(LatLng marker, Location user)
     {
+        if(user == null)
+            return -1;
         double lat1 = deg2grad(marker.latitude);
         double lat2 = deg2grad(user.getLatitude());
         double long1 = deg2grad(marker.longitude);
