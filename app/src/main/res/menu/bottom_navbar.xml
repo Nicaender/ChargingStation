@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navFavorites"
-        android:icon="@drawable/ic_baseline_favorite_border_24"
+        android:icon="@drawable/fav_icon"
         android:title="@string/favorites" />
 
     <item
