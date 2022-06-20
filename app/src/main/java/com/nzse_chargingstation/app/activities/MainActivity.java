@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * A function ro switch the fragment from inside a fragment
+     * A function to switch the fragment from inside a fragment
      * @param option is the option, which fragment to be changed
      */
     public void switchFragment(int option)
