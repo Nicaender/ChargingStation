@@ -37,7 +37,7 @@ public class ContainerAndGlobal {
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
     private static boolean firstTimeGPSEnabled = true;
-    private static int maxViewRange = 10;
+    private static int maxViewChargingStation = 100000;
     private static CameraPosition lastCameraPosition = null;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -136,12 +136,12 @@ public class ContainerAndGlobal {
         ContainerAndGlobal.firstTimeGPSEnabled = firstTimeGPSEnabled;
     }
 
-    public static int getMaxViewRange() {
-        return maxViewRange;
+    public static int getMaxViewChargingStation() {
+        return maxViewChargingStation;
     }
 
-    public static void setMaxViewRange(int maxViewRange) {
-        ContainerAndGlobal.maxViewRange = maxViewRange;
+    public static void setMaxViewChargingStation(int maxViewChargingStation) {
+        ContainerAndGlobal.maxViewChargingStation = maxViewChargingStation;
     }
 
     public static CameraPosition getLastCameraPosition() {
@@ -150,6 +150,22 @@ public class ContainerAndGlobal {
 
     public static void setLastCameraPosition(CameraPosition lastCameraPosition) {
         ContainerAndGlobal.lastCameraPosition = lastCameraPosition;
+    }
+
+    /**
+     * Return the index of a charging station
+     * @param chargingStation is the class that wants to be indexed
+     * @return the index from the array or -1 if it fails to found it
+     */
+    public static int indexOfChargingStation(ChargingStation chargingStation)
+    {
+        for(int i = 0; i < chargingStationList.size(); i++)
+        {
+            if(chargingStation.equals(chargingStationList.get(i)))
+                return i;
+        }
+
+        return -1;
     }
 
     /**

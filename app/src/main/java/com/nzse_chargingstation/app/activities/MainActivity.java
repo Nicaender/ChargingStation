@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
-    MapsFragment mapsFragment = new MapsFragment();
-    MyCarsFragment myCarsFragment = new MyCarsFragment();
-    FavoritesFragment favoritesFragment = new FavoritesFragment();
-    SettingsFragment settingsFragment = new SettingsFragment();
+    final MapsFragment mapsFragment = new MapsFragment();
+    final MyCarsFragment myCarsFragment = new MyCarsFragment();
+    final FavoritesFragment favoritesFragment = new FavoritesFragment();
+    final SettingsFragment settingsFragment = new SettingsFragment();
     private FusedLocationProviderClient fusedLocationClient;
 
     private BottomNavigationView bottomNavBar;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         // using SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 5);
+        final int maxChargingStations = sharedPreferences.getInt("maxChargingStations", 100);
 
         // When user reopens the app
         // after applying dark/light mode
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        ContainerAndGlobal.setMaxViewRange(maxViewRange);
+        ContainerAndGlobal.setMaxViewChargingStation(maxChargingStations);
 
         if(ContainerAndGlobal.isChangedSetting())
         {

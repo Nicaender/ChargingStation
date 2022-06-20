@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -51,6 +52,7 @@ public class MapsFragment extends Fragment {
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Thread markerThread;
+    private SharedPreferences sharedPreferences;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
     private int favoriteX, reportX, spinnerX, eyeX, locationX;
 
@@ -70,6 +72,9 @@ public class MapsFragment extends Fragment {
         forceUpdate = false;
         threadInitialize();
 
+        sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -83,8 +88,6 @@ public class MapsFragment extends Fragment {
 
         mMapView.getMapAsync(mMap -> {
             googleMap = mMap;
-            SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-            final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
             if(isDarkModeOn)
                 googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
 
@@ -310,6 +313,29 @@ public class MapsFragment extends Fragment {
 
         // Implementation of search button
         imgBtnSearch.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchActivity.class)));
+
+        // Implementation to limit total charging stations on the map
+        final int size = 12;
+        String[] maxView = new String[size];
+        for(int i = 0; i < size; i++)
+        {
+            maxView[i] = String.valueOf((i+1) * 25);
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
+                .setItems(maxView, (dialog, which) -> {
+                    if(ContainerAndGlobal.getMaxViewChargingStation() == Integer.parseInt(maxView[which]))
+                        return;
+                    ContainerAndGlobal.setMaxViewChargingStation(Integer.parseInt(maxView[which]));
+                    if(updateMarker)
+                        forceUpdate = true;
+                    updateMarker = true;
+                    final SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
+                    editor.apply();
+                });
+        AlertDialog dialog = builder.create();
+        imgViewRadius.setOnClickListener(v -> dialog.show());
     }
 
     @Override
@@ -321,7 +347,7 @@ public class MapsFragment extends Fragment {
             float zoomLevel = (float) 15.0;
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
             if(ContainerAndGlobal.getCurrentLocation() != null && // Check if location is turned on or it is outside the max view range and is not already in marked list
-                    ContainerAndGlobal.calculateLength(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange() &&
+                    ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getZoomToThisChargingStationOnPause()) > ContainerAndGlobal.getMaxViewChargingStation() &&
                             !ContainerAndGlobal.isInMarkedList(ContainerAndGlobal.getZoomToThisChargingStationOnPause()))
             {
                 googleMap.addMarker(new MarkerOptions()
@@ -454,7 +480,7 @@ public class MapsFragment extends Fragment {
                         if(forceUpdate)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.calculateLength(tmp.getLocation(), ContainerAndGlobal.getCurrentLocation()) > ContainerAndGlobal.getMaxViewRange())
+                        if(ContainerAndGlobal.getCurrentLocation() != null && i >= ContainerAndGlobal.getMaxViewChargingStation())
                             break;
                         if(!tmp.isShowMarker())
                             continue;

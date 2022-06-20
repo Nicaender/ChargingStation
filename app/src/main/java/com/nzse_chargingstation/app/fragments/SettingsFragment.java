@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment {
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxViewRange = sharedPreferences.getInt("maxViewRange", 5);
+        final int maxChargingStations = sharedPreferences.getInt("maxChargingStations", 100);
 
         // When user reopens the app
         // after applying dark/light mode
@@ -60,9 +60,9 @@ public class SettingsFragment extends Fragment {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             btnDarkmode.setText(R.string.enable_darkmode);
         }
-        ContainerAndGlobal.setMaxViewRange(maxViewRange);
+        ContainerAndGlobal.setMaxViewChargingStation(maxChargingStations);
 
-        etViewRadiusValue.setText(String.valueOf(ContainerAndGlobal.getMaxViewRange()));
+        etViewRadiusValue.setText(String.valueOf(ContainerAndGlobal.getMaxViewChargingStation()));
 
         // Implementation of dark mode button
         btnDarkmode.setOnClickListener(v -> {
@@ -99,16 +99,16 @@ public class SettingsFragment extends Fragment {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 // Perform action on key press
-                ContainerAndGlobal.setMaxViewRange(Integer.parseInt(etViewRadiusValue.getText().toString()));
+                ContainerAndGlobal.setMaxViewChargingStation(Integer.parseInt(etViewRadiusValue.getText().toString()));
                 for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
                 {
-                    if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getMarkedList().get(i).getLocation(), ContainerAndGlobal.getCurrentLocation()) < ContainerAndGlobal.getMaxViewRange())
+                    if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) > ContainerAndGlobal.getMaxViewChargingStation())
                     {
                         ContainerAndGlobal.getMarkedList().remove(i);
                         i--;
                     }
                 }
-                editor.putInt("maxViewRange", ContainerAndGlobal.getMaxViewRange());
+                editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
                 editor.apply();
                 InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(etViewRadiusValue.getWindowToken(), 0);
