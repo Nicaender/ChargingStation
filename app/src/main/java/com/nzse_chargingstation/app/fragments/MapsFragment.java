@@ -94,7 +94,7 @@ public class MapsFragment extends Fragment {
 
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext());
+            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext(), sharedPreferences);
             googleMap.setInfoWindowAdapter(markerInfoWindowAdapter);
 
             googleMap.setOnMarkerClickListener(marker -> {
