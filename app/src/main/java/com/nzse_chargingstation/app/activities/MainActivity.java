@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
             getOldFavoritesAndDefective();
         }
 
+        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
+        {
+            ContainerAndGlobal.setFirstTimeGPSEnabled(false);
+            ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
+        }
+
         requestLocationPermission();
 
         // Initialization
@@ -155,8 +161,6 @@ public class MainActivity extends AppCompatActivity {
                             ContainerAndGlobal.setCurrentLocation(location);
                             if(ContainerAndGlobal.isFirstTimeGPSEnabled())
                             {
-                                ContainerAndGlobal.setFirstTimeGPSEnabled(false);
-                                ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
                                 startActivity(new Intent(this, MainActivity.class));
                                 overridePendingTransition(0, 0);
                                 finish();
