@@ -39,6 +39,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         holder.myCS = favoriteList.get(position);
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         holder.tvFavoriteAddress.setText(name);
+        String city = holder.myCS.getPostleitzahl() + ", " + holder.myCS.getOrt();
+        holder.tvFavoriteCity.setText(city);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
             distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
@@ -69,6 +71,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
     class favoriteHolder extends RecyclerView.ViewHolder {
         private final TextView tvFavoriteAddress;
         private final TextView tvDistance;
+        private final TextView tvFavoriteCity;
         private final Button btnUnfavorite;
         private ChargingStation myCS;
 
@@ -77,6 +80,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
             super(itemView);
             tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAddress);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
+            tvFavoriteCity = itemView.findViewById(R.id.textViewFavoriteCity);
             btnUnfavorite = itemView.findViewById(R.id.buttonUnfavorite);
 
             itemView.setOnClickListener(v -> {

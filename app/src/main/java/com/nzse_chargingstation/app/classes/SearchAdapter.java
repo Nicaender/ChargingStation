@@ -50,6 +50,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         // setting data to our views of recycler view.
         holder.myCS = chargingStationList.get(position);
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
+        String city = holder.myCS.getPostleitzahl() + ", " + holder.myCS.getOrt();
         holder.tvSearchAddress.setText(name);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
@@ -57,6 +58,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         else
             distance = "Unknown distance";
         holder.tvDistance.setText(distance);
+        holder.tvSearchCity.setText(city);
     }
 
     @Override
@@ -68,6 +70,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         // creating variables for our views.
         private final TextView tvSearchAddress;
         private final TextView tvDistance;
+        private final TextView tvSearchCity;
         private ChargingStation myCS;
 
         public ViewHolder(@NonNull View itemView) {
@@ -75,6 +78,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             // initializing our views with their ids.
             tvSearchAddress = itemView.findViewById(R.id.textViewSearchAddress);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
+            tvSearchCity = itemView.findViewById(R.id.textViewSearchCity);
 
             itemView.setOnClickListener(v -> {
                 ContainerAndGlobal.setZoomToThisChargingStationOnPause(myCS);

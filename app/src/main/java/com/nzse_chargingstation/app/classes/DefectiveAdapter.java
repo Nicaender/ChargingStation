@@ -33,6 +33,8 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         Defective currentDefective = defectiveList.get(position);
         String distance;
         holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer());
+        String city = currentDefective.getDefectiveCs().getPostleitzahl() + ", " + currentDefective.getDefectiveCs().getOrt();
+        holder.tvDefectiveCity.setText(city);
         if(ContainerAndGlobal.getCurrentLocation() != null)
             distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
@@ -76,6 +78,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     class defectiveHolder extends RecyclerView.ViewHolder {
         private final TextView tvDefectiveAddress;
         private final TextView tvDefectiveReason;
+        private final TextView tvDefectiveCity;
         private final TextView tvDistance;
         private final Button btnMarkToRepair;
 
@@ -83,6 +86,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
             super(itemView);
             tvDefectiveAddress = itemView.findViewById(R.id.textViewDefectiveAddress);
             tvDefectiveReason = itemView.findViewById(R.id.textViewDefectiveReason);
+            tvDefectiveCity = itemView.findViewById(R.id.textViewDefectiveCity);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             btnMarkToRepair = itemView.findViewById(R.id.buttonMarkToRepair);
         }

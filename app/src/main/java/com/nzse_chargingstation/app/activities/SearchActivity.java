@@ -72,7 +72,8 @@ public class SearchActivity extends AppCompatActivity {
         for (ChargingStation item : ContainerAndGlobal.getFilteredList()) {
             // checking if the entered string matched with any item of our recycler view.
             String name = item.getStrasse() + " " + item.getHausnummer();
-            if (name.toLowerCase().contains(text.toLowerCase())) {
+            String city = item.getPostleitzahl() + ", " + item.getOrt();
+            if (name.toLowerCase().contains(text.toLowerCase()) || city.toLowerCase().contains(text.toLowerCase())) {
                 // if the item is matched we are
                 // adding it to our filtered list.
                 filteredList.add(item);
