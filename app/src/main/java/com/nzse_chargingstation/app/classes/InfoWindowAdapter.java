@@ -2,7 +2,6 @@ package com.nzse_chargingstation.app.classes;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
@@ -18,13 +18,9 @@ import com.nzse_chargingstation.app.R;
 public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final Context mContext;
-    final SharedPreferences sharedPreferences;
-    boolean isDarkModeOn;
 
-    public InfoWindowAdapter(Context context, SharedPreferences sharedPreferences) {
+    public InfoWindowAdapter(Context context) {
         this.mContext = context.getApplicationContext();
-        this.sharedPreferences = sharedPreferences;
-        isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
     }
 
     @Nullable
@@ -33,7 +29,6 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         return null;
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     @Nullable
     @Override
     public View getInfoWindow(@NonNull Marker marker) {
@@ -60,7 +55,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         if(myCS.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
         {
             fastCharging = "No fast charging";
-            if(isDarkModeOn)
+            if(ContainerAndGlobal.isDarkmode())
                 imgViewChargingStation.setColorFilter(mContext.getColor(R.color.white));
             else
                 imgViewChargingStation.setColorFilter(mContext.getColor(R.color.black));
@@ -71,16 +66,16 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             imgViewChargingStation.setColorFilter(mContext.getColor(R.color.icon_color));
         }
         tvChargingStationFastCharging.setText(fastCharging);
-        if(isDarkModeOn)
+        if(ContainerAndGlobal.isDarkmode())
         {
-            v.setBackground(mContext.getDrawable(R.drawable.item_curved_dark));
+            v.setBackground(AppCompatResources.getDrawable(mContext, R.drawable.item_curved_dark));
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.white));
         }
         else
         {
-            v.setBackground(mContext.getDrawable(R.drawable.item_curved));
+            v.setBackground(AppCompatResources.getDrawable(mContext, R.drawable.item_curved_light));
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.black));

@@ -93,18 +93,18 @@ public class MainActivity extends AppCompatActivity {
         // Saving state of our app
         // using SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-        final int maxChargingStations = sharedPreferences.getInt("maxChargingStations", 100);
+        ContainerAndGlobal.setDarkmode(sharedPreferences.getBoolean("isDarkModeOn", false));
+        ContainerAndGlobal.setMaxViewChargingStation(sharedPreferences.getInt("maxChargingStations", 100));
 
         // When user reopens the app
         // after applying dark/light mode
-        if (isDarkModeOn) {
+        if (ContainerAndGlobal.isDarkmode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        ContainerAndGlobal.setMaxViewChargingStation(maxChargingStations);
+        ContainerAndGlobal.setMaxViewChargingStation(ContainerAndGlobal.getMaxViewChargingStation());
 
         if(ContainerAndGlobal.isChangedSetting())
         {

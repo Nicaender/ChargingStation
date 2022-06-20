@@ -1,18 +1,13 @@
 package com.nzse_chargingstation.app.fragments;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -45,22 +40,19 @@ public class SettingsFragment extends Fragment {
         // using SharedPreferences
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
 
         // When user reopens the app
         // after applying dark/light mode
-        if (isDarkModeOn) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        if (ContainerAndGlobal.isDarkmode()) {
             btnDarkmode.setText(R.string.disable_darkmode);
         }
         else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             btnDarkmode.setText(R.string.enable_darkmode);
         }
 
         // Implementation of dark mode button
         btnDarkmode.setOnClickListener(v -> {
-            if (isDarkModeOn) {
+            if (ContainerAndGlobal.isDarkmode()) {
                 // if dark mode is on it
                 // will turn it off
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

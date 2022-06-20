@@ -37,6 +37,7 @@ public class ContainerAndGlobal {
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
     private static boolean firstTimeGPSEnabled = true;
+    private static boolean darkmode = false;
     private static int maxViewChargingStation = 100000;
     private static CameraPosition lastCameraPosition = null;
     public static final DecimalFormat df = new DecimalFormat("#.##");
@@ -134,6 +135,14 @@ public class ContainerAndGlobal {
 
     public static void setFirstTimeGPSEnabled(boolean firstTimeGPSEnabled) {
         ContainerAndGlobal.firstTimeGPSEnabled = firstTimeGPSEnabled;
+    }
+
+    public static boolean isDarkmode() {
+        return darkmode;
+    }
+
+    public static void setDarkmode(boolean darkmode) {
+        ContainerAndGlobal.darkmode = darkmode;
     }
 
     public static int getMaxViewChargingStation() {

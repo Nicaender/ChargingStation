@@ -53,7 +53,6 @@ public class MapsFragment extends Fragment {
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Thread markerThread;
-    private SharedPreferences sharedPreferences;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
     private int favoriteX, reportX, spinnerX, eyeX, locationX;
 
@@ -73,9 +72,6 @@ public class MapsFragment extends Fragment {
         forceUpdate = false;
         threadInitialize();
 
-        sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
-
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -89,12 +85,12 @@ public class MapsFragment extends Fragment {
 
         mMapView.getMapAsync(mMap -> {
             googleMap = mMap;
-            if(isDarkModeOn)
+            if(ContainerAndGlobal.isDarkmode())
                 googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
 
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext(), sharedPreferences);
+            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext());
             googleMap.setInfoWindowAdapter(markerInfoWindowAdapter);
 
             googleMap.setOnMarkerClickListener(marker -> {
@@ -507,6 +503,7 @@ public class MapsFragment extends Fragment {
         if(updateMarker)
             forceUpdate = true;
         updateMarker = true;
+        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
         editor.apply();
