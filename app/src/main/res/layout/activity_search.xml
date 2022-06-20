@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:padding="10dp"
     tools:context=".activities.SearchActivity">
 
     <Button
         android:id="@+id/buttonSearchBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginLeft="5dp"
         android:backgroundTint="@color/button_background_color"
         android:textColor="@color/button_text_color"
         android:text="@string/back"/>
@@ -22,7 +23,6 @@
         android:layout_toRightOf="@id/buttonSearchBack"
         android:background="@color/white"
         android:iconifiedByDefault="false"
-        android:layout_margin="10dp"
         android:queryHint="@string/search_here"
         android:backgroundTint="@color/background_color"/>
 
@@ -30,7 +30,7 @@
         android:id="@+id/rvSearchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/searchViewChargingStation" />
 
 </RelativeLayout>

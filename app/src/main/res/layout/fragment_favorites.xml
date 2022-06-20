@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:padding="10dp"
     tools:context=".fragments.FavoritesFragment">
 
     <RelativeLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
@@ -15,7 +16,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFavoriteList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
     </RelativeLayout>
 
 </RelativeLayout>

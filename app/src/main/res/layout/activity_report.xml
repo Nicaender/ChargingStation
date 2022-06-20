@@ -5,39 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:padding="10dp"
     tools:context=".activities.ReportActivity">
 
     <Button
         android:id="@+id/buttonReportBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginLeft="5dp"
         android:backgroundTint="@color/button_background_color"
         android:textColor="@color/button_text_color"
         android:text="@string/back"/>
 
     <ImageView
-        android:id="@+id/imageview_charging_station"
-        android:layout_width="94dp"
-        android:layout_height="81dp"
+        android:id="@+id/imageViewChargingStation"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_below="@id/buttonReportBack"
         app:srcCompat="@drawable/ic_baseline_electrical_services_24"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/no_description"
+        app:tint="@color/icon_color" />
 
     <TextView
         android:id="@+id/textViewChargingStationAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_below="@id/buttonReportBack"
-        android:layout_toRightOf="@id/imageview_charging_station" />
+        android:layout_toRightOf="@id/imageViewChargingStation" />
 
     <TextView
-        android:id="@+id/textview_additional_information"
+        android:id="@+id/textViewAdditionalInformation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_below="@id/imageview_charging_station"
+        android:layout_below="@id/imageViewChargingStation"
         android:textSize="25sp"
         android:text="@string/additional_information" />
 
@@ -45,9 +45,8 @@
         android:id="@+id/editTextAdditionalInformation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:layout_centerInParent="true"
-        android:layout_below="@id/textview_additional_information"
+        android:layout_below="@id/textViewAdditionalInformation"
         android:background="@color/background_color"
         android:autofillHints="Additional information"
         tools:ignore="LabelFor"

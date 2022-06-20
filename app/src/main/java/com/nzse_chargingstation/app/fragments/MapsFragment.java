@@ -38,6 +38,7 @@ import com.nzse_chargingstation.app.activities.ReportActivity;
 import com.nzse_chargingstation.app.activities.SearchActivity;
 import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
+import com.nzse_chargingstation.app.classes.InfoWindowAdapter;
 
 import java.util.ArrayList;
 
@@ -93,6 +94,9 @@ public class MapsFragment extends Fragment {
 
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext());
+            googleMap.setInfoWindowAdapter(markerInfoWindowAdapter);
+
             googleMap.setOnMarkerClickListener(marker -> {
                 // Triggered when user click any marker on the map
                 clickedMarker = marker;
@@ -138,10 +142,7 @@ public class MapsFragment extends Fragment {
                 {
                     ContainerAndGlobal.removeFavorite(tmp);
                     assert tmp != null;
-                    if(tmp.isFiltered())
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    else
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    assignColor(marker, tmp);
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
                 }
                 else
@@ -277,10 +278,7 @@ public class MapsFragment extends Fragment {
             {
                 ContainerAndGlobal.removeFavorite(tmp);
                 assert tmp != null;
-                if(tmp.isFiltered())
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                else
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                assignColor(clickedMarker, tmp);
                 imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
             }
             else
@@ -474,16 +472,7 @@ public class MapsFragment extends Fragment {
                             break;
                         if(!tmp.isShowMarker())
                             continue;
-                        if(tmp.isFiltered())
-                            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                    .position(tmp.getLocation())
-                                    .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
-                        else
-                            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                    .position(tmp.getLocation())
-                                    .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
+                        assignMarker(tmp);
                         try {
                             //noinspection BusyWait
                             Thread.sleep(0, 100);
@@ -521,5 +510,49 @@ public class MapsFragment extends Fragment {
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
         editor.apply();
+    }
+
+    /**
+     * Assigning a marker for a charging station and automatically filters its color
+     * @param chargingStation is the charging station that wants to be added
+     */
+    private void assignMarker(ChargingStation chargingStation)
+    {
+        if(chargingStation.isFiltered())
+            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .position(chargingStation.getLocation())
+                    .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+        else
+        {
+            if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        .position(chargingStation.getLocation())
+                        .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+            else
+                requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        .position(chargingStation.getLocation())
+                        .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+        }
+    }
+
+    /**
+     * Assign a marker color automatically (Not for favorite)
+     * @param marker is the marker that wants to be changed
+     * @param chargingStation is the parameter for its filter
+     */
+    private void assignColor(Marker marker, ChargingStation chargingStation)
+    {
+        if(chargingStation.isFiltered())
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        else
+        {
+            if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            else
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        }
     }
 }

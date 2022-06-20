@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             ContainerAndGlobal.setChangedSetting(false);
         }
         else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
 
 
         // Implementation of bottom navigation bar
@@ -121,16 +121,16 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.navMaps:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
                     return true;
                 case R.id.navMyCars:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, myCarsFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, myCarsFragment).commit();
                     return true;
                 case R.id.navFavorites:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favoritesFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
                     return true;
                 case R.id.navSettings:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
                     return true;
             }
             return false;
