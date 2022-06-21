@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
                 Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
+                defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
                 ContainerAndGlobal.addDefective(defectiveTmp);
             }
     }

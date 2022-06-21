@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -254,6 +256,7 @@ public class MapsFragment extends Fragment {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         spRadiusValue.setAdapter(adapter);
+        spRadiusValue.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
 
         spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
             if(googleMap.isMyLocationEnabled())
