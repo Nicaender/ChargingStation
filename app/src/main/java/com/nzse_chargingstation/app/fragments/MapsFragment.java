@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.activities.InfoActivity;
 import com.nzse_chargingstation.app.activities.ReportActivity;
 import com.nzse_chargingstation.app.activities.SearchActivity;
 import com.nzse_chargingstation.app.classes.ChargingStation;
@@ -103,9 +104,9 @@ public class MapsFragment extends Fragment {
                 else
                     marker.setSnippet("Distance: unknown");
 
-                ChargingStation markedCs = ContainerAndGlobal.searchChargingStation(marker.getPosition());
+                ContainerAndGlobal.setClickedChargingStation(ContainerAndGlobal.searchChargingStation(marker.getPosition()));
 
-                if(ContainerAndGlobal.isInFavorite(markedCs))
+                if(ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getClickedChargingStation()))
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
                 else
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
@@ -135,21 +136,22 @@ public class MapsFragment extends Fragment {
             });
 
             googleMap.setOnInfoWindowClickListener(marker -> {
-                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(marker.getPosition());
-                if(ContainerAndGlobal.isInFavorite(tmp))
-                {
-                    ContainerAndGlobal.removeFavorite(tmp);
-                    assert tmp != null;
-                    assignColor(marker, tmp);
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-                }
-                else
-                {
-                    ContainerAndGlobal.addFavorite(tmp);
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-                }
-                ContainerAndGlobal.saveData(true, requireContext());
+                startActivity(new Intent(getActivity(), InfoActivity.class));
+//                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(marker.getPosition());
+//                if(ContainerAndGlobal.isInFavorite(tmp))
+//                {
+//                    ContainerAndGlobal.removeFavorite(tmp);
+//                    assert tmp != null;
+//                    assignColor(marker, tmp);
+//                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+//                }
+//                else
+//                {
+//                    ContainerAndGlobal.addFavorite(tmp);
+//                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+//                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+//                }
+//                ContainerAndGlobal.saveData(true, requireContext());
             });
 
             googleMap.setOnInfoWindowLongClickListener(marker -> {

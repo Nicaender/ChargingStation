@@ -33,6 +33,7 @@ public class ContainerAndGlobal {
     private static ChargingStation reportedChargingStation = null;
     private static ChargingStation zoomToThisChargingStation = null;
     private static ChargingStation zoomToThisChargingStationOnPause = null;
+    private static ChargingStation clickedChargingStation = null;
     private static Marker reportedMarker = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
@@ -107,6 +108,14 @@ public class ContainerAndGlobal {
 
     public static void setZoomToThisChargingStationOnPause(ChargingStation zoomToThisChargingStationOnPause) {
         ContainerAndGlobal.zoomToThisChargingStationOnPause = zoomToThisChargingStationOnPause;
+    }
+
+    public static ChargingStation getClickedChargingStation() {
+        return clickedChargingStation;
+    }
+
+    public static void setClickedChargingStation(ChargingStation clickedChargingStation) {
+        ContainerAndGlobal.clickedChargingStation = clickedChargingStation;
     }
 
     public static void setReportedMarker(Marker reportedMarker) {

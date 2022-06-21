@@ -34,4 +34,5 @@
     <string name="search_here">Search here</string>
     <string name="how_many_charging_station_to_show_on_the_map">How many charging stations to show on the map?</string>
     <string name="plz_city">PLZ, City</string>
+    <string name="betreiber">Betreiber</string>
 </resources>
