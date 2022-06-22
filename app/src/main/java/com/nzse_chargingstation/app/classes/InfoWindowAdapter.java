@@ -41,6 +41,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView tvChargingStationAddress = v.findViewById(R.id.textViewChargingStationAddress);
         TextView tvChargingStationDistance = v.findViewById(R.id.textViewChargingStationDistance);
         TextView tvChargingStationFastCharging = v.findViewById(R.id.textViewChargingStationFastCharging);
+        TextView tvHoldInfo = v.findViewById(R.id.textViewHoldInfo);
         ImageView imgViewChargingStation = v.findViewById(R.id.imageViewChargingStation);
         imgViewChargingStation.setImageResource(mContext.getResources().getIdentifier("ic_baseline_electrical_services_24", "drawable", mContext.getPackageName()));
 
@@ -72,6 +73,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.white));
+            tvHoldInfo.setTextColor(mContext.getColor(R.color.white));
         }
         else
         {
@@ -79,6 +81,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.black));
+            tvHoldInfo.setTextColor(mContext.getColor(R.color.black));
         }
 
         return v;

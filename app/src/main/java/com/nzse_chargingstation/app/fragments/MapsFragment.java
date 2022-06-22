@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -49,7 +48,6 @@ public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
-    private ImageView imgViewRadius;
     private ImageButton imgBtnFavorite;
     private ImageButton imgBtnReport;
     private ImageButton imgBtnMyLocation;
@@ -58,6 +56,7 @@ public class MapsFragment extends Fragment {
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
     private int favoriteX, reportX, spinnerX, locationX;
+    private final float zoomLevel = (float) 15.0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,31 +131,9 @@ public class MapsFragment extends Fragment {
                 return false;
             });
 
-            googleMap.setOnInfoWindowClickListener(marker -> {
-                startActivity(new Intent(getActivity(), InfoActivity.class));
-//                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(marker.getPosition());
-//                if(ContainerAndGlobal.isInFavorite(tmp))
-//                {
-//                    ContainerAndGlobal.removeFavorite(tmp);
-//                    assert tmp != null;
-//                    assignColor(marker, tmp);
-//                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-//                }
-//                else
-//                {
-//                    ContainerAndGlobal.addFavorite(tmp);
-//                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-//                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-//                }
-//                ContainerAndGlobal.saveData(true, requireContext());
-            });
+            googleMap.setOnInfoWindowClickListener(marker -> googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel)));
 
-            googleMap.setOnInfoWindowLongClickListener(marker -> {
-                if(!reportChargingStation(marker))
-                    return;
-
-                startActivity(new Intent(getActivity(), ReportActivity.class));
-            });
+            googleMap.setOnInfoWindowLongClickListener(marker -> startActivity(new Intent(getActivity(), InfoActivity.class)));
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
@@ -186,7 +163,6 @@ public class MapsFragment extends Fragment {
                 forceUpdate = true;
             updateMarker = true;
 
-            float zoomLevel = (float) 15.0;
             LatLng start;
 
             if(ContainerAndGlobal.getCurrentLocation() != null)
@@ -224,7 +200,7 @@ public class MapsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imgViewRadius =  view.findViewById(R.id.imageViewRadius);
+        ImageView imgViewRadius = view.findViewById(R.id.imageViewRadius);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
         imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
@@ -296,7 +272,6 @@ public class MapsFragment extends Fragment {
             imgBtnMyLocation.setVisibility(GONE);
         // Implementation of custom my location
         imgBtnMyLocation.setOnClickListener(v -> {
-            float zoomLevel = (float) 15.0;
             LatLng tmp = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tmp, zoomLevel));
             imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
@@ -326,7 +301,6 @@ public class MapsFragment extends Fragment {
         mMapView.onResume();
         if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
         {
-            float zoomLevel = (float) 15.0;
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
             if(ContainerAndGlobal.getCurrentLocation() != null && // Check if location is turned on or it is outside the max view range and is not already in marked list
                     ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getZoomToThisChargingStationOnPause()) > ContainerAndGlobal.getMaxViewChargingStation() &&
