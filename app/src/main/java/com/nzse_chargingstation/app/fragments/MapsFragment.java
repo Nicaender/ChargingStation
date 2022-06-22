@@ -57,7 +57,7 @@ public class MapsFragment extends Fragment {
     private Marker clickedMarker;
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
-    private int favoriteX, reportX, spinnerX, eyeX, locationX;
+    private int favoriteX, reportX, spinnerX, locationX;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,9 +125,6 @@ public class MapsFragment extends Fragment {
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", -1000f);
-                animation.setDuration(250);
-                animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", 1000f);
                 animation.setDuration(250);
                 animation.start();
@@ -169,9 +166,6 @@ public class MapsFragment extends Fragment {
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
-                animation.setDuration(250);
-                animation.start();
-                animation = ObjectAnimator.ofFloat(imgViewRadius, "translationX", eyeX);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", locationX);
@@ -238,7 +232,6 @@ public class MapsFragment extends Fragment {
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
         favoriteX = (int) imgBtnFavorite.getTranslationX();
         reportX = (int) imgBtnReport.getTranslationX();
-        eyeX = (int) imgViewRadius.getTranslationX();
         spinnerX = (int) spRadiusValue.getTranslationX();
         locationX = (int) imgBtnMyLocation.getTranslationX();
 
