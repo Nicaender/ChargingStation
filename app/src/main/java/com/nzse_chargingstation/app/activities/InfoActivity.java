@@ -54,7 +54,7 @@ public class InfoActivity extends AppCompatActivity {
         String kreisOderKreisfreieStadt = "District or independent city: " + ContainerAndGlobal.getClickedChargingStation().getKreis_kreisfreie_stadt();
         String breitengrad = "Latitude: " + ContainerAndGlobal.getClickedChargingStation().getBreitengrad();
         String laengengrad = "Longitude: " + ContainerAndGlobal.getClickedChargingStation().getLängengrad();
-        String inbetriebnahmedatum = "Commissioning date: " + ContainerAndGlobal.getClickedChargingStation().getInbetriebnahmedatum();
+        String inbetriebnahmedatum = "Commissioned date: " + ContainerAndGlobal.getClickedChargingStation().getInbetriebnahmedatum();
         String anschlussleitung = "Connecting cable: " + ContainerAndGlobal.getClickedChargingStation().getAnschlussleitung();
         String artDerLadeeinrichung = "Type of charging device: " + ContainerAndGlobal.getClickedChargingStation().getArtDerLadeeinrichtung();
         String anzahlLadePunkte = "Number of charging points: " + ContainerAndGlobal.getClickedChargingStation().getAnzahlDerLadepunkte();

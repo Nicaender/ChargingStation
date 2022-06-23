@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewChargingStationFastCharging"
         android:textSize="16sp"
+        android:textStyle="italic"
         android:text="@string/hold_for_more_info"/>
 
 </RelativeLayout>

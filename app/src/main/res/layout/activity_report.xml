@@ -15,6 +15,7 @@
         android:layout_marginLeft="5dp"
         android:backgroundTint="@color/button_background_color"
         android:textColor="@color/button_text_color"
+        android:textStyle="bold"
         android:text="@string/back"/>
 
     <ImageView
@@ -31,7 +32,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonReportBack"
-        android:layout_toRightOf="@id/imageViewChargingStation" />
+        android:layout_toRightOf="@id/imageViewChargingStation"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/textViewChargingStationCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewChargingStationAddress"
+        android:layout_toRightOf="@id/imageViewChargingStation"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/textViewAdditionalInformation"
@@ -61,6 +71,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
         android:backgroundTint="@color/button_background_color"
+        android:textColor="@color/button_text_color"
+        android:textStyle="bold"
         android:text="@string/report" />
 
 </RelativeLayout>

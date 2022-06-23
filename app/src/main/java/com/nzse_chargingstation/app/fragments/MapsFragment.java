@@ -118,13 +118,13 @@ public class MapsFragment extends Fragment {
                     imgBtnReport.setVisibility(View.VISIBLE);
                 }
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", backgroundY);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
                 animation.setDuration(250);
@@ -142,13 +142,13 @@ public class MapsFragment extends Fragment {
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-                animation.setDuration(400);
+                animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
                 animation.setDuration(250);
@@ -225,13 +225,13 @@ public class MapsFragment extends Fragment {
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
         ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
-        animation.setDuration(400);
+        animation.setDuration(250);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-        animation.setDuration(400);
+        animation.setDuration(250);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-        animation.setDuration(400);
+        animation.setDuration(250);
         animation.start();
 
         ArrayList<String> items = new ArrayList<>();
@@ -443,6 +443,7 @@ public class MapsFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
+                    int counter = 0;
                     for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
                     {
                         if(stopThread)
@@ -450,11 +451,12 @@ public class MapsFragment extends Fragment {
                         if(forceUpdate)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                        if(ContainerAndGlobal.getCurrentLocation() != null && i >= ContainerAndGlobal.getMaxViewChargingStation())
+                        if(ContainerAndGlobal.getCurrentLocation() != null && counter >= ContainerAndGlobal.getMaxViewChargingStation())
                             break;
                         if(!tmp.isShowMarker())
                             continue;
                         assignMarker(tmp);
+                        counter++;
                         try {
                             //noinspection BusyWait
                             Thread.sleep(0, 100);

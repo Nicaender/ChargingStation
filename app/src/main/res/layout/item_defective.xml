@@ -71,8 +71,8 @@
             android:layout_margin="10dp"
             android:layout_alignParentEnd="true"
             android:backgroundTint="@color/button_background_color"
-            android:textColor="@color/button_text_color"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/button_text_color"/>
 
     </RelativeLayout>
 

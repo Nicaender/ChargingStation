@@ -15,7 +15,7 @@ import com.nzse_chargingstation.app.classes.Defective;
 public class ReportActivity extends AppCompatActivity {
 
     Button btnReportBack, btnReportConfirm;
-    TextView tvChargingStationAddress;
+    TextView tvChargingStationAddress, tvChargingStationCity;
     EditText etAdditionalInformation;
 
     @Override
@@ -26,10 +26,13 @@ public class ReportActivity extends AppCompatActivity {
         btnReportBack = findViewById(R.id.buttonReportBack);
         btnReportConfirm = findViewById(R.id.buttonReportConfirm);
         tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
+        tvChargingStationCity = findViewById(R.id.textViewChargingStationCity);
         etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
 
         String name = ContainerAndGlobal.getReportedChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getReportedChargingStation().getHausnummer();
         tvChargingStationAddress.setText(name);
+        String city = ContainerAndGlobal.getReportedChargingStation().getPostleitzahl() + ", " + ContainerAndGlobal.getReportedChargingStation().getOrt();
+        tvChargingStationCity.setText(city);
 
         btnReportBack.setOnClickListener(v -> finish());
 
