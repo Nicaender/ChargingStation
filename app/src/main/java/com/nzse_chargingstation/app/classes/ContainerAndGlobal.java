@@ -63,6 +63,10 @@ public class ContainerAndGlobal {
         return defectiveList;
     }
 
+    /**
+     * Set a filter range and applying it
+     * @param filterRange is the new filter range
+     */
     public static void setFilterRangeAndApply(double filterRange) {
         for(int i = 0; i < chargingStationList.size(); i++)
         {
