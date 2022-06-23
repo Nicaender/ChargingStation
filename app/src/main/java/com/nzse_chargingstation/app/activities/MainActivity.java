@@ -24,7 +24,6 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
-import com.nzse_chargingstation.app.fragments.MyCarsFragment;
 import com.nzse_chargingstation.app.fragments.SettingsFragment;
 
 import org.json.JSONArray;
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private long pressedTime;
 
     final MapsFragment mapsFragment = new MapsFragment();
-    final MyCarsFragment myCarsFragment = new MyCarsFragment();
     final FavoritesFragment favoritesFragment = new FavoritesFragment();
     final SettingsFragment settingsFragment = new SettingsFragment();
     private FusedLocationProviderClient fusedLocationClient;
@@ -122,9 +120,6 @@ public class MainActivity extends AppCompatActivity {
             {
                 case R.id.navMaps:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
-                    return true;
-                case R.id.navMyCars:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, myCarsFragment).commit();
                     return true;
                 case R.id.navFavorites:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
@@ -229,8 +224,6 @@ public class MainActivity extends AppCompatActivity {
         if(option == 0)
             bottomNavBar.setSelectedItemId(R.id.navMaps);
         else if(option == 1)
-            bottomNavBar.setSelectedItemId(R.id.navMyCars);
-        else if(option == 2)
             bottomNavBar.setSelectedItemId(R.id.navFavorites);
         else
             bottomNavBar.setSelectedItemId(R.id.navSettings);

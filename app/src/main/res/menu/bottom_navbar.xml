@@ -7,11 +7,6 @@
         android:title="@string/maps" />
 
     <item
-        android:id="@+id/navMyCars"
-        android:icon="@drawable/ic_baseline_electric_car_24"
-        android:title="@string/my_cars" />
-
-    <item
         android:id="@+id/navFavorites"
         android:icon="@drawable/fav_icon"
         android:title="@string/favorites" />
