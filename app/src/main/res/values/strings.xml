@@ -21,4 +21,5 @@
     <string name="how_many_charging_station_to_show_on_the_map">How many charging stations to show on the map?</string>
     <string name="plz_city">PLZ, City</string>
     <string name="hold_for_more_info">Hold for more info</string>
+    <string name="report">Report</string>
 </resources>
