@@ -118,13 +118,13 @@ public class MapsFragment extends Fragment {
                     imgBtnReport.setVisibility(View.VISIBLE);
                 }
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", backgroundY);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
                 animation.setDuration(250);
@@ -142,13 +142,13 @@ public class MapsFragment extends Fragment {
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-                animation.setDuration(250);
+                animation.setDuration(400);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
                 animation.setDuration(250);
@@ -225,13 +225,13 @@ public class MapsFragment extends Fragment {
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
         ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
-        animation.setDuration(250);
+        animation.setDuration(400);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-        animation.setDuration(250);
+        animation.setDuration(400);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-        animation.setDuration(250);
+        animation.setDuration(400);
         animation.start();
 
         ArrayList<String> items = new ArrayList<>();
