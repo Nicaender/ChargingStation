@@ -44,7 +44,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         if(!currentDefective.isMarked())
             holder.btnMarkToRepair.setText("Mark");
         else
-            holder.btnMarkToRepair.setText("Marked");
+            holder.btnMarkToRepair.setText("Finish");
 
         holder.btnMarkToRepair.setOnClickListener(v -> {
             if(!currentDefective.isMarked())
