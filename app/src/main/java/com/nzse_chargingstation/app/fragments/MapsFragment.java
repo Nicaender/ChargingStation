@@ -246,7 +246,7 @@ public class MapsFragment extends Fragment {
         spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
             if(googleMap.isMyLocationEnabled())
             {
-                ContainerAndGlobal.setFilterRange(position);
+                ContainerAndGlobal.setFilterRangeAndApply(position);
                 if(updateMarker)
                     forceUpdate = true;
                 updateMarker = true;

@@ -63,7 +63,7 @@ public class ContainerAndGlobal {
         return defectiveList;
     }
 
-    public static void setFilterRange(double filterRange) {
+    public static void setFilterRangeAndApply(double filterRange) {
         for(int i = 0; i < chargingStationList.size(); i++)
         {
             if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < filterRange)
