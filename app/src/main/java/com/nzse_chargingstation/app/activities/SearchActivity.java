@@ -29,8 +29,6 @@ public class SearchActivity extends AppCompatActivity {
         Button btnSearchBack;
         btnSearchBack = findViewById(R.id.buttonSearchBack);
 
-        svChargingStation.performClick();
-
         // Implementation of back button
         btnSearchBack.setOnClickListener(v -> finish());
 
