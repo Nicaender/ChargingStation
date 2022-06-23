@@ -56,7 +56,7 @@ public class MapsFragment extends Fragment {
     private Marker clickedMarker;
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
-    private int favoriteX, reportX, spinnerX, locationX, backgroundX;
+    private int favoriteY, reportY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
 
     @Override
@@ -111,19 +111,19 @@ public class MapsFragment extends Fragment {
                 else
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
 
-                if(imgBtnFavorite.getVisibility() == View.GONE)
+                if(imgViewFavRepBackground.getVisibility() == View.GONE)
                 {
+                    imgViewFavRepBackground.setVisibility(View.VISIBLE);
                     imgBtnFavorite.setVisibility(View.VISIBLE);
                     imgBtnReport.setVisibility(View.VISIBLE);
-                    imgViewFavRepBackground.setVisibility(View.VISIBLE);
                 }
-                ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", favoriteX);
+                ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", backgroundY);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", reportX);
+                animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", backgroundX);
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
@@ -141,13 +141,13 @@ public class MapsFragment extends Fragment {
             googleMap.setOnInfoWindowLongClickListener(marker -> startActivity(new Intent(getActivity(), InfoActivity.class)));
 
             googleMap.setOnInfoWindowCloseListener(marker -> {
-                ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
+                ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+                animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
                 animation.setDuration(250);
                 animation.start();
-                animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", -1000f);
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
@@ -215,22 +215,22 @@ public class MapsFragment extends Fragment {
         ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
         imgViewFavRepBackground = view.findViewById(R.id.imageViewFavRepBackground);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
-        favoriteX = (int) imgBtnFavorite.getTranslationX();
-        reportX = (int) imgBtnReport.getTranslationX();
+        backgroundY = (int) imgViewFavRepBackground.getTranslationY();
+        favoriteY = (int) imgBtnFavorite.getTranslationY();
+        reportY = (int) imgBtnReport.getTranslationY();
         spinnerX = (int) spRadiusValue.getTranslationX();
         locationX = (int) imgBtnMyLocation.getTranslationX();
-        backgroundX = (int) imgViewFavRepBackground.getTranslationX();
 
+        imgViewFavRepBackground.setVisibility(GONE);
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
-        imgViewFavRepBackground.setVisibility(GONE);
-        ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
-        animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+        animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
-        animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", -1000f);
+        animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
 
