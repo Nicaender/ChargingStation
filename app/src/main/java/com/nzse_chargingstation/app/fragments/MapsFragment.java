@@ -51,11 +51,12 @@ public class MapsFragment extends Fragment {
     private ImageButton imgBtnFavorite;
     private ImageButton imgBtnReport;
     private ImageButton imgBtnMyLocation;
+    private ImageView imgViewFavRepBackground;
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Thread markerThread;
     private boolean stopThread = false, updateMarker = false, forceUpdate = false, updateLocationUI = true;
-    private int favoriteX, reportX, spinnerX, locationX;
+    private int favoriteX, reportX, spinnerX, locationX, backgroundX;
     private final float zoomLevel = (float) 15.0;
 
     @Override
@@ -114,11 +115,15 @@ public class MapsFragment extends Fragment {
                 {
                     imgBtnFavorite.setVisibility(View.VISIBLE);
                     imgBtnReport.setVisibility(View.VISIBLE);
+                    imgViewFavRepBackground.setVisibility(View.VISIBLE);
                 }
                 ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", favoriteX);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", reportX);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", backgroundX);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
@@ -140,6 +145,9 @@ public class MapsFragment extends Fragment {
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", -1000f);
                 animation.setDuration(250);
                 animation.start();
                 animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
@@ -205,18 +213,24 @@ public class MapsFragment extends Fragment {
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
         imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
         ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
+        imgViewFavRepBackground = view.findViewById(R.id.imageViewFavRepBackground);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
         favoriteX = (int) imgBtnFavorite.getTranslationX();
         reportX = (int) imgBtnReport.getTranslationX();
         spinnerX = (int) spRadiusValue.getTranslationX();
         locationX = (int) imgBtnMyLocation.getTranslationX();
+        backgroundX = (int) imgViewFavRepBackground.getTranslationX();
 
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
+        imgViewFavRepBackground.setVisibility(GONE);
         ObjectAnimator animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationX", -1000f);
         animation.setDuration(250);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnReport, "translationX", -1000f);
+        animation.setDuration(250);
+        animation.start();
+        animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationX", -1000f);
         animation.setDuration(250);
         animation.start();
 
