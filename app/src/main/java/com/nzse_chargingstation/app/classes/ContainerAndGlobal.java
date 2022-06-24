@@ -420,4 +420,24 @@ public class ContainerAndGlobal {
         }
         editor.apply();
     }
+
+    /**
+     * Resetting all static variables
+     */
+    public static void resetVariables()
+    {
+        filterRange = 0;
+        currentLocation = null;
+        reportedChargingStation = null;
+        zoomToThisChargingStation = null;
+        zoomToThisChargingStationOnPause = null;
+        clickedChargingStation = null;
+        reportedMarker = null;
+        changedSetting = false;
+        firstTime = true;
+        firstTimeGPSEnabled = true;
+        darkmode = false;
+        maxViewChargingStation = 100000;
+        lastCameraPosition = null;
+    }
 }

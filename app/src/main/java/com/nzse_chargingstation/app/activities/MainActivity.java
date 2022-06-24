@@ -61,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
         if(ContainerAndGlobal.isFirstTime())
         {
             ContainerAndGlobal.setFirstTime(false);
+
+            // Clearing old data in case the user closes the app and then reopens it
+            ContainerAndGlobal.getChargingStationList().clear();
+            ContainerAndGlobal.getFavoriteList().clear();
+            ContainerAndGlobal.getFilteredList().clear();
+            ContainerAndGlobal.getMarkedList().clear();
+            ContainerAndGlobal.getDefectiveList().clear();
+
             String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
             try {
                 JSONArray jsonarray = new JSONArray(jsonString);
@@ -179,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (pressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
+            ContainerAndGlobal.resetVariables();
             finish();
         } else {
             Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
