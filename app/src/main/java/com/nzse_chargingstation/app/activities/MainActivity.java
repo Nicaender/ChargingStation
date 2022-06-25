@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.onAttach(base, "en"));
+        super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
     }
 
     /**

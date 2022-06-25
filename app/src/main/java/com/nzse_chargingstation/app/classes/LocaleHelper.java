@@ -22,6 +22,10 @@ public class LocaleHelper {
 
     }
 
+    public static String getLanguage(Context context) {
+        return getPersistedData(context, Locale.getDefault().getLanguage());
+    }
+
     private static String getPersistedData(Context context, String defaultLanguage) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(SELECTED_LANGUAGE, defaultLanguage);

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -11,6 +12,7 @@ import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.DefectiveAdapter;
 import com.nzse_chargingstation.app.classes.DefectiveDistanceComparator;
+import com.nzse_chargingstation.app.classes.LocaleHelper;
 
 public class TechnicianActivity extends AppCompatActivity {
 
@@ -28,7 +30,7 @@ public class TechnicianActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        DefectiveAdapter adapter = new DefectiveAdapter();
+        DefectiveAdapter adapter = new DefectiveAdapter(this);
         recyclerView.setAdapter(adapter);
 
         adapter.setDefectiveList(ContainerAndGlobal.getDefectiveList());
@@ -36,5 +38,10 @@ public class TechnicianActivity extends AppCompatActivity {
         btnBackTechniker = findViewById(R.id.buttonBackTechniker);
 
         btnBackTechniker.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
     }
 }

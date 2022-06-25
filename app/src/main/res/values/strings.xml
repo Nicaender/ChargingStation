@@ -7,10 +7,11 @@
     <string name="settings">Settings</string>
     <string name="enable_darkmode">Enable darkmode</string>
     <string name="disable_darkmode">Disable darkmode</string>
-    <string name="additional_information">Additional information:</string>
+    <string name="additional_information">Additional information</string>
     <string name="reason">Reason</string>
     <string name="address">Address</string>
     <string name="distance">Distance</string>
+    <string name="distance_auf_deutsch" translatable="false">Distanz</string>
     <string name="remove">Remove</string>
     <string name="not_in_favorite">Not in favorites</string>
     <string name="in_favorite">In favorites</string>
@@ -19,9 +20,43 @@
     <string name="input_additional_information">Input additional information</string>
     <string name="search_here">Search here</string>
     <string name="how_many_charging_station_to_show_on_the_map">How many charging stations to show on the map?</string>
-    <string name="hold_for_more_info">Hold for more info</string>
+    <string name="hold_for_more_info">Long click for more information</string>
+    <string name="hold_for_more_info_auf_deutsch" translatable="false">Weitere Information lang drücken</string>
     <string name="report">Report</string>
     <string name="language">en</string>
-    <string name="language_button">Language: English</string>
+    <string name="language_button">Translate to german</string>
     <string name="language_toggle">de</string>
+    <string name="string_operator">Operator</string>
+    <string name="string_street">Street</string>
+    <string name="string_house_number">House number</string>
+    <string name="string_optional_address">Optional address</string>
+    <string name="string_postal_code">Postal code</string>
+    <string name="string_city">City</string>
+    <string name="string_state">State</string>
+    <string name="string_district_question">District or independent city</string>
+    <string name="string_latitude">Latitude</string>
+    <string name="string_longitude">Longitude</string>
+    <string name="string_commissioned_date">Installation date</string>
+    <string name="string_connecting_cable">Connecting cable</string>
+    <string name="string_type_of_charging_device">Type of charging device</string>
+    <string name="string_number_of_charging_points">Number of charging points</string>
+    <string name="string_connector_type_1">Connector type 1</string>
+    <string name="string_connector_type_2">Connector type 2</string>
+    <string name="string_connector_type_3">Connector type 3</string>
+    <string name="string_connector_type_4">Connector type 4</string>
+    <string name="fast_charging">Fast charging is available</string>
+    <string name="fast_charging_auf_deutsch" translatable="false">Schnellladung ist verfügbar</string>
+    <string name="fast_charging_no">Fast charging is not available</string>
+    <string name="fast_charging_no_auf_deutsch" translatable="false">Schnellladung ist nicht verfügbar</string>
+    <string name="click_to_show_navigation_route">Click to show navigation route</string>
+    <string name="click_to_show_navigation_route_auf_deutsch" translatable="false">Drücken für die Navigationsroute</string>
+    <string name="unknown">Unknown</string>
+    <string name="unknown_auf_deutsch" translatable="false">Unbekannt</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="successfully_marked">Successfully marked</string>
+    <string name="successfully_repaired">Successfully repaired</string>
+    <string name="mark">Mark</string>
+    <string name="finish">Finish</string>
+    <string name="charging_station_successfully_reported">Charging station successfully reported</string>
+    <string name="location_is_unknown">Location is unknown</string>
 </resources>

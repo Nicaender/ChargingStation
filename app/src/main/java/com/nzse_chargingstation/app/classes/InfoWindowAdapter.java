@@ -41,6 +41,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         TextView tvChargingStationAddress = v.findViewById(R.id.textViewChargingStationAddress);
         TextView tvChargingStationDistance = v.findViewById(R.id.textViewChargingStationDistance);
         TextView tvChargingStationFastCharging = v.findViewById(R.id.textViewChargingStationFastCharging);
+        TextView tvInfo = v.findViewById(R.id.textViewInfo);
         TextView tvHoldInfo = v.findViewById(R.id.textViewHoldInfo);
         ImageView imgViewChargingStation = v.findViewById(R.id.imageViewChargingStation);
         imgViewChargingStation.setImageResource(mContext.getResources().getIdentifier("ic_baseline_electrical_services_24", "drawable", mContext.getPackageName()));
@@ -48,14 +49,30 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         assert myCS != null;
         address = myCS.getStrasse() + ' ' + myCS.getHausnummer();
         tvChargingStationAddress.setText(address);
+
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = "Distance: " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
-        else
-            distance = "Distance: Unknown distance";
-        tvChargingStationDistance.setText(distance);
-        if(myCS.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
         {
-            fastCharging = "No fast charging";
+            if(LocaleHelper.getLanguage(mContext).equals("en"))
+                distance = mContext.getResources().getString(R.string.distance) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            else
+                distance = mContext.getResources().getString(R.string.distance_auf_deutsch) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+        }
+        else
+        {
+            if(LocaleHelper.getLanguage(mContext).equals("en"))
+                distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
+            else
+                distance = mContext.getResources().getString(R.string.distance_auf_deutsch) + " : " + mContext.getResources().getString(R.string.unknown_auf_deutsch);
+        }
+
+        tvChargingStationDistance.setText(distance);
+
+        if(myCS.getArtDerLadeeinrichtung().equals("Schnellladeeinrichtung"))
+        {
+            if(LocaleHelper.getLanguage(mContext).equals("en"))
+                fastCharging = mContext.getString(R.string.fast_charging);
+            else
+                fastCharging = mContext.getString(R.string.fast_charging_auf_deutsch);
             if(ContainerAndGlobal.isDarkmode())
                 imgViewChargingStation.setColorFilter(mContext.getColor(R.color.white));
             else
@@ -63,16 +80,33 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         }
         else
         {
-            fastCharging = "Fast charging";
+            if(LocaleHelper.getLanguage(mContext).equals("en"))
+                fastCharging = mContext.getString(R.string.fast_charging_no);
+            else
+                fastCharging = mContext.getString(R.string.fast_charging_no_auf_deutsch);
             imgViewChargingStation.setColorFilter(mContext.getColor(R.color.icon_color));
         }
+
         tvChargingStationFastCharging.setText(fastCharging);
+
+        if(LocaleHelper.getLanguage(mContext).equals("en"))
+        {
+            tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route));
+            tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info));
+        }
+        else
+        {
+            tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route_auf_deutsch));
+            tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info_auf_deutsch));
+        }
+
         if(ContainerAndGlobal.isDarkmode())
         {
             v.setBackground(AppCompatResources.getDrawable(mContext, R.drawable.item_curved_dark));
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.white));
+            tvInfo.setTextColor(mContext.getColor(R.color.white));
             tvHoldInfo.setTextColor(mContext.getColor(R.color.white));
         }
         else
@@ -81,6 +115,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationFastCharging.setTextColor(mContext.getColor(R.color.black));
+            tvInfo.setTextColor(mContext.getColor(R.color.black));
             tvHoldInfo.setTextColor(mContext.getColor(R.color.black));
         }
 

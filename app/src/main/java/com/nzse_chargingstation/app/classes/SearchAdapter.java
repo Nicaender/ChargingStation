@@ -56,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         if(ContainerAndGlobal.getCurrentLocation() != null)
             distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
-            distance = "Unknown distance";
+            distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvDistance.setText(distance);
         holder.tvSearchCity.setText(city);
     }

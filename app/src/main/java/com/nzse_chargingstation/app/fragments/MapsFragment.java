@@ -252,7 +252,7 @@ public class MapsFragment extends Fragment {
                 markerSignal.release();
             }
             else
-                Toast.makeText(getContext(), "Location is unknown", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), requireContext().getResources().getString(R.string.location_is_unknown), Toast.LENGTH_SHORT).show();
         });
 
         // Implementation of favorite button

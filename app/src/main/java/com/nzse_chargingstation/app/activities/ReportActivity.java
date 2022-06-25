@@ -2,6 +2,7 @@ package com.nzse_chargingstation.app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
+import com.nzse_chargingstation.app.classes.LocaleHelper;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -39,6 +41,11 @@ public class ReportActivity extends AppCompatActivity {
         btnReportConfirm.setOnClickListener(v -> add_defective());
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
+    }
+
     /**
      * Adding a new defective charging station
      */
@@ -49,6 +56,6 @@ public class ReportActivity extends AppCompatActivity {
         ContainerAndGlobal.addDefective(tmp);
         ContainerAndGlobal.saveData(false, getApplicationContext());
         finish();
-        Toast.makeText(this, "Charging station successfully reported", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getResources().getString(R.string.charging_station_successfully_reported), Toast.LENGTH_SHORT).show();
     }
 }

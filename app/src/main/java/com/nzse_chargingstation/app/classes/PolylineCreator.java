@@ -191,7 +191,10 @@ public class PolylineCreator {
             // Adding all the points in the route to LineOptions
             lineOptions.addAll(points);
             lineOptions.width(10);
-            lineOptions.color(Color.GREEN);
+            if(ContainerAndGlobal.isDarkmode())
+                lineOptions.color(Color.GREEN);
+            else
+                lineOptions.color(Color.BLUE);
             Log.d("mylog", "onPostExecute lineoptions decoded");
         }
 

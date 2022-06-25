@@ -1,5 +1,6 @@
 package com.nzse_chargingstation.app.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
+import com.nzse_chargingstation.app.classes.LocaleHelper;
 import com.nzse_chargingstation.app.classes.SearchAdapter;
 
 import java.util.ArrayList;
@@ -55,6 +57,11 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
     }
 
     /**

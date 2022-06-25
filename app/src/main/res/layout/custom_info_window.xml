@@ -36,10 +36,19 @@
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/textViewHoldInfo"
+        android:id="@+id/textViewInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewChargingStationFastCharging"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:text="@string/click_to_show_navigation_route"/>
+
+    <TextView
+        android:id="@+id/textViewHoldInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewInfo"
         android:textSize="16sp"
         android:textStyle="italic"
         android:text="@string/hold_for_more_info"/>

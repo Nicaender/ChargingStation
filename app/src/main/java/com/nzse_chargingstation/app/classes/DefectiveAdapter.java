@@ -1,6 +1,7 @@
 package com.nzse_chargingstation.app.classes;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defectiveHolder> {
+
+    public DefectiveAdapter(Context context)
+    {
+        this.mContext = context;
+    }
     private List<Defective> defectiveList = new ArrayList<>();
+    private final Context mContext;
 
     @NonNull
     @Override
@@ -27,38 +34,38 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
         return new defectiveHolder(itemView);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
         Defective currentDefective = defectiveList.get(position);
         String distance;
-        holder.tvDefectiveAddress.setText(currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer());
+        String name = currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer();
+        holder.tvDefectiveAddress.setText(name);
         String city = currentDefective.getDefectiveCs().getPostleitzahl() + ", " + currentDefective.getDefectiveCs().getOrt();
         holder.tvDefectiveCity.setText(city);
         if(ContainerAndGlobal.getCurrentLocation() != null)
             distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
-            distance = "Unknown distance";
+            distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvDefectiveReason.setText(currentDefective.getReason());
         holder.tvDistance.setText(distance);
         if(!currentDefective.isMarked())
-            holder.btnMarkToRepair.setText("Mark");
+            holder.btnMarkToRepair.setText(mContext.getResources().getString(R.string.mark));
         else
-            holder.btnMarkToRepair.setText("Finish");
+            holder.btnMarkToRepair.setText(mContext.getResources().getString(R.string.finish));
 
         holder.btnMarkToRepair.setOnClickListener(v -> {
             if(!currentDefective.isMarked())
             {
                 currentDefective.setMarked(true);
                 notifyItemChanged(holder.getAdapterPosition());
-                Toast.makeText(v.getContext(), "Successfully marked", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), mContext.getResources().getString(R.string.successfully_marked), Toast.LENGTH_SHORT).show();
             }
             else
             {
                 ContainerAndGlobal.removeDefective(currentDefective);
                 ContainerAndGlobal.saveData(false, v.getContext());
                 notifyItemRemoved(holder.getAdapterPosition());
-                Toast.makeText(v.getContext(), "Successfully repaired", Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), mContext.getResources().getString(R.string.successfully_repaired), Toast.LENGTH_SHORT).show();
             }
         });
     }
