@@ -73,10 +73,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 fastCharging = mContext.getString(R.string.fast_charging);
             else
                 fastCharging = mContext.getString(R.string.fast_charging_auf_deutsch);
-            if(ContainerAndGlobal.isDarkmode())
-                imgViewChargingStation.setColorFilter(mContext.getColor(R.color.white));
-            else
-                imgViewChargingStation.setColorFilter(mContext.getColor(R.color.black));
+            imgViewChargingStation.setColorFilter(mContext.getColor(R.color.icon_color));
         }
         else
         {
@@ -84,7 +81,10 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 fastCharging = mContext.getString(R.string.fast_charging_no);
             else
                 fastCharging = mContext.getString(R.string.fast_charging_no_auf_deutsch);
-            imgViewChargingStation.setColorFilter(mContext.getColor(R.color.icon_color));
+            if(ContainerAndGlobal.isDarkmode())
+                imgViewChargingStation.setColorFilter(mContext.getColor(R.color.white));
+            else
+                imgViewChargingStation.setColorFilter(mContext.getColor(R.color.black));
         }
 
         tvChargingStationFastCharging.setText(fastCharging);

@@ -61,7 +61,7 @@ public class MapsFragment extends Fragment {
     private Semaphore markerSignal, polylineSignal;
     private String url;
     private boolean stopThread = false, updateLocationUI = true;
-    private int favoriteY, reportY, spinnerX, locationX, backgroundY;
+    private int lastShownIndex, favoriteY, reportY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
 
     @Override
@@ -319,11 +319,8 @@ public class MapsFragment extends Fragment {
         if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
         {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
-            // Check if location is turned on or it is outside the max view range and is not already in marked list
-            if(ContainerAndGlobal.getCurrentLocation() != null &&
-                    ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getZoomToThisChargingStationOnPause()) > ContainerAndGlobal.getMaxViewChargingStation() &&
-                            !ContainerAndGlobal.isInMarkedList(ContainerAndGlobal.getZoomToThisChargingStationOnPause()))
-            {
+
+            if(showOnMap(ContainerAndGlobal.getZoomToThisChargingStationOnPause())) {
                 googleMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                         .position(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation())
@@ -465,8 +462,10 @@ public class MapsFragment extends Fragment {
                     if(markerSignal.availablePermits() > 0)
                         break;
                     ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                    if(ContainerAndGlobal.getCurrentLocation() != null && counter >= ContainerAndGlobal.getMaxViewChargingStation())
+                    if(ContainerAndGlobal.getCurrentLocation() != null && counter >= ContainerAndGlobal.getMaxViewChargingStation()) {
+                        lastShownIndex = i-1;
                         break;
+                    }
                     if(!tmp.isShowMarker())
                         continue;
                     assignMarker(tmp);
@@ -521,7 +520,7 @@ public class MapsFragment extends Fragment {
         ContainerAndGlobal.setMaxViewChargingStation(limit);
         for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
         {
-            if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) > ContainerAndGlobal.getMaxViewChargingStation())
+            if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) < lastShownIndex)
             {
                 ContainerAndGlobal.getMarkedList().remove(i);
                 i--;
@@ -597,6 +596,20 @@ public class MapsFragment extends Fragment {
         String output = "json";
         // Building the url to the web service
         return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.maps_api_key);
+    }
+
+    /**
+     * Check whether location is on, and charging station is not on the map
+     * @param chargingStation is the input class
+     * @return true if it is not shown yet, else false
+     */
+    private boolean showOnMap(ChargingStation chargingStation)
+    {
+        return ContainerAndGlobal.getCurrentLocation() != null
+                && ContainerAndGlobal.indexOfChargingStation(chargingStation) > lastShownIndex
+                && !ContainerAndGlobal.isInMarkedList(chargingStation)
+                && !ContainerAndGlobal.isInFavorite(chargingStation)
+                && !ContainerAndGlobal.isInDefective(chargingStation);
     }
 
     /**

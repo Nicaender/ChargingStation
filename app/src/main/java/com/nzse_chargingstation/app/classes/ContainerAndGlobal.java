@@ -223,6 +223,22 @@ public class ContainerAndGlobal {
     }
 
     /**
+     * Search a charging station in the defectives
+     * @param chargingStation is the class that wants to be checked
+     * @return true if it is in defective, else false
+     */
+    public static boolean isInDefective(ChargingStation chargingStation)
+    {
+        for(int i = 0; i < defectiveList.size(); i++)
+        {
+            if(defectiveList.get(i).getDefectiveCs().equals(chargingStation))
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Search a charging station in the marked list
      * @param chargingStation is the class that wants to be checked
      * @return true if it is in marked list, else false
