@@ -6,7 +6,6 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,6 +44,7 @@ import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.InfoWindowAdapter;
 import com.nzse_chargingstation.app.classes.PolylineCreator;
+import com.nzse_chargingstation.app.classes.RoutePlan;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -58,9 +58,10 @@ public class MapsFragment extends Fragment {
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Polyline currentPolyline;
-    private Thread markerThread, polylineThread;
-    private Semaphore markerSignal, polylineSignal;
+    private Thread markerThread, polylineThread, navigatedPolylineThread;
+    private final Semaphore markerSignal = new Semaphore(0), polylineSignal = new Semaphore(0), navigatedPolylineSignal = new Semaphore(0);
     private String url;
+    private final ArrayList<Polyline> navigatedPolyline = new ArrayList<>();
     private boolean stopThread = false, updateLocationUI = true;
     private int lastShownIndex, favoriteY, reportY, routeY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
@@ -76,13 +77,13 @@ public class MapsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        // initialize Semaphores and threads, then runs the threads
-        markerSignal = new Semaphore(0);
-        polylineSignal = new Semaphore(0);
+        // Initialize threads, then runs the threads
         markerThreadInitialize();
         polylineThreadInitialize();
+        navigatedPolylineThreadInitialize();
         markerThread.start();
         polylineThread.start();
+        navigatedPolylineThread.start();
         stopThread = false;
 
         // Create the google map
@@ -184,11 +185,17 @@ public class MapsFragment extends Fragment {
                 ContainerAndGlobal.setLastCameraPosition(null);
             }
 
-            // When a user clicked on favorite, it will moves the camera to that charging station
+            // When user clicked charging station on favorite, it will moves the camera to that charging station
             if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
             {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), zoomLevel));
                 ContainerAndGlobal.setZoomToThisChargingStation(null);
+            }
+
+            // When user clicked navigate on route plan, it will automatically created a polyline from the beginning to the end
+            if(ContainerAndGlobal.getNavigateRoutePlan() != null)
+            {
+                navigatedPolylineSignal.release();
             }
 /*
             Here are the approximate zoom levels and what they do :
@@ -368,9 +375,11 @@ public class MapsFragment extends Fragment {
         stopThread = true;
         markerSignal.release();
         polylineSignal.release();
+        navigatedPolylineSignal.release();
         try {
             markerThread.join();
             polylineThread.join();
+            navigatedPolylineThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -524,6 +533,59 @@ public class MapsFragment extends Fragment {
                 if(currentPolyline != null)
                     requireActivity().runOnUiThread(() -> currentPolyline.remove());
                 requireActivity().runOnUiThread(() -> currentPolyline = googleMap.addPolyline(polyline));
+            }
+        });
+    }
+
+    private void navigatedPolylineThreadInitialize()
+    {
+        navigatedPolylineThread = new Thread(() -> {
+            while(true) {
+                // Wait for the signal from map
+                try {
+                    navigatedPolylineSignal.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if(stopThread)
+                    return;
+
+                RoutePlan tmp = ContainerAndGlobal.getNavigateRoutePlan();
+                ContainerAndGlobal.setNavigateRoutePlan(null);
+                PolylineCreator polylineCreator = new PolylineCreator();
+                if(ContainerAndGlobal.getCurrentLocation() != null)
+                {
+                    LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                    final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
+                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl);
+                    requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
+                }
+                for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
+                {
+                    if(stopThread)
+                        return;
+                    if(showOnMap(tmp.getChargingStationRoutes().get(i))) {
+                        googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .position(tmp.getChargingStationRoutes().get(i).getLocation())
+                                .title(tmp.getChargingStationRoutes().get(i).getStrasse() + ' ' + tmp.getChargingStationRoutes().get(i).getHausnummer()));
+                        ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i));
+                    }
+                    if(i == tmp.getChargingStationRoutes().size()-2)
+                    {
+                        if(showOnMap(tmp.getChargingStationRoutes().get(i+1))) {
+                            googleMap.addMarker(new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                    .position(tmp.getChargingStationRoutes().get(i+1).getLocation())
+                                    .title(tmp.getChargingStationRoutes().get(i+1).getStrasse() + ' ' + tmp.getChargingStationRoutes().get(i+1).getHausnummer()));
+                            ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i+1));
+                        }
+                    }
+                    final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(i +1).getLocation());
+                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl);
+                    requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
+                }
             }
         });
     }

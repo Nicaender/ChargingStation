@@ -37,7 +37,6 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
 
     @Override
     public void onBindViewHolder(@NonNull RouteEachHolder holder, int position) {
-        //TODO
         String name = routeEachList.get(position).getStrasse() + ' ' + routeEachList.get(position).getHausnummer();
         holder.tvRouteEachAddress.setText(name);
         String city = routeEachList.get(position).getPostleitzahl() + ", " + routeEachList.get(position).getOrt();

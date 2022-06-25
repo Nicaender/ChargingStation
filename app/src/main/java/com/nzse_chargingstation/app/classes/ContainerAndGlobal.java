@@ -37,6 +37,7 @@ public class ContainerAndGlobal {
     private static ChargingStation clickedChargingStation = null;
     private static Marker reportedMarker = null;
     private static RoutePlan selectedRoutePlan = null;
+    private static RoutePlan navigateRoutePlan = null;
     private static boolean changedSetting = false;
     private static boolean firstTime = true;
     private static boolean firstTimeGPSEnabled = true;
@@ -138,6 +139,14 @@ public class ContainerAndGlobal {
 
     public static void setSelectedRoutePlan(RoutePlan selectedRoutePlan) {
         ContainerAndGlobal.selectedRoutePlan = selectedRoutePlan;
+    }
+
+    public static RoutePlan getNavigateRoutePlan() {
+        return navigateRoutePlan;
+    }
+
+    public static void setNavigateRoutePlan(RoutePlan navigateRoutePlan) {
+        ContainerAndGlobal.navigateRoutePlan = navigateRoutePlan;
     }
 
     public static boolean isChangedSetting() {
@@ -478,6 +487,7 @@ public class ContainerAndGlobal {
         clickedChargingStation = null;
         reportedMarker = null;
         selectedRoutePlan = null;
+        navigateRoutePlan = null;
         changedSetting = false;
         firstTime = true;
         firstTimeGPSEnabled = true;

@@ -44,11 +44,9 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
             mContext.startActivity(new Intent(mContext, RouteActivity.class));
         });
 
-        holder.btnRouteNavigate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO
-            }
+        holder.btnRouteNavigate.setOnClickListener(v -> {
+            ContainerAndGlobal.setNavigateRoutePlan(routeList.get(position));
+            ((MainActivity)mContext).switchFragment(0);
         });
     }
 
