@@ -1,6 +1,5 @@
 package com.nzse_chargingstation.app.classes;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

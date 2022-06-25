@@ -135,16 +135,17 @@ public class MapsFragment extends Fragment {
                 // Animate the icons entry
                 animate(true);
 
-                // Show direction from current location to the selected charging station
-                LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                url = getUrl(start, marker.getPosition());
-                polylineSignal.release();
-
                 return false;
             });
 
             // Triggered when user click the info window
-            googleMap.setOnInfoWindowClickListener(marker -> googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel)));
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel));
+                // Show direction from current location to the selected charging station
+                LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                url = getUrl(start, marker.getPosition());
+                polylineSignal.release();
+            });
 
             // Triggered when user long click the info window
             googleMap.setOnInfoWindowLongClickListener(marker -> startActivity(new Intent(getActivity(), InfoActivity.class)));
