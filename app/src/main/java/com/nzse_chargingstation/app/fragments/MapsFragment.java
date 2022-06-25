@@ -331,7 +331,10 @@ public class MapsFragment extends Fragment {
             }
             AlertDialog.Builder builder1 = new AlertDialog.Builder(requireActivity());
             builder1.setTitle(R.string.route_plan_list)
-                    .setItems(routeList, (dialog1, which) -> ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition())));
+                    .setItems(routeList, (dialog1, which) -> {
+                        ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
+                        ContainerAndGlobal.saveData(3, requireContext());
+                    });
             builder1.show();
         });
     }
@@ -347,10 +350,7 @@ public class MapsFragment extends Fragment {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
 
             if(showOnMap(ContainerAndGlobal.getZoomToThisChargingStationOnPause())) {
-                googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                        .position(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation())
-                        .title(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getStrasse() + ' ' + ContainerAndGlobal.getZoomToThisChargingStationOnPause().getHausnummer()));
+                assignMarker(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
                 ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
             }
             ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
@@ -449,10 +449,7 @@ public class MapsFragment extends Fragment {
                     if(markerSignal.availablePermits() > 0)
                         break;
                     ChargingStation tmp = ContainerAndGlobal.getMarkedList().get(i);
-                    requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                            .position(tmp.getLocation())
-                            .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
+                    assignMarker(tmp);
                     try {
                         //noinspection BusyWait
                         Thread.sleep(0, 100);
@@ -469,10 +466,7 @@ public class MapsFragment extends Fragment {
                     if(markerSignal.availablePermits() > 0)
                         break;
                     ChargingStation tmp = ContainerAndGlobal.getFavoriteList().get(i);
-                    requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                            .position(tmp.getLocation())
-                            .title(tmp.getStrasse() + ' ' + tmp.getHausnummer())));
+                    assignMarker(tmp);
                     try {
                         //noinspection BusyWait
                         Thread.sleep(0, 100);
@@ -527,7 +521,7 @@ public class MapsFragment extends Fragment {
 
                 if(stopThread)
                     return;
-                PolylineOptions polyline = polylineCreator.createPolyline(url);
+                PolylineOptions polyline = polylineCreator.createPolyline(url, -1);
                 url = null;
                 // Put the route line on the map, delete the older one if it exists
                 if(currentPolyline != null)
@@ -554,36 +548,41 @@ public class MapsFragment extends Fragment {
                 RoutePlan tmp = ContainerAndGlobal.getNavigateRoutePlan();
                 ContainerAndGlobal.setNavigateRoutePlan(null);
                 PolylineCreator polylineCreator = new PolylineCreator();
-                if(ContainerAndGlobal.getCurrentLocation() != null)
+                if(ContainerAndGlobal.getCurrentLocation() != null && tmp.getChargingStationRoutes().size() > 0 && !ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(0)))
                 {
                     LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
                     final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
-                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl);
+                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
                     requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
                 }
                 for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
                 {
                     if(stopThread)
                         return;
+                    int next = i+1;
+                    if(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(i)))
+                        continue;
+                    while(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(next))) {
+                        next++;
+                        if(next >= tmp.getChargingStationRoutes().size())
+                            break;
+                    }
+                    if(next >= tmp.getChargingStationRoutes().size())
+                        break;
+
                     if(showOnMap(tmp.getChargingStationRoutes().get(i))) {
-                        googleMap.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .position(tmp.getChargingStationRoutes().get(i).getLocation())
-                                .title(tmp.getChargingStationRoutes().get(i).getStrasse() + ' ' + tmp.getChargingStationRoutes().get(i).getHausnummer()));
+                        assignMarker(tmp.getChargingStationRoutes().get(i));
                         ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i));
                     }
-                    if(i == tmp.getChargingStationRoutes().size()-2)
+                    if(next == tmp.getChargingStationRoutes().size()-1)
                     {
-                        if(showOnMap(tmp.getChargingStationRoutes().get(i+1))) {
-                            googleMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                    .position(tmp.getChargingStationRoutes().get(i+1).getLocation())
-                                    .title(tmp.getChargingStationRoutes().get(i+1).getStrasse() + ' ' + tmp.getChargingStationRoutes().get(i+1).getHausnummer()));
-                            ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i+1));
+                        if(showOnMap(tmp.getChargingStationRoutes().get(next))) {
+                            assignMarker(tmp.getChargingStationRoutes().get(next));
+                            ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(next));
                         }
                     }
-                    final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(i +1).getLocation());
-                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl);
+                    final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(next).getLocation());
+                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, i%2);
                     requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
                 }
             }
@@ -620,23 +619,30 @@ public class MapsFragment extends Fragment {
      */
     private void assignMarker(ChargingStation chargingStation)
     {
-        if(chargingStation.isFiltered())
+        if(ContainerAndGlobal.isInFavorite(chargingStation))
             requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
                     .position(chargingStation.getLocation())
                     .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
-        else
-        {
-            if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+        else {
+            if(chargingStation.isFiltered())
                 requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         .position(chargingStation.getLocation())
                         .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
             else
-                requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                        .position(chargingStation.getLocation())
-                        .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+            {
+                if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                    requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .position(chargingStation.getLocation())
+                            .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+                else
+                    requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .position(chargingStation.getLocation())
+                            .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+            }
         }
     }
 

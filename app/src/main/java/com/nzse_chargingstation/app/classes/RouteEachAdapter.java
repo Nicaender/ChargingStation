@@ -37,20 +37,20 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
 
     @Override
     public void onBindViewHolder(@NonNull RouteEachHolder holder, int position) {
-        String name = routeEachList.get(position).getStrasse() + ' ' + routeEachList.get(position).getHausnummer();
+        String name = routeEachList.get(holder.getAdapterPosition()).getStrasse() + ' ' + routeEachList.get(holder.getAdapterPosition()).getHausnummer();
         holder.tvRouteEachAddress.setText(name);
-        String city = routeEachList.get(position).getPostleitzahl() + ", " + routeEachList.get(position).getOrt();
+        String city = routeEachList.get(holder.getAdapterPosition()).getPostleitzahl() + ", " + routeEachList.get(holder.getAdapterPosition()).getOrt();
         holder.tvRouteEachCity.setText(city);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(routeEachList.get(position).getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(routeEachList.get(holder.getAdapterPosition()).getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvRouteEachDistance.setText(distance);
 
         holder.btnRouteEachRemove.setOnClickListener(v -> {
             holder.btnRouteEachRemove.setClickable(false);
-            routePlan.getChargingStationRoutes().remove(position);
+            routePlan.getChargingStationRoutes().remove(holder.getAdapterPosition());
             ContainerAndGlobal.saveData(3, v.getContext());
             notifyItemRemoved(holder.getAdapterPosition());
             Toast.makeText(v.getContext(), v.getResources().getString(R.string.removed_from_this_route_plan), Toast.LENGTH_SHORT).show();

@@ -1,5 +1,6 @@
 package com.nzse_chargingstation.app.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -26,6 +27,8 @@ import com.nzse_chargingstation.app.classes.RoutePlan;
 
 public class RouteFragment extends Fragment {
 
+    private RouteAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class RouteFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
 
-        RouteAdapter adapter = new RouteAdapter(requireContext());
+        adapter = new RouteAdapter(requireContext());
         recyclerView.setAdapter(adapter);
 
         adapter.setRouteList(ContainerAndGlobal.getRoutePlanList());
@@ -70,5 +73,13 @@ public class RouteFragment extends Fragment {
             builder.setNegativeButton(getString(R.string.builder_negative_button), (dialog, which) -> dialog.cancel());
             builder.show();
         });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
     }
 }

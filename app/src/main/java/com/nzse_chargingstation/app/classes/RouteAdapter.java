@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,16 +38,20 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RouteHolder holder, int position) {
-        holder.tvRouteName.setText(routeList.get(position).getName());
+        holder.tvRouteName.setText(routeList.get(holder.getAdapterPosition()).getName());
 
         holder.btnRouteEdit.setOnClickListener(v -> {
-            ContainerAndGlobal.setSelectedRoutePlan(routeList.get(position));
+            ContainerAndGlobal.setSelectedRoutePlan(routeList.get(holder.getAdapterPosition()));
             mContext.startActivity(new Intent(mContext, RouteActivity.class));
         });
 
         holder.btnRouteNavigate.setOnClickListener(v -> {
-            ContainerAndGlobal.setNavigateRoutePlan(routeList.get(position));
-            ((MainActivity)mContext).switchFragment(0);
+            if(routeList.get(holder.getAdapterPosition()).getChargingStationRoutes().size() != 0) {
+                ContainerAndGlobal.setNavigateRoutePlan(routeList.get(holder.getAdapterPosition()));
+                ((MainActivity)mContext).switchFragment(0);
+            }
+            else
+                Toast.makeText(mContext, R.string.this_route_plan_has_0_charging_station, Toast.LENGTH_SHORT).show();
         });
     }
 

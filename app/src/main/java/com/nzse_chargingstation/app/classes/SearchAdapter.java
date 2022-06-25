@@ -48,7 +48,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHold
     @Override
     public void onBindViewHolder(@NonNull SearchHolder holder, int position) {
         // setting data to our views of recycler view.
-        holder.myCS = chargingStationList.get(position);
+        holder.myCS = chargingStationList.get(holder.getAdapterPosition());
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         String city = holder.myCS.getPostleitzahl() + ", " + holder.myCS.getOrt();
         holder.tvSearchAddress.setText(name);

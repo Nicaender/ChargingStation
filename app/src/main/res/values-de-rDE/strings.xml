@@ -62,4 +62,7 @@
     <string name="edit">Bearbeiten</string>
     <string name="route_plan_list">Routenplan Liste</string>
     <string name="removed_from_this_route_plan">Von diesem Routenplan entfernt</string>
+    <string name="this_route_plan_has_0_charging_station">Dieser Routenplan hat 0 Ladesäule</string>
+    <string name="remove_route">Routenplan entfernen</string>
+    <string name="route_plan_is_removed">Der Routenplan ist entfernt</string>
 </resources>

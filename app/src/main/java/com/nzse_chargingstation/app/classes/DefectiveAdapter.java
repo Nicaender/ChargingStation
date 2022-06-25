@@ -35,7 +35,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
 
     @Override
     public void onBindViewHolder(@NonNull DefectiveHolder holder, int position) {
-        Defective currentDefective = defectiveList.get(position);
+        Defective currentDefective = defectiveList.get(holder.getAdapterPosition());
         String distance;
         String name = currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer();
         holder.tvDefectiveAddress.setText(name);

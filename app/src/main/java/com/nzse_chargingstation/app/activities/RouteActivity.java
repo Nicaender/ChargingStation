@@ -2,8 +2,10 @@ package com.nzse_chargingstation.app.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ public class RouteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_route);
 
         Button btnRouteEachBack = findViewById(R.id.buttonRouteEachBack);
+        Button btnRouteRemove = findViewById(R.id.buttonRouteRemove);
         TextView tvRoutePlanName = findViewById(R.id.textViewRoutePlanName);
 
         RoutePlan currentRoutePlan = ContainerAndGlobal.getSelectedRoutePlan();
@@ -42,6 +45,19 @@ public class RouteActivity extends AppCompatActivity {
         adapter.setRouteEachList(currentRoutePlan.getChargingStationRoutes());
 
         btnRouteEachBack.setOnClickListener(v -> finish());
+
+        btnRouteRemove.setOnClickListener(v -> {
+            for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
+            {
+                if(currentRoutePlan.equals(ContainerAndGlobal.getRoutePlanList().get(i))) {
+                    ContainerAndGlobal.getRoutePlanList().remove(i);
+                    Toast.makeText(this, getString(R.string.route_plan_is_removed), Toast.LENGTH_SHORT).show();
+                    ContainerAndGlobal.saveData(3, this);
+                    finish();
+                    break;
+                }
+            }
+        });
     }
 
     @Override

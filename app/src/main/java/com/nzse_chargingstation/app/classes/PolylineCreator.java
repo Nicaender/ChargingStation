@@ -19,14 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class PolylineCreator {
 
-    public PolylineOptions createPolyline(String url)
+    public PolylineOptions createPolyline(String url, int colorState)
     {
         String data = storeDataFromWebsite(url);
         List<List<HashMap<String, String>>> routes = jsonToRoute(data);
-        return parsePolyline(routes);
+        return parsePolyline(routes, colorState);
     }
 
     private String storeDataFromWebsite(String... strings) {
@@ -171,7 +172,7 @@ public class PolylineCreator {
         return routes;
     }
 
-    private PolylineOptions parsePolyline(List<List<HashMap<String, String>>> result) {
+    private PolylineOptions parsePolyline(List<List<HashMap<String, String>>> result, int colorState) {
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;
         // Traversing through all the routes
@@ -195,6 +196,14 @@ public class PolylineCreator {
                 lineOptions.color(Color.GREEN);
             else
                 lineOptions.color(Color.BLUE);
+            if(colorState == 0)
+                lineOptions.color(Color.RED);
+            else if(colorState == 1) {
+                if(ContainerAndGlobal.isDarkmode())
+                    lineOptions.color(Color.GREEN);
+                else
+                    lineOptions.color(Color.BLUE);
+            }
             Log.d("mylog", "onPostExecute lineoptions decoded");
         }
 

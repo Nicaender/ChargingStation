@@ -36,7 +36,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteHolder holder, int position) {
-        holder.myCS = favoriteList.get(position);
+        holder.myCS = favoriteList.get(holder.getAdapterPosition());
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         holder.tvFavoriteAddress.setText(name);
         String city = holder.myCS.getPostleitzahl() + ", " + holder.myCS.getOrt();
