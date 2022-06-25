@@ -22,7 +22,6 @@ import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
-import com.nzse_chargingstation.app.classes.TaskLoadedCallback;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.SettingsFragment;
@@ -37,7 +36,7 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements TaskLoadedCallback {
+public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements TaskLoadedCallbac
     private FusedLocationProviderClient fusedLocationClient;
 
     private BottomNavigationView bottomNavBar;
-    private Object polyline;
 
     private final int REQUEST_LOCATION_PERMISSION = 1;
 
@@ -238,20 +236,5 @@ public class MainActivity extends AppCompatActivity implements TaskLoadedCallbac
             bottomNavBar.setSelectedItemId(R.id.navFavorites);
         else
             bottomNavBar.setSelectedItemId(R.id.navSettings);
-    }
-
-    @Override
-    public void onTaskDone(Object... values) {
-        polyline = values[0];
-    }
-
-    public Object getPolyline()
-    {
-        return this.polyline;
-    }
-
-    public void setPolyline(Object polyline)
-    {
-        this.polyline = polyline;
     }
 }

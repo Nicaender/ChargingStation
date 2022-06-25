@@ -38,13 +38,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.InfoActivity;
-import com.nzse_chargingstation.app.activities.MainActivity;
 import com.nzse_chargingstation.app.activities.ReportActivity;
 import com.nzse_chargingstation.app.activities.SearchActivity;
 import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
-import com.nzse_chargingstation.app.classes.FetchURL;
 import com.nzse_chargingstation.app.classes.InfoWindowAdapter;
+import com.nzse_chargingstation.app.classes.PolylineCreator;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -60,6 +59,7 @@ public class MapsFragment extends Fragment {
     private Polyline currentPolyline;
     private Thread markerThread, polylineThread;
     private Semaphore markerSignal, polylineSignal;
+    private String url;
     private boolean stopThread = false, updateLocationUI = true;
     private int favoriteY, reportY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
@@ -137,8 +137,7 @@ public class MapsFragment extends Fragment {
 
                 // Show direction from current location to the selected charging station
                 LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                String url = getUrl(start, marker.getPosition());
-                new FetchURL(requireContext()).execute(url, "driving");
+                url = getUrl(start, marker.getPosition());
                 polylineSignal.release();
 
                 return false;
@@ -488,6 +487,7 @@ public class MapsFragment extends Fragment {
     private void polylineThreadInitialize()
     {
         polylineThread = new Thread(() -> {
+            PolylineCreator polylineCreator = new PolylineCreator();
             while(true)
             {
                 // Wait for the signal from map
@@ -497,26 +497,14 @@ public class MapsFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                // Wait for the result from main activity
-                while(((MainActivity)requireContext()).getPolyline() == null)
-                {
-                    if(stopThread)
-                        return;
-                    try {
-                        //noinspection BusyWait
-                        Thread.sleep(0, 100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                Object polyline = ((MainActivity)requireContext()).getPolyline();
+                if(stopThread)
+                    return;
+                PolylineOptions polyline = polylineCreator.createPolyline(url);
+                url = null;
                 // Put the route line on the map, delete the older one if it exists
                 if(currentPolyline != null)
                     requireActivity().runOnUiThread(() -> currentPolyline.remove());
-                requireActivity().runOnUiThread(() -> currentPolyline = googleMap.addPolyline((PolylineOptions) polyline));
-                ((MainActivity)requireContext()).setPolyline(null);
+                requireActivity().runOnUiThread(() -> currentPolyline = googleMap.addPolyline(polyline));
             }
         });
     }
