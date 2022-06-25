@@ -55,7 +55,7 @@
     <string name="route_plan">Routenplan</string>
     <string name="navigate">Navigieren</string>
     <string name="add_new_route_plan">Neu Routenplan hinzufügen</string>
-    <string name="route_plan_name_question">Routenplanname?</string>
+    <string name="route_plan_name_question">Name des Routenplans</string>
     <string name="builder_positive_button">Bestätigen</string>
     <string name="builder_negative_button">Abbrechen</string>
     <string name="successfully_added">Erfolgreich hinzugefügt</string>

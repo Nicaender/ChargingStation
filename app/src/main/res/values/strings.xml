@@ -63,7 +63,7 @@
     <string name="edit">Edit</string>
     <string name="navigate">Navigate</string>
     <string name="add_new_route_plan">Add new route plan</string>
-    <string name="route_plan_name_question">Route plan name?</string>
+    <string name="route_plan_name_question">Route plan\'s name</string>
     <string name="builder_positive_button">Confirm</string>
     <string name="builder_negative_button">Cancel</string>
     <string name="successfully_added">Successfully added</string>
