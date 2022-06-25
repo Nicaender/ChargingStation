@@ -16,7 +16,7 @@ import com.nzse_chargingstation.app.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defectiveHolder> {
+public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.DefectiveHolder> {
 
     public DefectiveAdapter(Context context)
     {
@@ -27,14 +27,14 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
 
     @NonNull
     @Override
-    public defectiveHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DefectiveHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_defective, parent, false);
-        return new defectiveHolder(itemView);
+        return new DefectiveHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull defectiveHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DefectiveHolder holder, int position) {
         Defective currentDefective = defectiveList.get(position);
         String distance;
         String name = currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer();
@@ -81,14 +81,11 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.defe
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
-    class defectiveHolder extends RecyclerView.ViewHolder {
-        private final TextView tvDefectiveAddress;
-        private final TextView tvDefectiveReason;
-        private final TextView tvDefectiveCity;
-        private final TextView tvDistance;
+    class DefectiveHolder extends RecyclerView.ViewHolder {
+        private final TextView tvDefectiveAddress, tvDefectiveReason, tvDefectiveCity, tvDistance;
         private final Button btnMarkToRepair;
 
-        public defectiveHolder(@NonNull View itemView) {
+        public DefectiveHolder(@NonNull View itemView) {
             super(itemView);
             tvDefectiveAddress = itemView.findViewById(R.id.textViewDefectiveAddress);
             tvDefectiveReason = itemView.findViewById(R.id.textViewDefectiveReason);

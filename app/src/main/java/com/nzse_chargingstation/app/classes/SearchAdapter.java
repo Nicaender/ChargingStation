@@ -15,7 +15,7 @@ import com.nzse_chargingstation.app.R;
 
 import java.util.ArrayList;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHolder> {
 
     // creating a variable for array list and context.
     private ArrayList<ChargingStation> chargingStationList;
@@ -40,13 +40,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false);
-        return new ViewHolder(view);
+        return new SearchHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchHolder holder, int position) {
         // setting data to our views of recycler view.
         holder.myCS = chargingStationList.get(position);
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
@@ -66,14 +66,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return chargingStationList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class SearchHolder extends RecyclerView.ViewHolder {
         // creating variables for our views.
-        private final TextView tvSearchAddress;
-        private final TextView tvDistance;
-        private final TextView tvSearchCity;
+        private final TextView tvSearchAddress, tvDistance, tvSearchCity;
         private ChargingStation myCS;
 
-        public ViewHolder(@NonNull View itemView) {
+        public SearchHolder(@NonNull View itemView) {
             super(itemView);
             // initializing our views with their ids.
             tvSearchAddress = itemView.findViewById(R.id.textViewSearchAddress);

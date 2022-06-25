@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/item_curved">
+
+        <TextView
+            android:id="@+id/textViewRouteName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:textSize="40sp"
+            android:textColor="@color/recycler_view_text_color"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/buttonRouteEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/textViewRouteName"
+            android:backgroundTint="@color/button_background_color"
+            android:textColor="@color/button_text_color"
+            android:textStyle="bold"
+            android:text="@string/edit"/>
+
+        <Button
+            android:id="@+id/buttonRouteNavigate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/textViewRouteName"
+            android:backgroundTint="@color/button_background_color"
+            android:textColor="@color/button_text_color"
+            android:textStyle="bold"
+            android:text="@string/navigate"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

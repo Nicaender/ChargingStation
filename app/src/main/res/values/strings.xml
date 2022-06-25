@@ -60,4 +60,7 @@
     <string name="charging_station_successfully_reported">Charging station successfully reported</string>
     <string name="location_is_unknown">Location is unknown</string>
     <string name="route_plan">Route plan</string>
+    <string name="edit">Edit</string>
+    <string name="navigate">Navigate</string>
+    <string name="add_new_route_plan">Add new route plan</string>
 </resources>

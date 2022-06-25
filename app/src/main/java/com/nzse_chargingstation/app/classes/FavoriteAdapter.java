@@ -17,7 +17,7 @@ import com.nzse_chargingstation.app.activities.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favoriteHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
 
     public FavoriteAdapter(Context context)
     {
@@ -28,14 +28,14 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
 
     @NonNull
     @Override
-    public favoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoriteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_favorite, parent, false);
-        return new favoriteHolder(itemView);
+        return new FavoriteHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull favoriteHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavoriteHolder holder, int position) {
         holder.myCS = favoriteList.get(position);
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         holder.tvFavoriteAddress.setText(name);
@@ -68,14 +68,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.favori
         notifyItemRangeChanged(0, favorites.size());
     }
 
-    class favoriteHolder extends RecyclerView.ViewHolder {
-        private final TextView tvFavoriteAddress;
-        private final TextView tvDistance;
-        private final TextView tvFavoriteCity;
+    class FavoriteHolder extends RecyclerView.ViewHolder {
+        private final TextView tvFavoriteAddress, tvDistance, tvFavoriteCity;
         private final Button btnRemoveFromFavorite;
         private ChargingStation myCS;
 
-        public favoriteHolder(View itemView)
+        public FavoriteHolder(View itemView)
         {
             super(itemView);
             tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAddress);
