@@ -26,6 +26,7 @@ import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
+import com.nzse_chargingstation.app.fragments.RouteFragment;
 import com.nzse_chargingstation.app.fragments.SettingsFragment;
 
 import org.json.JSONArray;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     final MapsFragment mapsFragment = new MapsFragment();
     final FavoritesFragment favoritesFragment = new FavoritesFragment();
     final SettingsFragment settingsFragment = new SettingsFragment();
+    final RouteFragment routeFragment = new RouteFragment();
     private FusedLocationProviderClient fusedLocationClient;
 
     private BottomNavigationView bottomNavBar;
@@ -130,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
             {
                 case R.id.navMaps:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
+                    return true;
+                case R.id.navRoute:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, routeFragment).commit();
                     return true;
                 case R.id.navFavorites:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
@@ -240,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
         if(option == 0)
             bottomNavBar.setSelectedItemId(R.id.navMaps);
         else if(option == 1)
+            bottomNavBar.setSelectedItemId(R.id.navRoute);
+        else if(option == 2)
             bottomNavBar.setSelectedItemId(R.id.navFavorites);
         else
             bottomNavBar.setSelectedItemId(R.id.navSettings);

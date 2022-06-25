@@ -52,4 +52,5 @@
     <string name="finish">Abschließen</string>
     <string name="charging_station_successfully_reported">Ladesäule ist erfolgreich gemeldet</string>
     <string name="location_is_unknown">Standort ist unbekannt</string>
+    <string name="route_plan">Routenplan</string>
 </resources>

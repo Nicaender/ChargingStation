@@ -3,8 +3,13 @@
 
     <item
         android:id="@+id/navMaps"
-        android:icon="@drawable/ic_baseline_navigation_24"
+        android:icon="@drawable/ic_baseline_map_24"
         android:title="@string/maps" />
+
+    <item
+        android:id="@+id/navRoute"
+        android:icon="@drawable/ic_baseline_navigation_24"
+        android:title="@string/route_plan" />
 
     <item
         android:id="@+id/navFavorites"

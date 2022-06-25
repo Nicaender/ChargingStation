@@ -59,4 +59,5 @@
     <string name="finish">Finish</string>
     <string name="charging_station_successfully_reported">Charging station successfully reported</string>
     <string name="location_is_unknown">Location is unknown</string>
+    <string name="route_plan">Route plan</string>
 </resources>
