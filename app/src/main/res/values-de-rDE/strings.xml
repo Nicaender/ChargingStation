@@ -53,4 +53,11 @@
     <string name="charging_station_successfully_reported">Ladesäule ist erfolgreich gemeldet</string>
     <string name="location_is_unknown">Standort ist unbekannt</string>
     <string name="route_plan">Routenplan</string>
+    <string name="navigate">Navigieren</string>
+    <string name="add_new_route_plan">Neu Routenplan hinzufügen</string>
+    <string name="route_plan_name_question">Routenplanname?</string>
+    <string name="builder_positive_button">Bestätigen</string>
+    <string name="builder_negative_button">Abbrechen</string>
+    <string name="successfully_added">Erfolgreich hinzugefügt</string>
+    <string name="edit">Bearbeiten</string>
 </resources>

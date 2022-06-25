@@ -272,7 +272,7 @@ public class MapsFragment extends Fragment {
                 clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
             }
-            ContainerAndGlobal.saveData(true, requireContext());
+            ContainerAndGlobal.saveData(1, requireContext());
         });
 
         // Implementation of report button

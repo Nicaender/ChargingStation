@@ -54,7 +54,7 @@ public class ReportActivity extends AppCompatActivity {
         Defective tmp;
         tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getReportedChargingStation()), etAdditionalInformation.getText().toString());
         ContainerAndGlobal.addDefective(tmp);
-        ContainerAndGlobal.saveData(false, getApplicationContext());
+        ContainerAndGlobal.saveData(2, getApplicationContext());
         finish();
         Toast.makeText(this, getResources().getString(R.string.charging_station_successfully_reported), Toast.LENGTH_SHORT).show();
     }

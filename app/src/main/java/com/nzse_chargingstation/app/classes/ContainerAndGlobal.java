@@ -27,6 +27,7 @@ public class ContainerAndGlobal {
     private static final ArrayList<ChargingStation> favoriteList = new ArrayList<>();
     private static final ArrayList<ChargingStation> filteredList = new ArrayList<>();
     private static final ArrayList<ChargingStation> markedList = new ArrayList<>();
+    private static final ArrayList<RoutePlan> routePlanList = new ArrayList<>();
     private static final ArrayList<Defective> defectiveList = new ArrayList<>();
     private static double filterRange = 0;
     private static Location currentLocation = null;
@@ -57,6 +58,10 @@ public class ContainerAndGlobal {
 
     public static ArrayList<ChargingStation> getMarkedList() {
         return markedList;
+    }
+
+    public static ArrayList<RoutePlan> getRoutePlanList() {
+        return routePlanList;
     }
 
     public static ArrayList<Defective> getDefectiveList() {
@@ -416,23 +421,37 @@ public class ContainerAndGlobal {
 
     /**
      * A function to save the data from favorite list or defective list to sharedpreferences
-     * @param favorite is a boolean, whether it is a favorite or defective
+     * @param option is the data selector, 0 = all, 1 = favorites, 2 = defectives, 3 = routes
      */
-    public static void saveData(boolean favorite, Context context)
+    public static void saveData(int option, Context context)
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
         String json;
-        if(favorite)
+        if(option == 0)
+        {
+            json = gson.toJson(ContainerAndGlobal.getFavoriteList());
+            editor.putString("FavoriteList", json);
+            json = gson.toJson(ContainerAndGlobal.getDefectiveList());
+            editor.putString("DefectiveList", json);
+            json = gson.toJson(ContainerAndGlobal.getRoutePlanList());
+            editor.putString("RouteList", json);
+        }
+        else if(option == 1)
         {
             json = gson.toJson(ContainerAndGlobal.getFavoriteList());
             editor.putString("FavoriteList", json);
         }
-        else
+        else if(option == 2)
         {
             json = gson.toJson(ContainerAndGlobal.getDefectiveList());
             editor.putString("DefectiveList", json);
+        }
+        else if(option == 3)
+        {
+            json = gson.toJson(ContainerAndGlobal.getRoutePlanList());
+            editor.putString("RouteList", json);
         }
         editor.apply();
     }

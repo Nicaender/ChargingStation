@@ -62,7 +62,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
             else
             {
                 ContainerAndGlobal.removeDefective(currentDefective);
-                ContainerAndGlobal.saveData(false, v.getContext());
+                ContainerAndGlobal.saveData(2, v.getContext());
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), mContext.getResources().getString(R.string.successfully_repaired), Toast.LENGTH_SHORT).show();
             }

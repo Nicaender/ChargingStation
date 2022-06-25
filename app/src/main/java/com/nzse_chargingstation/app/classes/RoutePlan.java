@@ -4,15 +4,14 @@ import java.util.ArrayList;
 
 public class RoutePlan {
 
-    private String name;
+    public RoutePlan(String name) {
+        this.name = name;
+    }
+    private final String name;
     private final ArrayList<ChargingStation> chargingStationRoutes = new ArrayList<>();
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public ArrayList<ChargingStation> getChargingStationRoutes() {

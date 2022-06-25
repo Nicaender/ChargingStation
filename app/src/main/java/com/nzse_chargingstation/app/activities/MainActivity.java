@@ -24,6 +24,7 @@ import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
+import com.nzse_chargingstation.app.classes.RoutePlan;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.RouteFragment;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            getOldFavoritesAndDefective();
+            getOldDatas();
         }
 
         if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
@@ -186,8 +187,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ContainerAndGlobal.saveData(true, getApplicationContext());
-        ContainerAndGlobal.saveData(false, getApplicationContext());
+        ContainerAndGlobal.saveData(0, getApplicationContext());
     }
 
     @Override
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Importing favorites and defectives from shared preferences
      */
-    private void getOldFavoritesAndDefective()
+    private void getOldDatas()
     {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Gson gson = new Gson();
@@ -233,6 +233,19 @@ public class MainActivity extends AppCompatActivity {
                 Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
                 defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
                 ContainerAndGlobal.addDefective(defectiveTmp);
+            }
+        json = sharedPrefs.getString("RouteList", "");
+        type = new TypeToken<List<RoutePlan>>() {}.getType();
+        List<RoutePlan> oldRoutePlans = gson.fromJson(json, type);
+        if(oldRoutePlans != null)
+            for(int i = 0; i < oldRoutePlans.size(); i++)
+            {
+                RoutePlan newRoutePlan = new RoutePlan(oldRoutePlans.get(i).getName());
+                for(int j = 0; j < oldRoutePlans.get(i).getChargingStationRoutes().size(); j++)
+                {
+                    newRoutePlan.getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(oldRoutePlans.get(i).getChargingStationRoutes().get(j).getLocation()));
+                }
+                ContainerAndGlobal.getRoutePlanList().add(newRoutePlan);
             }
     }
 
