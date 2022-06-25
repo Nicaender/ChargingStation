@@ -6,6 +6,7 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -52,8 +53,8 @@ public class MapsFragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap googleMap;
-    private ImageButton imgBtnFavorite, imgBtnReport, imgBtnMyLocation;
-    private ImageView imgViewFavRepBackground;
+    private ImageButton imgBtnFavorite, imgBtnReport, imgBtnMyLocation, imgBtnAddToRoute;
+    private ImageView imgViewMenuBackground;
     private MaterialSpinner spRadiusValue;
     private Marker clickedMarker;
     private Polyline currentPolyline;
@@ -61,7 +62,7 @@ public class MapsFragment extends Fragment {
     private Semaphore markerSignal, polylineSignal;
     private String url;
     private boolean stopThread = false, updateLocationUI = true;
-    private int lastShownIndex, favoriteY, reportY, spinnerX, locationX, backgroundY;
+    private int lastShownIndex, favoriteY, reportY, routeY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
 
     @Override
@@ -125,9 +126,9 @@ public class MapsFragment extends Fragment {
                     imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
 
                 // Show the icons if it is invisible
-                if(imgViewFavRepBackground.getVisibility() == View.GONE)
+                if(imgViewMenuBackground.getVisibility() == View.GONE)
                 {
-                    imgViewFavRepBackground.setVisibility(View.VISIBLE);
+                    imgViewMenuBackground.setVisibility(View.VISIBLE);
                     imgBtnFavorite.setVisibility(View.VISIBLE);
                     imgBtnReport.setVisibility(View.VISIBLE);
                 }
@@ -210,29 +211,34 @@ public class MapsFragment extends Fragment {
         ImageView imgViewRadius = view.findViewById(R.id.imageViewRadius);
         imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
+        imgBtnAddToRoute = view.findViewById(R.id.imageButtonAddToRoute);
         imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
         ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
-        imgViewFavRepBackground = view.findViewById(R.id.imageViewFavRepBackground);
+        imgViewMenuBackground = view.findViewById(R.id.imageViewMenuBackground);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
-        backgroundY = (int) imgViewFavRepBackground.getTranslationY();
+        backgroundY = (int) imgViewMenuBackground.getTranslationY();
         favoriteY = (int) imgBtnFavorite.getTranslationY();
         reportY = (int) imgBtnReport.getTranslationY();
+        routeY = (int) imgBtnAddToRoute.getTranslationY();
         spinnerX = (int) spRadiusValue.getTranslationX();
         locationX = (int) imgBtnMyLocation.getTranslationX();
 
         // Hides the favorite and report ui when the map is ready for the first time
-        imgViewFavRepBackground.setVisibility(GONE);
+        imgViewMenuBackground.setVisibility(GONE);
         imgBtnFavorite.setVisibility(GONE);
         imgBtnReport.setVisibility(GONE);
 
         // Animate the item secretly to hide it
-        ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
         animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
+        animation.setDuration(250);
+        animation.start();
+        animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
         animation.setDuration(250);
         animation.start();
 
@@ -308,6 +314,19 @@ public class MapsFragment extends Fragment {
                 .setItems(maxView, (dialog, which) -> limitMaxChargingStation(Integer.parseInt(maxView[which])));
         AlertDialog dialog = builder.create();
         imgViewRadius.setOnClickListener(v -> dialog.show());
+
+        // Implementation of add to route image button
+        imgBtnAddToRoute.setOnClickListener(v -> {
+            String[] routeList = new String[ContainerAndGlobal.getRoutePlanList().size()];
+            for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
+            {
+                routeList[i] = ContainerAndGlobal.getRoutePlanList().get(i).getName();
+            }
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(requireActivity());
+            builder1.setTitle(R.string.route_plan_list)
+                    .setItems(routeList, (dialog1, which) -> ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition())));
+            builder1.show();
+        });
     }
 
     @Override
@@ -621,13 +640,16 @@ public class MapsFragment extends Fragment {
         ObjectAnimator animation;
         if(enter)
         {
-            animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", backgroundY);
+            animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", backgroundY);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
+            animation.setDuration(250);
+            animation.start();
+            animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", routeY);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
@@ -637,13 +659,16 @@ public class MapsFragment extends Fragment {
         }
         else
         {
-            animation = ObjectAnimator.ofFloat(imgViewFavRepBackground, "translationY", 1000f);
+            animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
+            animation.setDuration(250);
+            animation.start();
+            animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
             animation.setDuration(250);
             animation.start();
             animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);

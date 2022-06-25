@@ -67,4 +67,6 @@
     <string name="builder_positive_button">Confirm</string>
     <string name="builder_negative_button">Cancel</string>
     <string name="successfully_added">Successfully added</string>
+    <string name="route_plan_list">Route plan list</string>
+    <string name="removed_from_this_route_plan">Removed from this route plan</string>
 </resources>

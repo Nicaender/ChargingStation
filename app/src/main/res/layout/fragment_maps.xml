@@ -36,8 +36,8 @@
 
 
     <ImageView
-        android:id="@+id/imageViewFavRepBackground"
-        android:layout_width="150dp"
+        android:id="@+id/imageViewMenuBackground"
+        android:layout_width="200dp"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
@@ -59,12 +59,26 @@
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/middleAnchor"
         android:layout_marginBottom="40dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="40dp"
         android:background="@null"
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/ic_baseline_favorite_border_24"
         android:contentDescription="@string/not_in_favorite"
+        app:tint="@color/icon_color" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAddToRoute"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="40dp"
+        android:background="@null"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:src="@drawable/ic_baseline_add_road_24"
+        android:contentDescription="@string/no_description"
         app:tint="@color/icon_color" />
 
     <ImageButton
@@ -74,7 +88,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/middleAnchor"
         android:layout_marginBottom="40dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="40dp"
         android:background="@null"
         android:scaleX="2"
         android:scaleY="2"
