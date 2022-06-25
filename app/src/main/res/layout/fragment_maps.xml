@@ -64,7 +64,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/ic_baseline_favorite_border_24"
-        android:contentDescription="@string/notinfavorite"
+        android:contentDescription="@string/not_in_favorite"
         app:tint="@color/icon_color" />
 
     <ImageButton
@@ -79,7 +79,7 @@
         android:scaleX="2"
         android:scaleY="2"
         android:src="@drawable/ic_baseline_report_24"
-        android:contentDescription="@string/infavorite"
+        android:contentDescription="@string/in_favorite"
         app:tint="@color/icon_color" />
 
     <ImageButton

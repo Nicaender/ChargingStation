@@ -16,10 +16,11 @@ import androidx.fragment.app.Fragment;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.activities.TechnicianActivity;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
+import com.nzse_chargingstation.app.classes.LocaleHelper;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment{
 
-    Button btnTechnicianSite, btnDarkmode;
+    Button btnTechnicianSite, btnDarkmode, btnLanguageSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +36,7 @@ public class SettingsFragment extends Fragment {
 
         btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
         btnDarkmode = view.findViewById(R.id.buttonDarkMode);
+        btnLanguageSwitch =  view.findViewById(R.id.buttonLanguageSwitch);
 
         // Saving state of our app
         // using SharedPreferences
@@ -49,6 +51,9 @@ public class SettingsFragment extends Fragment {
         else {
             btnDarkmode.setText(R.string.enable_darkmode);
         }
+
+        // When user reopens the app after changing language;
+        btnLanguageSwitch.setText(R.string.language_button);
 
         // Implementation of dark mode button
         btnDarkmode.setOnClickListener(v -> {
@@ -79,5 +84,12 @@ public class SettingsFragment extends Fragment {
 
         // Implementation of button to login site from techniker
         btnTechnicianSite.setOnClickListener(v -> startActivity(new Intent(getActivity(), TechnicianActivity.class)));
+
+        // Implementation of language switch button
+        btnLanguageSwitch.setOnClickListener(v -> {
+            LocaleHelper.setLocale(requireContext(), getResources().getString(R.string.language_toggle));
+            requireActivity().recreate();
+            ContainerAndGlobal.setChangedSetting(true);
+        });
     }
 }

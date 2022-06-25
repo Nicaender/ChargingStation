@@ -2,6 +2,7 @@ package com.nzse_chargingstation.app.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
+import com.nzse_chargingstation.app.classes.LocaleHelper;
 import com.nzse_chargingstation.app.fragments.FavoritesFragment;
 import com.nzse_chargingstation.app.fragments.MapsFragment;
 import com.nzse_chargingstation.app.fragments.SettingsFragment;
@@ -193,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
         }
         pressedTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "en"));
     }
 
     /**

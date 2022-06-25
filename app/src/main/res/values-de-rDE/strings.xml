@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Zurück</string>
+    <string name="favorites">Favoriten</string>
+    <string name="maps">Maps</string>
+    <string name="settings">Einstellungen</string>
+    <string name="enable_darkmode">Dunklemodus aktivieren</string>
+    <string name="disable_darkmode">Dunklemodus deaktivieren</string>
+    <string name="additional_information">Weitere Information:</string>
+    <string name="reason">Grund</string>
+    <string name="address">Adresse</string>
+    <string name="distance">Distanz</string>
+    <string name="remove">Entfernen</string>
+    <string name="not_in_favorite">Nicht in Favoriten</string>
+    <string name="in_favorite">In Favoriten</string>
+    <string name="technician_site">Techniker Seite</string>
+    <string name="no_description">Keine Beschreibung</string>
+    <string name="input_additional_information">Weitere Information hinzufügen</string>
+    <string name="how_many_charging_station_to_show_on_the_map">Wie viele Ladesäule sollen angezeigt werden?</string>
+    <string name="hold_for_more_info">Halt für weitere Informationen</string>
+    <string name="report">Melden</string>
+    <string name="search_here">Hier suchen</string>
+    <string name="language">de</string>
+    <string name="language_button">Sprache: Deutsch</string>
+    <string name="language_toggle">en</string>
+</resources>

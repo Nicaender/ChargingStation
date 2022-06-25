@@ -8,22 +8,33 @@
     tools:context=".fragments.SettingsFragment">
 
     <Button
+        android:id="@+id/buttonDarkMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@color/button_background_color"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/button_text_color"/>
+
+    <Button
         android:id="@+id/buttonTechnicianSite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:backgroundTint="@color/button_background_color"
+        android:layout_below="@id/buttonDarkMode"
         android:textColor="@color/button_text_color"
         android:textStyle="bold"
         android:textSize="16sp"
         android:text="@string/technician_site"/>
 
     <Button
-        android:id="@+id/buttonDarkMode"
+        android:id="@+id/buttonLanguageSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_above="@id/buttonTechnicianSite"
+        android:layout_below="@id/buttonTechnicianSite"
         android:backgroundTint="@color/button_background_color"
         android:textStyle="bold"
         android:textSize="16sp"

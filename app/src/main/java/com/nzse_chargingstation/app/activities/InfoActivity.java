@@ -7,7 +7,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nzse_chargingstation.app.R;
-import com.nzse_chargingstation.app.classes.ChargingStation;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 
 public class InfoActivity extends AppCompatActivity {
