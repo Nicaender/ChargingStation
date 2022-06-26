@@ -66,7 +66,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHold
         return chargingStationList.size();
     }
 
-    public class SearchHolder extends RecyclerView.ViewHolder {
+    protected class SearchHolder extends RecyclerView.ViewHolder {
         // creating variables for our views.
         private final TextView tvSearchAddress, tvDistance, tvSearchCity;
         private ChargingStation myCS;

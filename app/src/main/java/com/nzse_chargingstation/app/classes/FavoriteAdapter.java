@@ -68,8 +68,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         notifyItemRangeChanged(0, favorites.size());
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    class FavoriteHolder extends RecyclerView.ViewHolder {
+    protected class FavoriteHolder extends RecyclerView.ViewHolder {
         private final TextView tvFavoriteAddress, tvDistance, tvFavoriteCity;
         private final Button btnRemoveFromFavorite;
         private ChargingStation myCS;

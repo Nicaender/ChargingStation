@@ -80,8 +80,7 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
         notifyItemRangeChanged(0, defectives.size());
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    class DefectiveHolder extends RecyclerView.ViewHolder {
+    protected static class DefectiveHolder extends RecyclerView.ViewHolder {
         private final TextView tvDefectiveAddress, tvDefectiveReason, tvDefectiveCity, tvDistance;
         private final Button btnMarkToRepair;
 

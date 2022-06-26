@@ -1,7 +1,6 @@
 package com.nzse_chargingstation.app.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
-import com.nzse_chargingstation.app.classes.FavoriteAdapter;
 import com.nzse_chargingstation.app.classes.RouteAdapter;
 import com.nzse_chargingstation.app.classes.RoutePlan;
 

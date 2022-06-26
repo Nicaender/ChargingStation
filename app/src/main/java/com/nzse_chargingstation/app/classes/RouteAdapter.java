@@ -66,7 +66,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
         notifyItemRangeChanged(0, routeList.size());
     }
 
-    class RouteHolder extends RecyclerView.ViewHolder {
+    protected static class RouteHolder extends RecyclerView.ViewHolder {
         private final TextView tvRouteName;
         private final Button btnRouteEdit, btnRouteNavigate;
 
