@@ -218,16 +218,17 @@ public class MainActivity extends AppCompatActivity {
         String json = sharedPrefs.getString("FavoriteList", "");
         Type type = new TypeToken<List<ChargingStation>>() {}.getType();
         List<ChargingStation> oldFavorites = gson.fromJson(json, type);
-        if(oldFavorites != null)
+        if(oldFavorites != null) {
             for(int i = 0; i < oldFavorites.size(); i++)
             {
                 ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getLocation());
                 ContainerAndGlobal.addFavorite(tmp);
             }
+        }
         json = sharedPrefs.getString("DefectiveList", "");
         type = new TypeToken<List<Defective>>() {}.getType();
         List<Defective> oldDefectives = gson.fromJson(json, type);
-        if(oldDefectives != null)
+        if(oldDefectives != null) {
             for(int i = 0; i < oldDefectives.size(); i++)
             {
                 ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
@@ -235,10 +236,11 @@ public class MainActivity extends AppCompatActivity {
                 defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
                 ContainerAndGlobal.addDefective(defectiveTmp);
             }
+        }
         json = sharedPrefs.getString("RouteList", "");
         type = new TypeToken<List<RoutePlan>>() {}.getType();
         List<RoutePlan> oldRoutePlans = gson.fromJson(json, type);
-        if(oldRoutePlans != null)
+        if(oldRoutePlans != null) {
             for(int i = 0; i < oldRoutePlans.size(); i++)
             {
                 RoutePlan newRoutePlan = new RoutePlan(oldRoutePlans.get(i).getName());
@@ -248,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 ContainerAndGlobal.getRoutePlanList().add(newRoutePlan);
             }
+        }
     }
 
     /**

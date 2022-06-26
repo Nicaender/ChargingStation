@@ -577,7 +577,10 @@ public class MapsFragment extends Fragment {
                     LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
                     final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
                     final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
-                    requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
+                    requireActivity().runOnUiThread(() -> {
+                        googleMap.addPolyline(tmpPolyline);
+                        imgBtnMyLocation.performClick();
+                    });
                 }
                 for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
                 {
