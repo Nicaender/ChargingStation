@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Nicharge Finder</string>
+    <string name="app_name" translatable="false">etto</string>
     <string name="maps_api_key" translatable="false">AIzaSyA0tbzz76B64F13F9TUleXPe0G32R3zYTE</string>
     <string name="back">Back</string>
     <string name="favorites">Favorites</string>
