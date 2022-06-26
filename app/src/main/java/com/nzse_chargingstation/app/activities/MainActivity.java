@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             ContainerAndGlobal.getFavoriteList().clear();
             ContainerAndGlobal.getFilteredList().clear();
             ContainerAndGlobal.getMarkedList().clear();
+            ContainerAndGlobal.getRoutePlanList().clear();
             ContainerAndGlobal.getDefectiveList().clear();
 
             String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
