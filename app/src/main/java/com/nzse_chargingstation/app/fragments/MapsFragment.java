@@ -10,10 +10,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -61,7 +63,6 @@ public class MapsFragment extends Fragment {
     private Thread markerThread, polylineThread, navigatedPolylineThread;
     private final Semaphore markerSignal = new Semaphore(0), polylineSignal = new Semaphore(0), navigatedPolylineSignal = new Semaphore(0);
     private String url;
-    private final ArrayList<Polyline> navigatedPolyline = new ArrayList<>();
     private boolean stopThread = false, updateLocationUI = true;
     private int lastShownIndex, favoriteY, reportY, routeY, spinnerX, locationX, backgroundY;
     private final float zoomLevel = (float) 15.0;
@@ -334,7 +335,30 @@ public class MapsFragment extends Fragment {
                     .setItems(routeList, (dialog1, which) -> {
                         ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
                         ContainerAndGlobal.saveData(3, requireContext());
-                    });
+                        Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                    })
+                            .setNeutralButton(getString(R.string.add_new_route_plan), (dialog12, which) -> {
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(requireActivity());
+                                builder2.setTitle(R.string.route_plan_name_question);
+
+                                // Set up the input
+                                final EditText input = new EditText(requireContext());
+                                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                builder2.setView(input);
+                                // Set up the buttons
+                                builder2.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
+                                    if(!input.getText().toString().isEmpty())
+                                    {
+                                        ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
+                                        ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
+                                        ContainerAndGlobal.saveData(3, requireContext());
+                                        Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                builder2.setNegativeButton(getString(R.string.builder_negative_button), (dialog2, which2) -> dialog2.cancel());
+                                builder2.show();
+                            });
             builder1.show();
         });
     }
@@ -553,7 +577,7 @@ public class MapsFragment extends Fragment {
                     LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
                     final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
                     final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
-                    requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
+                    requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
                 }
                 for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
                 {
@@ -583,7 +607,7 @@ public class MapsFragment extends Fragment {
                     }
                     final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(next).getLocation());
                     final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, i%2);
-                    requireActivity().runOnUiThread(() -> navigatedPolyline.add(googleMap.addPolyline(tmpPolyline)));
+                    requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
                 }
             }
         });
