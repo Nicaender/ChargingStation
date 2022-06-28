@@ -6,6 +6,7 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -328,12 +329,16 @@ public class MapsFragment extends Fragment {
         {
             maxView[i] = String.valueOf((i+1) * 25);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
+        AlertDialog.Builder builderLimit = new AlertDialog.Builder(requireActivity());
+        builderLimit.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
                 .setItems(maxView, (dialog, which) -> limitMaxChargingStation(Integer.parseInt(maxView[which])));
-        AlertDialog dialog = builder.create();
-        imgViewRadius.setOnClickListener(v -> dialog.show());
+        AlertDialog dialogLimit = builderLimit.create();
+        dialogLimit.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+        imgViewRadius.setOnClickListener(v -> dialogLimit.show());
 
+
+        AlertDialog.Builder builderRoute = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builderAddRoute = new AlertDialog.Builder(requireActivity());
         // Implementation of add to route image button
         imgBtnAddToRoute.setOnClickListener(v -> {
             String[] routeList = new String[ContainerAndGlobal.getRoutePlanList().size()];
@@ -341,36 +346,38 @@ public class MapsFragment extends Fragment {
             {
                 routeList[i] = ContainerAndGlobal.getRoutePlanList().get(i).getName();
             }
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(requireActivity());
-            builder1.setTitle(R.string.route_plan_list)
+            builderRoute.setTitle(R.string.route_plan_list)
                     .setItems(routeList, (dialog1, which) -> {
                         ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
                         ContainerAndGlobal.saveData(3, requireContext());
                         Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
                     })
-                            .setNeutralButton(getString(R.string.add_new_route_plan), (dialog12, which) -> {
-                                AlertDialog.Builder builder2 = new AlertDialog.Builder(requireActivity());
-                                builder2.setTitle(R.string.route_plan_name_question);
+                    .setNeutralButton(getString(R.string.add_new_route_plan), (dialog, which) -> {
+                        builderAddRoute.setTitle(R.string.route_plan_name_question);
 
-                                // Set up the input
-                                final EditText input = new EditText(requireContext());
-                                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                                builder2.setView(input);
-                                // Set up the buttons
-                                builder2.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
-                                    if(!input.getText().toString().isEmpty())
-                                    {
-                                        ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
-                                        ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
-                                        ContainerAndGlobal.saveData(3, requireContext());
-                                        Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                builder2.setNegativeButton(getString(R.string.builder_negative_button), (dialog2, which2) -> dialog2.cancel());
-                                builder2.show();
-                            });
-            builder1.show();
+                        // Set up the input
+                        final EditText input = new EditText(requireContext());
+                        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builderAddRoute.setView(input);
+                        // Set up the buttons
+                        builderAddRoute.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
+                            if(!input.getText().toString().isEmpty())
+                            {
+                                ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
+                                ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
+                                ContainerAndGlobal.saveData(3, requireContext());
+                                Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        builderAddRoute.setNegativeButton(getString(R.string.builder_negative_button), (dialog2, which2) -> dialog2.cancel());
+                        AlertDialog dialogAddRoute = builderAddRoute.create();
+                        dialogAddRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+                        dialogAddRoute.show();
+                    });
+            AlertDialog dialogRoute = builderRoute.create();
+            dialogRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+            dialogRoute.show();
         });
     }
 
