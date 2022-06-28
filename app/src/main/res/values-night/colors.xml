@@ -14,4 +14,12 @@
     <color name="icon_color">@color/medium_green</color>
     <color name="arrow_color">@color/white</color>
 
+    <!-- Custom Color -->
+    <color name="light_green">#75F0B5</color>
+    <color name="medium_green">#26AD65</color>
+    <color name="midnight_blue">#0D0E19</color>
+    <color name="dark_cloudy_blue">#282d45</color>
+    <color name="darker_cloudy_blue">#1e2133</color>
+    <color name="gray_white">#f7f7f7</color>
+
 </resources>

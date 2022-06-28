@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
@@ -15,8 +16,6 @@ import com.nzse_chargingstation.app.classes.DefectiveDistanceComparator;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
 public class TechnicianActivity extends AppCompatActivity {
-
-    Button btnBackTechniker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +35,9 @@ public class TechnicianActivity extends AppCompatActivity {
 
             adapter.setDefectiveList(ContainerAndGlobal.getDefectiveList());
 
-            btnBackTechniker = findViewById(R.id.buttonBackTechniker);
+            ImageView imgViewTechnicianBack = findViewById(R.id.imageViewTechnicianBack);
 
-            btnBackTechniker.setOnClickListener(v -> finish());
+            imgViewTechnicianBack.setOnClickListener(v -> finish());
         } catch (Exception e) {
             e.printStackTrace();
         }

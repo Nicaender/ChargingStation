@@ -3,26 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragmentContainer"
     android:background="@color/background_color"
     android:padding="10dp"
     tools:context=".activities.TechnicianActivity">
 
-    <Button
-        android:id="@+id/buttonBackTechniker"
+    <ImageView
+        android:id="@+id/imageViewTechnicianBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:backgroundTint="@color/button_background_color"
-        android:textColor="@color/button_text_color"
-        android:textStyle="bold"
-        android:text="@string/back" />
+        android:src="@drawable/ic_baseline_arrow_back_32"
+        android:contentDescription="@string/back"
+        app:tint="@color/arrow_color" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDefectiveList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/buttonBackTechniker" />
+        android:layout_below="@id/imageViewTechnicianBack" />
 
 </RelativeLayout>
