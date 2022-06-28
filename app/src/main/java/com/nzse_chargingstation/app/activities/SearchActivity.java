@@ -3,6 +3,7 @@ package com.nzse_chargingstation.app.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,11 +29,14 @@ public class SearchActivity extends AppCompatActivity {
 
         SearchView svChargingStation;
         svChargingStation = findViewById(R.id.searchViewChargingStation);
-        Button btnSearchBack;
-        btnSearchBack = findViewById(R.id.buttonSearchBack);
+        ImageView imgViewSearchBack;
+        imgViewSearchBack = findViewById(R.id.imageViewSearchBack);
 
         // Implementation of back button
-        btnSearchBack.setOnClickListener(v -> finish());
+        imgViewSearchBack.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(0, 0);
+        });
 
         // Implementation of search bar
         RecyclerView recyclerView = findViewById(R.id.rvSearchList);
@@ -53,6 +57,8 @@ public class SearchActivity extends AppCompatActivity {
         searchAdapter = new SearchAdapter(this,  ContainerAndGlobal.getFilteredList());
         recyclerView.setAdapter(searchAdapter);
 
+        svChargingStation.onActionViewExpanded();
+
         svChargingStation.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -70,6 +76,12 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
     }
 
     /**

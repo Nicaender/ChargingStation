@@ -13,6 +13,6 @@
     <color name="button_text_color">@color/white</color>
     <color name="recycler_view_text_color">@color/white</color>
     <color name="nav_icon_color">@color/medium_green</color>
-    <color name="icon_color">@color/medium_green</color>
+    <color name="icon_color">@color/white</color>
 
 </resources>

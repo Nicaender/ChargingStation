@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -221,7 +222,7 @@ public class MapsFragment extends Fragment {
         imgBtnReport = view.findViewById(R.id.imageButtonReport);
         imgBtnAddToRoute = view.findViewById(R.id.imageButtonAddToRoute);
         imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
-        ImageButton imgBtnSearch = view.findViewById(R.id.imageButtonSearch);
+        SearchView svSearchBar = view.findViewById(R.id.searchViewSearchBar);
         imgViewMenuBackground = view.findViewById(R.id.imageViewMenuBackground);
         spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
         backgroundY = (int) imgViewMenuBackground.getTranslationY();
@@ -308,7 +309,17 @@ public class MapsFragment extends Fragment {
         });
 
         // Implementation of search button
-        imgBtnSearch.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchActivity.class)));
+        svSearchBar.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+            requireActivity().overridePendingTransition(0, 0);
+            svSearchBar.clearFocus();
+        });
+        svSearchBar.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus)
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+            requireActivity().overridePendingTransition(0, 0);
+            svSearchBar.clearFocus();
+        });
 
         // Implementation to limit total charging stations on the map
         final int size = 12;

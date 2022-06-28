@@ -14,10 +14,14 @@
 
     <ImageView
         android:id="@+id/imageViewRadius"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="15dp"
-        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="25dp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/item_circle"
+        android:elevation="3dp"
         android:src="@drawable/ic_baseline_remove_red_eye_24"
         android:contentDescription="@string/no_description"
         app:tint="@color/icon_color" />
@@ -30,6 +34,7 @@
         android:layout_marginLeft="65dp"
         android:layout_marginBottom="10dp"
         android:background="@android:drawable/btn_dropdown"
+        android:elevation="3dp"
         android:spinnerMode="dropdown"
         app:ms_dropdown_max_height="200dp"
         app:ms_background_color="@color/item_background_color" />
@@ -96,31 +101,29 @@
         android:contentDescription="@string/in_favorite"
         app:tint="@color/icon_color" />
 
-    <ImageButton
-        android:id="@+id/imageButtonSearch"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
-        android:background="@null"
-        android:scaleX="2"
-        android:scaleY="2"
-        android:src="@drawable/ic_baseline_search_24"
-        android:contentDescription="@string/no_description"
-        app:tint="@color/icon_color" />
+    <SearchView
+        android:id="@+id/searchViewSearchBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/item_curved"
+        android:elevation="3dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search_here"
+        android:queryBackground="@null"/>
 
     <ImageButton
         android:id="@+id/imageButtonMyLocation"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="25dp"
-        android:background="@null"
-        android:scaleX="2"
-        android:scaleY="2"
+        android:padding="5dp"
+        android:background="@drawable/item_circle"
+        android:elevation="3dp"
         android:src="@drawable/ic_baseline_location_searching_24"
         android:contentDescription="@string/no_description"
         app:tint="@color/icon_color" />
