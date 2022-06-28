@@ -23,7 +23,6 @@
     <string name="hold_for_more_info">Long click for more information</string>
     <string name="hold_for_more_info_auf_deutsch" translatable="false">Weitere Information lang drücken</string>
     <string name="report">Report</string>
-    <string name="language">en</string>
     <string name="language_button">Translate to german</string>
     <string name="language_toggle">de</string>
     <string name="string_operator">Operator</string>

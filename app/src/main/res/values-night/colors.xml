@@ -6,7 +6,6 @@
     <!-- for Dark mode -->
     <color name="background_color">@color/midnight_blue</color>
     <color name="nav_color">@color/darker_cloudy_blue</color>
-    <color name="inverted_background_color">@color/white</color>
     <color name="text_color">@color/white</color>
     <color name="button_background_color">@color/dark_cloudy_blue</color>
     <color name="item_background_color">@color/darker_cloudy_blue</color>
@@ -15,7 +14,6 @@
     <color name="arrow_color">@color/white</color>
 
     <!-- Custom Color -->
-    <color name="light_green">#75F0B5</color>
     <color name="medium_green">#26AD65</color>
     <color name="midnight_blue">#0D0E19</color>
     <color name="dark_cloudy_blue">#282d45</color>
