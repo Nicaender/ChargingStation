@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                getOldDatas();
+                getOldData();
             }
 
             if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Importing favorites and defectives from shared preferences
      */
-    private void getOldDatas()
+    private void getOldData()
     {
         try {
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
