@@ -74,4 +74,5 @@
     <string name="rename">Rename</string>
     <string name="successfully_renamed">Successfully renamed</string>
     <string name="delete_route_plan_question">Do you really want to delete this route plan?</string>
+    <string name="successfully_applied">Successfully applied</string>
 </resources>

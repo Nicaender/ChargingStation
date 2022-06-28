@@ -25,7 +25,7 @@
         android:layout_below="@id/buttonReportBack"
         app:srcCompat="@drawable/ic_baseline_electrical_services_24"
         android:contentDescription="@string/no_description"
-        app:tint="@color/icon_color" />
+        app:tint="@color/charging_station_icon_color" />
 
     <TextView
         android:id="@+id/textViewChargingStationAddress"

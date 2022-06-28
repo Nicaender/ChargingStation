@@ -12,6 +12,7 @@
     <color name="button_text_color">@color/white</color>
     <color name="icon_color">@color/white</color>
     <color name="arrow_color">@color/black</color>
+    <color name="charging_station_icon_color">@color/medium_green</color>
 
     <!-- Custom Color -->
     <color name="medium_green">#26AD65</color>

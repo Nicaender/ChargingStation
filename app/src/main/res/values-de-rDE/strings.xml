@@ -67,4 +67,5 @@
     <string name="rename">Umbenennen</string>
     <string name="successfully_renamed">Erfolgreich umbenannt</string>
     <string name="delete_route_plan_question">Möchten Sie diesen Routeplan wirklich löschen?</string>
+    <string name="successfully_applied">Erfolgreich angewendet</string>
 </resources>

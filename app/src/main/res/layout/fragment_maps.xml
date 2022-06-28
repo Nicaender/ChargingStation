@@ -43,11 +43,11 @@
 
     <ImageView
         android:id="@+id/imageViewMenuBackground"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="35dp"
         android:src="@drawable/item_curved"
         android:elevation="3dp"
         android:contentDescription="@string/no_description"
@@ -60,48 +60,42 @@
         android:layout_centerInParent="true"
         android:contentDescription="@string/no_description" />
 
-    <ImageButton
-        android:id="@+id/imageButtonFavorite"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/imageViewFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/middleAnchor"
         android:layout_marginBottom="40dp"
         android:layout_marginRight="40dp"
         android:background="@null"
-        android:scaleX="2"
-        android:scaleY="2"
-        android:src="@drawable/ic_baseline_favorite_border_24"
+        android:src="@drawable/ic_baseline_favorite_border_40"
         android:elevation="3dp"
         android:contentDescription="@string/not_in_favorite"
         app:tint="@color/icon_color" />
 
-    <ImageButton
-        android:id="@+id/imageButtonAddToRoute"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/imageViewAddToRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="40dp"
         android:background="@null"
-        android:scaleX="2"
-        android:scaleY="2"
-        android:src="@drawable/ic_baseline_add_road_24"
+        android:src="@drawable/ic_baseline_add_road_40"
         android:elevation="3dp"
         android:contentDescription="@string/no_description"
         app:tint="@color/icon_color" />
 
-    <ImageButton
-        android:id="@+id/imageButtonReport"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/imageViewReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/middleAnchor"
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="40dp"
         android:background="@null"
-        android:scaleX="2"
-        android:scaleY="2"
         android:src="@drawable/ic_baseline_report_24"
         android:elevation="3dp"
         android:contentDescription="@string/in_favorite"
@@ -119,8 +113,8 @@
         android:queryHint="@string/search_here"
         android:queryBackground="@null"/>
 
-    <ImageButton
-        android:id="@+id/imageButtonMyLocation"
+    <ImageView
+        android:id="@+id/imageViewMyLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
