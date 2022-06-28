@@ -2,7 +2,6 @@ package com.nzse_chargingstation.app.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
