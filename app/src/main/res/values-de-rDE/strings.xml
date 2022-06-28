@@ -2,7 +2,7 @@
 <resources>
     <string name="back">Zurück</string>
     <string name="favorites">Favoriten</string>
-    <string name="maps">Maps</string>
+    <string name="maps">Karten</string>
     <string name="settings">Einstellungen</string>
     <string name="enable_darkmode">Dunklemodus aktivieren</string>
     <string name="disable_darkmode">Dunklemodus deaktivieren</string>
