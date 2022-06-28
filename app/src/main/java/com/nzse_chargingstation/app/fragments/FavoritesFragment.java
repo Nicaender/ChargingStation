@@ -29,15 +29,19 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(ContainerAndGlobal.getCurrentLocation() != null)
-            ContainerAndGlobal.getFavoriteList().sort(new ChargingStationDistanceComparator());
-        RecyclerView recyclerView = view.findViewById(R.id.rvFavoriteList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setHasFixedSize(true);
+        try {
+            if(ContainerAndGlobal.getCurrentLocation() != null)
+                ContainerAndGlobal.getFavoriteList().sort(new ChargingStationDistanceComparator());
+            RecyclerView recyclerView = view.findViewById(R.id.rvFavoriteList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+            recyclerView.setHasFixedSize(true);
 
-        FavoriteAdapter adapter = new FavoriteAdapter(requireContext());
-        recyclerView.setAdapter(adapter);
+            FavoriteAdapter adapter = new FavoriteAdapter(requireContext());
+            recyclerView.setAdapter(adapter);
 
-        adapter.setFavoriteList(ContainerAndGlobal.getFavoriteList());
+            adapter.setFavoriteList(ContainerAndGlobal.getFavoriteList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

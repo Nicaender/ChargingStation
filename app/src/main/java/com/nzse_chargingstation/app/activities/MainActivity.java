@@ -17,6 +17,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ChargingStation;
@@ -60,93 +61,97 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get current location
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            // get current location
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if(ContainerAndGlobal.isFirstTime())
-        {
-            ContainerAndGlobal.setFirstTime(false);
-
-            // Clearing old data in case the user closes the app and then reopens it
-            ContainerAndGlobal.getChargingStationList().clear();
-            ContainerAndGlobal.getFavoriteList().clear();
-            ContainerAndGlobal.getFilteredList().clear();
-            ContainerAndGlobal.getMarkedList().clear();
-            ContainerAndGlobal.getRoutePlanList().clear();
-            ContainerAndGlobal.getDefectiveList().clear();
-
-            String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
-            try {
-                JSONArray jsonarray = new JSONArray(jsonString);
-
-                for (int i = 0; i < jsonarray.length(); i++) {
-                    JSONObject json_inside = jsonarray.getJSONObject(i);
-
-                    ContainerAndGlobal.parseLadesaeuleObject(json_inside);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            getOldDatas();
-        }
-
-        if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
-        {
-            ContainerAndGlobal.setFirstTimeGPSEnabled(false);
-            ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
-        }
-
-        requestLocationPermission();
-
-        // Initialization
-        bottomNavBar = findViewById(R.id.bottomNavbar);
-        bottomNavBar.setSelectedItemId(R.id.navMaps);
-
-        // Saving state of our app
-        // using SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        ContainerAndGlobal.setDarkmode(sharedPreferences.getBoolean("isDarkModeOn", false));
-        ContainerAndGlobal.setMaxViewChargingStation(sharedPreferences.getInt("maxChargingStations", 100));
-
-        // When user reopens the app
-        // after applying dark/light mode
-        if (ContainerAndGlobal.isDarkmode()) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-        ContainerAndGlobal.setMaxViewChargingStation(ContainerAndGlobal.getMaxViewChargingStation());
-
-        if(ContainerAndGlobal.isChangedSetting())
-        {
-            bottomNavBar.setSelectedItemId(R.id.navSettings);
-            ContainerAndGlobal.setChangedSetting(false);
-        }
-        else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
-
-
-        // Implementation of bottom navigation bar
-        bottomNavBar.setOnItemSelectedListener(item -> {
-
-            switch (item.getItemId())
+            if(ContainerAndGlobal.isFirstTime())
             {
-                case R.id.navMaps:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
-                    return true;
-                case R.id.navRoute:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, routeFragment).commit();
-                    return true;
-                case R.id.navFavorites:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
-                    return true;
-                case R.id.navSettings:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
-                    return true;
+                ContainerAndGlobal.setFirstTime(false);
+
+                // Clearing old data in case the user closes the app and then reopens it
+                ContainerAndGlobal.getChargingStationList().clear();
+                ContainerAndGlobal.getFavoriteList().clear();
+                ContainerAndGlobal.getFilteredList().clear();
+                ContainerAndGlobal.getMarkedList().clear();
+                ContainerAndGlobal.getRoutePlanList().clear();
+                ContainerAndGlobal.getDefectiveList().clear();
+
+                String jsonString = ContainerAndGlobal.getJSONData(this, "ChargingStationJSON.json");
+                try {
+                    JSONArray jsonarray = new JSONArray(jsonString);
+
+                    for (int i = 0; i < jsonarray.length(); i++) {
+                        JSONObject json_inside = jsonarray.getJSONObject(i);
+
+                        ContainerAndGlobal.parseLadesaeuleObject(json_inside);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                getOldDatas();
             }
-            return false;
-        });
+
+            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
+            {
+                ContainerAndGlobal.setFirstTimeGPSEnabled(false);
+                ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
+            }
+
+            requestLocationPermission();
+
+            // Initialization
+            bottomNavBar = findViewById(R.id.bottomNavbar);
+            bottomNavBar.setSelectedItemId(R.id.navMaps);
+
+            // Saving state of our app
+            // using SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+            ContainerAndGlobal.setDarkmode(sharedPreferences.getBoolean("isDarkModeOn", false));
+            ContainerAndGlobal.setMaxViewChargingStation(sharedPreferences.getInt("maxChargingStations", 100));
+
+            // When user reopens the app
+            // after applying dark/light mode
+            if (ContainerAndGlobal.isDarkmode()) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+            else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+            ContainerAndGlobal.setMaxViewChargingStation(ContainerAndGlobal.getMaxViewChargingStation());
+
+            if(ContainerAndGlobal.isChangedSetting())
+            {
+                bottomNavBar.setSelectedItemId(R.id.navSettings);
+                ContainerAndGlobal.setChangedSetting(false);
+            }
+            else
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
+
+
+            // Implementation of bottom navigation bar
+            bottomNavBar.setOnItemSelectedListener(item -> {
+
+                switch (item.getItemId())
+                {
+                    case R.id.navMaps:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
+                        return true;
+                    case R.id.navRoute:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, routeFragment).commit();
+                        return true;
+                    case R.id.navFavorites:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
+                        return true;
+                    case R.id.navSettings:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
+                        return true;
+                }
+                return false;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -163,44 +168,56 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
     public void requestLocationPermission() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
-        if(EasyPermissions.hasPermissions(this, perms)) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, location -> {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            ContainerAndGlobal.setCurrentLocation(location);
-                            if(ContainerAndGlobal.isFirstTimeGPSEnabled())
-                            {
-                                startActivity(new Intent(this, MainActivity.class));
-                                overridePendingTransition(0, 0);
-                                finish();
+        try {
+            String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+            if(EasyPermissions.hasPermissions(this, perms)) {
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, location -> {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                                ContainerAndGlobal.setCurrentLocation(location);
+                                if(ContainerAndGlobal.isFirstTimeGPSEnabled())
+                                {
+                                    startActivity(new Intent(this, MainActivity.class));
+                                    overridePendingTransition(0, 0);
+                                    finish();
+                                }
                             }
-                        }
-                    });
-        }
-        else {
-            EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
+                        });
+            }
+            else {
+                EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ContainerAndGlobal.saveData(0, getApplicationContext());
+        try {
+            ContainerAndGlobal.saveData(0, getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if (pressedTime + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-            ContainerAndGlobal.resetVariables();
-            finish();
-        } else {
-            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        try {
+            if (pressedTime + 2000 > System.currentTimeMillis()) {
+                super.onBackPressed();
+                ContainerAndGlobal.resetVariables();
+                finish();
+            } else {
+                Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+            }
+            pressedTime = System.currentTimeMillis();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        pressedTime = System.currentTimeMillis();
     }
 
     @Override
@@ -213,43 +230,47 @@ public class MainActivity extends AppCompatActivity {
      */
     private void getOldDatas()
     {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString("FavoriteList", "");
-        Type type = new TypeToken<List<ChargingStation>>() {}.getType();
-        List<ChargingStation> oldFavorites = gson.fromJson(json, type);
-        if(oldFavorites != null) {
-            for(int i = 0; i < oldFavorites.size(); i++)
-            {
-                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getLocation());
-                ContainerAndGlobal.addFavorite(tmp);
-            }
-        }
-        json = sharedPrefs.getString("DefectiveList", "");
-        type = new TypeToken<List<Defective>>() {}.getType();
-        List<Defective> oldDefectives = gson.fromJson(json, type);
-        if(oldDefectives != null) {
-            for(int i = 0; i < oldDefectives.size(); i++)
-            {
-                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
-                Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
-                defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
-                ContainerAndGlobal.addDefective(defectiveTmp);
-            }
-        }
-        json = sharedPrefs.getString("RouteList", "");
-        type = new TypeToken<List<RoutePlan>>() {}.getType();
-        List<RoutePlan> oldRoutePlans = gson.fromJson(json, type);
-        if(oldRoutePlans != null) {
-            for(int i = 0; i < oldRoutePlans.size(); i++)
-            {
-                RoutePlan newRoutePlan = new RoutePlan(oldRoutePlans.get(i).getName());
-                for(int j = 0; j < oldRoutePlans.get(i).getChargingStationRoutes().size(); j++)
+        try {
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            Gson gson = new Gson();
+            String json = sharedPrefs.getString("FavoriteList", "");
+            Type type = new TypeToken<List<ChargingStation>>() {}.getType();
+            List<ChargingStation> oldFavorites = gson.fromJson(json, type);
+            if(oldFavorites != null) {
+                for(int i = 0; i < oldFavorites.size(); i++)
                 {
-                    newRoutePlan.getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(oldRoutePlans.get(i).getChargingStationRoutes().get(j).getLocation()));
+                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getLocation());
+                    ContainerAndGlobal.addFavorite(tmp);
                 }
-                ContainerAndGlobal.getRoutePlanList().add(newRoutePlan);
             }
+            json = sharedPrefs.getString("DefectiveList", "");
+            type = new TypeToken<List<Defective>>() {}.getType();
+            List<Defective> oldDefectives = gson.fromJson(json, type);
+            if(oldDefectives != null) {
+                for(int i = 0; i < oldDefectives.size(); i++)
+                {
+                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
+                    Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
+                    defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
+                    ContainerAndGlobal.addDefective(defectiveTmp);
+                }
+            }
+            json = sharedPrefs.getString("RouteList", "");
+            type = new TypeToken<List<RoutePlan>>() {}.getType();
+            List<RoutePlan> oldRoutePlans = gson.fromJson(json, type);
+            if(oldRoutePlans != null) {
+                for(int i = 0; i < oldRoutePlans.size(); i++)
+                {
+                    RoutePlan newRoutePlan = new RoutePlan(oldRoutePlans.get(i).getName());
+                    for(int j = 0; j < oldRoutePlans.get(i).getChargingStationRoutes().size(); j++)
+                    {
+                        newRoutePlan.getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(oldRoutePlans.get(i).getChargingStationRoutes().get(j).getLocation()));
+                    }
+                    ContainerAndGlobal.getRoutePlanList().add(newRoutePlan);
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
         }
     }
 
@@ -259,13 +280,17 @@ public class MainActivity extends AppCompatActivity {
      */
     public void switchFragment(int option)
     {
-        if(option == 0)
-            bottomNavBar.setSelectedItemId(R.id.navMaps);
-        else if(option == 1)
-            bottomNavBar.setSelectedItemId(R.id.navRoute);
-        else if(option == 2)
-            bottomNavBar.setSelectedItemId(R.id.navFavorites);
-        else
-            bottomNavBar.setSelectedItemId(R.id.navSettings);
+        try {
+            if(option == 0)
+                bottomNavBar.setSelectedItemId(R.id.navMaps);
+            else if(option == 1)
+                bottomNavBar.setSelectedItemId(R.id.navRoute);
+            else if(option == 2)
+                bottomNavBar.setSelectedItemId(R.id.navFavorites);
+            else
+                bottomNavBar.setSelectedItemId(R.id.navSettings);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

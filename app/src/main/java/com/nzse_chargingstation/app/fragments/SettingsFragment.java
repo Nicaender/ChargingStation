@@ -34,62 +34,66 @@ public class SettingsFragment extends Fragment{
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
-        btnDarkmode = view.findViewById(R.id.buttonDarkMode);
-        btnLanguageSwitch =  view.findViewById(R.id.buttonLanguageSwitch);
+        try {
+            btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
+            btnDarkmode = view.findViewById(R.id.buttonDarkMode);
+            btnLanguageSwitch =  view.findViewById(R.id.buttonLanguageSwitch);
 
-        // Saving state of our app
-        // using SharedPreferences
-        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
+            // Saving state of our app
+            // using SharedPreferences
+            SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        // When user reopens the app
-        // after applying dark/light mode
-        if (ContainerAndGlobal.isDarkmode()) {
-            btnDarkmode.setText(R.string.disable_darkmode);
-        }
-        else {
-            btnDarkmode.setText(R.string.enable_darkmode);
-        }
-
-        // When user reopens the app after changing language;
-        btnLanguageSwitch.setText(R.string.language_button);
-
-        // Implementation of dark mode button
-        btnDarkmode.setOnClickListener(v -> {
+            // When user reopens the app
+            // after applying dark/light mode
             if (ContainerAndGlobal.isDarkmode()) {
-                // if dark mode is on it
-                // will turn it off
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                // it will set isDarkModeOn
-                // boolean to false
-                editor.putBoolean("isDarkModeOn", false);
-                editor.apply();
-                // change text of Button
-                btnDarkmode.setText(R.string.enable_darkmode);
-            }
-            else {
-                // if dark mode is off
-                // it will turn it on
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                // it will set isDarkModeOn
-                // boolean to true
-                editor.putBoolean("isDarkModeOn", true);
-                editor.apply();
-                // change text of Button
                 btnDarkmode.setText(R.string.disable_darkmode);
             }
-            ContainerAndGlobal.setChangedSetting(true);
-        });
+            else {
+                btnDarkmode.setText(R.string.enable_darkmode);
+            }
 
-        // Implementation of button to login site from techniker
-        btnTechnicianSite.setOnClickListener(v -> startActivity(new Intent(getActivity(), TechnicianActivity.class)));
+            // When user reopens the app after changing language;
+            btnLanguageSwitch.setText(R.string.language_button);
 
-        // Implementation of language switch button
-        btnLanguageSwitch.setOnClickListener(v -> {
-            LocaleHelper.setLocale(requireContext(), getResources().getString(R.string.language_toggle));
-            requireActivity().recreate();
-            ContainerAndGlobal.setChangedSetting(true);
-        });
+            // Implementation of dark mode button
+            btnDarkmode.setOnClickListener(v -> {
+                if (ContainerAndGlobal.isDarkmode()) {
+                    // if dark mode is on it
+                    // will turn it off
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    // it will set isDarkModeOn
+                    // boolean to false
+                    editor.putBoolean("isDarkModeOn", false);
+                    editor.apply();
+                    // change text of Button
+                    btnDarkmode.setText(R.string.enable_darkmode);
+                }
+                else {
+                    // if dark mode is off
+                    // it will turn it on
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    // it will set isDarkModeOn
+                    // boolean to true
+                    editor.putBoolean("isDarkModeOn", true);
+                    editor.apply();
+                    // change text of Button
+                    btnDarkmode.setText(R.string.disable_darkmode);
+                }
+                ContainerAndGlobal.setChangedSetting(true);
+            });
+
+            // Implementation of button to login site from techniker
+            btnTechnicianSite.setOnClickListener(v -> startActivity(new Intent(getActivity(), TechnicianActivity.class)));
+
+            // Implementation of language switch button
+            btnLanguageSwitch.setOnClickListener(v -> {
+                LocaleHelper.setLocale(requireContext(), getResources().getString(R.string.language_toggle));
+                requireActivity().recreate();
+                ContainerAndGlobal.setChangedSetting(true);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

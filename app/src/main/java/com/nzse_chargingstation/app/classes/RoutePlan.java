@@ -7,11 +7,15 @@ public class RoutePlan {
     public RoutePlan(String name) {
         this.name = name;
     }
-    private final String name;
+    private String name;
     private final ArrayList<ChargingStation> chargingStationRoutes = new ArrayList<>();
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ArrayList<ChargingStation> getChargingStationRoutes() {

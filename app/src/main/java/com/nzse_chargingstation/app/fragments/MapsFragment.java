@@ -80,135 +80,139 @@ public class MapsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        // Initialize threads, then runs the threads
-        markerThreadInitialize();
-        polylineThreadInitialize();
-        navigatedPolylineThreadInitialize();
-        markerThread.start();
-        polylineThread.start();
-        navigatedPolylineThread.start();
-        stopThread = false;
-
-        // Create the google map
-        mMapView = rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume(); // needed to get the map to display immediately
-
         try {
-            MapsInitializer.initialize(requireActivity().getApplicationContext());
+            // Initialize threads, then runs the threads
+            markerThreadInitialize();
+            polylineThreadInitialize();
+            navigatedPolylineThreadInitialize();
+            markerThread.start();
+            polylineThread.start();
+            navigatedPolylineThread.start();
+            stopThread = false;
+
+            // Create the google map
+            mMapView = rootView.findViewById(R.id.mapView);
+            mMapView.onCreate(savedInstanceState);
+
+            mMapView.onResume(); // needed to get the map to display immediately
+
+            try {
+                MapsInitializer.initialize(requireActivity().getApplicationContext());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mMapView.getMapAsync(mMap -> {
+                googleMap = mMap;
+
+                // Enable dark mode on google map
+                if(ContainerAndGlobal.isDarkmode())
+                    googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+                // Enable custom window adapter
+                InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext());
+                googleMap.setInfoWindowAdapter(markerInfoWindowAdapter);
+
+                // Triggered when user click any marker on the map
+                googleMap.setOnMarkerClickListener(marker -> {
+                    clickedMarker = marker;
+                    if(ContainerAndGlobal.getCurrentLocation() != null)
+                        marker.setSnippet("Distance: " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(marker.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM, click for more info");
+                    else
+                        marker.setSnippet("Distance: unknown");
+
+                    ContainerAndGlobal.setClickedChargingStation(ContainerAndGlobal.searchChargingStation(marker.getPosition()));
+
+                    // Toggle the favorite icon whether the charging station is in favorite
+                    if(ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getClickedChargingStation()))
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                    else
+                        imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+
+                    // Show the icons if it is invisible
+                    if(imgViewMenuBackground.getVisibility() == View.GONE)
+                    {
+                        imgViewMenuBackground.setVisibility(View.VISIBLE);
+                        imgBtnFavorite.setVisibility(View.VISIBLE);
+                        imgBtnReport.setVisibility(View.VISIBLE);
+                    }
+
+                    // Animate the icons entry
+                    animate(true);
+
+                    return false;
+                });
+
+                // Triggered when user click the info window
+                googleMap.setOnInfoWindowClickListener(marker -> {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel));
+                    // Show direction from current location to the selected charging station
+                    LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                    url = getUrl(start, marker.getPosition());
+                    polylineSignal.release();
+                });
+
+                // Triggered when user long click the info window
+                googleMap.setOnInfoWindowLongClickListener(marker -> startActivity(new Intent(getActivity(), InfoActivity.class)));
+
+                // Triggered when the info window is closed
+                googleMap.setOnInfoWindowCloseListener(marker -> animate(false));
+
+                // Triggered when the camera is idle, allowing the location ui to be updated
+                googleMap.setOnCameraIdleListener(() -> updateLocationUI = true);
+
+                // Triggered when the camera is moving, removing the dot on location ui
+                googleMap.setOnCameraMoveListener(() -> {
+                    if(updateLocationUI && ContainerAndGlobal.getCurrentLocation() != null)
+                        imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_location_searching_24", "drawable", requireContext().getPackageName()));
+                });
+
+                // Get user location, starting the threads, after that put markers on the map
+                enableMyLocation();
+                markerSignal.release();
+
+                // Moves camera to user location
+                LatLng start;
+                if(ContainerAndGlobal.getCurrentLocation() != null)
+                    start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                else
+                    start = new LatLng(49.8728, 8.6512);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
+
+                // When user changes menu, it will regain the last camera position
+                if(ContainerAndGlobal.getLastCameraPosition() != null)
+                {
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
+                    if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getCurrentLocation()) < 0.1)
+                        imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
+                    ContainerAndGlobal.setLastCameraPosition(null);
+                }
+
+                // When user clicked charging station on favorite, it will moves the camera to that charging station
+                if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
+                {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), zoomLevel));
+                    ContainerAndGlobal.setZoomToThisChargingStation(null);
+                }
+
+                // When user clicked navigate on route plan, it will automatically created a polyline from the beginning to the end
+                if(ContainerAndGlobal.getNavigateRoutePlan() != null)
+                {
+                    navigatedPolylineSignal.release();
+                }
+    /*
+                Here are the approximate zoom levels and what they do :
+                1: World
+                5: Landmass/continent
+                10: City
+                15: Streets
+                20: Buildings
+    */
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        mMapView.getMapAsync(mMap -> {
-            googleMap = mMap;
-
-            // Enable dark mode on google map
-            if(ContainerAndGlobal.isDarkmode())
-                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night));
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-            // Enable custom window adapter
-            InfoWindowAdapter markerInfoWindowAdapter = new InfoWindowAdapter(requireContext());
-            googleMap.setInfoWindowAdapter(markerInfoWindowAdapter);
-
-            // Triggered when user click any marker on the map
-            googleMap.setOnMarkerClickListener(marker -> {
-                clickedMarker = marker;
-                if(ContainerAndGlobal.getCurrentLocation() != null)
-                    marker.setSnippet("Distance: " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(marker.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM, click for more info");
-                else
-                    marker.setSnippet("Distance: unknown");
-
-                ContainerAndGlobal.setClickedChargingStation(ContainerAndGlobal.searchChargingStation(marker.getPosition()));
-
-                // Toggle the favorite icon whether the charging station is in favorite
-                if(ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getClickedChargingStation()))
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-                else
-                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-
-                // Show the icons if it is invisible
-                if(imgViewMenuBackground.getVisibility() == View.GONE)
-                {
-                    imgViewMenuBackground.setVisibility(View.VISIBLE);
-                    imgBtnFavorite.setVisibility(View.VISIBLE);
-                    imgBtnReport.setVisibility(View.VISIBLE);
-                }
-
-                // Animate the icons entry
-                animate(true);
-
-                return false;
-            });
-
-            // Triggered when user click the info window
-            googleMap.setOnInfoWindowClickListener(marker -> {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel));
-                // Show direction from current location to the selected charging station
-                LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                url = getUrl(start, marker.getPosition());
-                polylineSignal.release();
-            });
-
-            // Triggered when user long click the info window
-            googleMap.setOnInfoWindowLongClickListener(marker -> startActivity(new Intent(getActivity(), InfoActivity.class)));
-
-            // Triggered when the info window is closed
-            googleMap.setOnInfoWindowCloseListener(marker -> animate(false));
-
-            // Triggered when the camera is idle, allowing the location ui to be updated
-            googleMap.setOnCameraIdleListener(() -> updateLocationUI = true);
-
-            // Triggered when the camera is moving, removing the dot on location ui
-            googleMap.setOnCameraMoveListener(() -> {
-                if(updateLocationUI && ContainerAndGlobal.getCurrentLocation() != null)
-                    imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_location_searching_24", "drawable", requireContext().getPackageName()));
-            });
-
-            // Get user location, starting the threads, after that put markers on the map
-            enableMyLocation();
-            markerSignal.release();
-
-            // Moves camera to user location
-            LatLng start;
-            if(ContainerAndGlobal.getCurrentLocation() != null)
-                start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-            else
-                start = new LatLng(49.8728, 8.6512);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
-
-            // When user changes menu, it will regain the last camera position
-            if(ContainerAndGlobal.getLastCameraPosition() != null)
-            {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
-                if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getCurrentLocation()) < 0.1)
-                    imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
-                ContainerAndGlobal.setLastCameraPosition(null);
-            }
-
-            // When user clicked charging station on favorite, it will moves the camera to that charging station
-            if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
-            {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), zoomLevel));
-                ContainerAndGlobal.setZoomToThisChargingStation(null);
-            }
-
-            // When user clicked navigate on route plan, it will automatically created a polyline from the beginning to the end
-            if(ContainerAndGlobal.getNavigateRoutePlan() != null)
-            {
-                navigatedPolylineSignal.release();
-            }
-/*
-            Here are the approximate zoom levels and what they do :
-            1: World
-            5: Landmass/continent
-            10: City
-            15: Streets
-            20: Buildings
-*/
-        });
 
         return rootView;
     }
@@ -217,168 +221,171 @@ public class MapsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialization
-        ImageView imgViewRadius = view.findViewById(R.id.imageViewRadius);
-        imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
-        imgBtnReport = view.findViewById(R.id.imageButtonReport);
-        imgBtnAddToRoute = view.findViewById(R.id.imageButtonAddToRoute);
-        imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
-        SearchView svSearchBar = view.findViewById(R.id.searchViewSearchBar);
-        imgViewMenuBackground = view.findViewById(R.id.imageViewMenuBackground);
-        spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
-        backgroundY = (int) imgViewMenuBackground.getTranslationY();
-        favoriteY = (int) imgBtnFavorite.getTranslationY();
-        reportY = (int) imgBtnReport.getTranslationY();
-        routeY = (int) imgBtnAddToRoute.getTranslationY();
-        spinnerX = (int) spRadiusValue.getTranslationX();
-        locationX = (int) imgBtnMyLocation.getTranslationX();
+        try {
+            // Initialization
+            ImageView imgViewRadius = view.findViewById(R.id.imageViewRadius);
+            imgBtnFavorite = view.findViewById(R.id.imageButtonFavorite);
+            imgBtnReport = view.findViewById(R.id.imageButtonReport);
+            imgBtnAddToRoute = view.findViewById(R.id.imageButtonAddToRoute);
+            imgBtnMyLocation = view.findViewById(R.id.imageButtonMyLocation);
+            SearchView svSearchBar = view.findViewById(R.id.searchViewSearchBar);
+            imgViewMenuBackground = view.findViewById(R.id.imageViewMenuBackground);
+            spRadiusValue = view.findViewById(R.id.spinnerRadiusValue);
+            backgroundY = (int) imgViewMenuBackground.getTranslationY();
+            favoriteY = (int) imgBtnFavorite.getTranslationY();
+            reportY = (int) imgBtnReport.getTranslationY();
+            routeY = (int) imgBtnAddToRoute.getTranslationY();
+            spinnerX = (int) spRadiusValue.getTranslationX();
+            locationX = (int) imgBtnMyLocation.getTranslationX();
 
-        // Hides the favorite and report ui when the map is ready for the first time
-        imgViewMenuBackground.setVisibility(GONE);
-        imgBtnFavorite.setVisibility(GONE);
-        imgBtnReport.setVisibility(GONE);
+            // Hides the favorite and report ui when the map is ready for the first time
+            imgViewMenuBackground.setVisibility(GONE);
+            imgBtnFavorite.setVisibility(GONE);
+            imgBtnReport.setVisibility(GONE);
 
-        // Animate the item secretly to hide it
-        ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
-        animation.setDuration(250);
-        animation.start();
-        animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-        animation.setDuration(250);
-        animation.start();
-        animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-        animation.setDuration(250);
-        animation.start();
-        animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
-        animation.setDuration(250);
-        animation.start();
+            // Animate the item secretly to hide it
+            ObjectAnimator animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
+            animation.setDuration(250);
+            animation.start();
+            animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
+            animation.setDuration(250);
+            animation.start();
+            animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
+            animation.setDuration(250);
+            animation.start();
+            animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
+            animation.setDuration(250);
+            animation.start();
 
-        // Implementation of radius filter spinner
-        ArrayList<String> items = new ArrayList<>();
-        for(int i = 0; i < 100; i++)
-        {
-            items.add(i + " KM");
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
-        spRadiusValue.setAdapter(adapter);
-        spRadiusValue.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
-
-        spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
-            if(googleMap.isMyLocationEnabled())
+            // Implementation of radius filter spinner
+            ArrayList<String> items = new ArrayList<>();
+            for(int i = 0; i < 100; i++)
             {
-                ContainerAndGlobal.setFilterRangeAndApply(position);
-                markerSignal.release();
+                items.add(i + " KM");
             }
-            else
-                Toast.makeText(getContext(), requireContext().getResources().getString(R.string.location_is_unknown), Toast.LENGTH_SHORT).show();
-        });
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+            spRadiusValue.setAdapter(adapter);
+            spRadiusValue.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
 
-        // Implementation of favorite button
-        imgBtnFavorite.setOnClickListener(v -> {
-            ChargingStation tmp = ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition());
-            if(ContainerAndGlobal.isInFavorite(tmp))
-            {
-                ContainerAndGlobal.removeFavorite(tmp);
-                assert tmp != null;
-                assignColor(clickedMarker, tmp);
-                imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
-            }
-            else
-            {
-                ContainerAndGlobal.addFavorite(tmp);
-                clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
-            }
-            ContainerAndGlobal.saveData(1, requireContext());
-        });
+            spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
+                if(googleMap.isMyLocationEnabled())
+                {
+                    ContainerAndGlobal.setFilterRangeAndApply(position);
+                    markerSignal.release();
+                }
+                else
+                    Toast.makeText(getContext(), requireContext().getResources().getString(R.string.location_is_unknown), Toast.LENGTH_SHORT).show();
+            });
 
-        // Implementation of report button
-        imgBtnReport.setOnClickListener(v -> {
-            if(!reportChargingStation(clickedMarker))
-                return;
+            // Implementation of favorite button
+            imgBtnFavorite.setOnClickListener(v -> {
+                ChargingStation tmp = ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition());
+                if(ContainerAndGlobal.isInFavorite(tmp))
+                {
+                    ContainerAndGlobal.removeFavorite(tmp);
+                    assert tmp != null;
+                    assignColor(clickedMarker, tmp);
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_border_24", "drawable", requireContext().getPackageName()));
+                }
+                else
+                {
+                    ContainerAndGlobal.addFavorite(tmp);
+                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    imgBtnFavorite.setImageResource(getResources().getIdentifier("ic_baseline_favorite_24", "drawable", requireContext().getPackageName()));
+                }
+                ContainerAndGlobal.saveData(1, requireContext());
+            });
 
-            startActivity(new Intent(getActivity(), ReportActivity.class));
-        });
+            // Implementation of report button
+            imgBtnReport.setOnClickListener(v -> {
+                if(!reportChargingStation(clickedMarker))
+                    return;
 
-        if(ContainerAndGlobal.getCurrentLocation() == null)
-            imgBtnMyLocation.setVisibility(GONE);
-        // Implementation of custom my location
-        imgBtnMyLocation.setOnClickListener(v -> {
-            LatLng tmp = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tmp, zoomLevel));
-            imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
-            updateLocationUI = false;
-        });
+                startActivity(new Intent(getActivity(), ReportActivity.class));
+            });
 
-        // Implementation of search button
-        svSearchBar.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SearchActivity.class));
-            requireActivity().overridePendingTransition(0, 0);
-            svSearchBar.clearFocus();
-        });
-        svSearchBar.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
-            if(hasFocus)
+            if(ContainerAndGlobal.getCurrentLocation() == null)
+                imgBtnMyLocation.setVisibility(GONE);
+            // Implementation of custom my location
+            imgBtnMyLocation.setOnClickListener(v -> {
+                LatLng tmp = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tmp, zoomLevel));
+                imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
+                updateLocationUI = false;
+            });
+
+            // Implementation of search button
+            svSearchBar.setOnClickListener(v -> {
                 startActivity(new Intent(getActivity(), SearchActivity.class));
-            requireActivity().overridePendingTransition(0, 0);
-            svSearchBar.clearFocus();
-        });
+                requireActivity().overridePendingTransition(0, 0);
+                svSearchBar.clearFocus();
+            });
+            svSearchBar.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+                if(hasFocus)
+                    startActivity(new Intent(getActivity(), SearchActivity.class));
+                requireActivity().overridePendingTransition(0, 0);
+                svSearchBar.clearFocus();
+            });
 
-        // Implementation to limit total charging stations on the map
-        final int size = 12;
-        String[] maxView = new String[size];
-        for(int i = 0; i < size; i++)
-        {
-            maxView[i] = String.valueOf((i+1) * 25);
-        }
-        AlertDialog.Builder builderLimit = new AlertDialog.Builder(requireActivity());
-        builderLimit.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
-                .setItems(maxView, (dialog, which) -> limitMaxChargingStation(Integer.parseInt(maxView[which])));
-        AlertDialog dialogLimit = builderLimit.create();
-        dialogLimit.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
-        imgViewRadius.setOnClickListener(v -> dialogLimit.show());
-
-
-        AlertDialog.Builder builderRoute = new AlertDialog.Builder(requireActivity());
-        AlertDialog.Builder builderAddRoute = new AlertDialog.Builder(requireActivity());
-        // Implementation of add to route image button
-        imgBtnAddToRoute.setOnClickListener(v -> {
-            String[] routeList = new String[ContainerAndGlobal.getRoutePlanList().size()];
-            for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
+            // Implementation to limit total charging stations on the map
+            final int size = 12;
+            String[] maxView = new String[size];
+            for(int i = 0; i < size; i++)
             {
-                routeList[i] = ContainerAndGlobal.getRoutePlanList().get(i).getName();
+                maxView[i] = String.valueOf((i+1) * 25);
             }
-            builderRoute.setTitle(R.string.route_plan_list)
-                    .setItems(routeList, (dialog1, which) -> {
-                        ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
-                        ContainerAndGlobal.saveData(3, requireContext());
-                        Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
-                    })
-                    .setNeutralButton(getString(R.string.add_new_route_plan), (dialog, which) -> {
-                        builderAddRoute.setTitle(R.string.route_plan_name_question);
+            AlertDialog.Builder builderLimit = new AlertDialog.Builder(requireActivity());
+            builderLimit.setTitle(R.string.how_many_charging_station_to_show_on_the_map)
+                    .setItems(maxView, (dialog, which) -> limitMaxChargingStation(Integer.parseInt(maxView[which])));
+            AlertDialog dialogLimit = builderLimit.create();
+            dialogLimit.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+            imgViewRadius.setOnClickListener(v -> dialogLimit.show());
 
-                        // Set up the input
-                        final EditText input = new EditText(requireContext());
-                        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                        input.setInputType(InputType.TYPE_CLASS_TEXT);
-                        builderAddRoute.setView(input);
-                        // Set up the buttons
-                        builderAddRoute.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
-                            if(!input.getText().toString().isEmpty())
-                            {
-                                ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
-                                ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
-                                ContainerAndGlobal.saveData(3, requireContext());
-                                Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
-                            }
+            // Implementation of add to route image button
+            AlertDialog.Builder builderRoute = new AlertDialog.Builder(requireActivity());
+            AlertDialog.Builder builderAddRoute = new AlertDialog.Builder(requireActivity());
+            imgBtnAddToRoute.setOnClickListener(v -> {
+                String[] routeList = new String[ContainerAndGlobal.getRoutePlanList().size()];
+                for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
+                {
+                    routeList[i] = ContainerAndGlobal.getRoutePlanList().get(i).getName();
+                }
+                builderRoute.setTitle(R.string.route_plan_list)
+                        .setItems(routeList, (dialog1, which) -> {
+                            ContainerAndGlobal.getRoutePlanList().get(which).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
+                            ContainerAndGlobal.saveData(3, requireContext());
+                            Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                        })
+                        .setNeutralButton(getString(R.string.add_new_route_plan), (dialog, which) -> {
+                            builderAddRoute.setTitle(R.string.route_plan_name_question);
+
+                            // Set up the input
+                            final EditText input = new EditText(requireContext());
+                            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                            input.setInputType(InputType.TYPE_CLASS_TEXT);
+                            builderAddRoute.setView(input);
+                            // Set up the buttons
+                            builderAddRoute.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
+                                if(!input.getText().toString().isEmpty())
+                                {
+                                    ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
+                                    ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
+                                    ContainerAndGlobal.saveData(3, requireContext());
+                                    Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            builderAddRoute.setNegativeButton(getString(R.string.builder_negative_button), (dialog2, which2) -> dialog2.cancel());
+                            AlertDialog dialogAddRoute = builderAddRoute.create();
+                            dialogAddRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+                            dialogAddRoute.show();
                         });
-                        builderAddRoute.setNegativeButton(getString(R.string.builder_negative_button), (dialog2, which2) -> dialog2.cancel());
-                        AlertDialog dialogAddRoute = builderAddRoute.create();
-                        dialogAddRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
-                        dialogAddRoute.show();
-                    });
-            AlertDialog dialogRoute = builderRoute.create();
-            dialogRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
-            dialogRoute.show();
-        });
+                AlertDialog dialogRoute = builderRoute.create();
+                dialogRoute.getWindow().setBackgroundDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
+                dialogRoute.show();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -386,16 +393,20 @@ public class MapsFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
 
-        // Moves camera to this charging station when user searched this charging station
-        if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
-        {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
+        try {
+            // Moves camera to this charging station when user searched this charging station
+            if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
+            {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
 
-            if(showOnMap(ContainerAndGlobal.getZoomToThisChargingStationOnPause())) {
-                assignMarker(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
-                ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+                if(showOnMap(ContainerAndGlobal.getZoomToThisChargingStationOnPause())) {
+                    assignMarker(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+                    ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+                }
+                ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
             }
-            ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -408,21 +419,25 @@ public class MapsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Save last camera position before destroying the fragment, when map is ready
-        if(googleMap != null)
-            ContainerAndGlobal.setLastCameraPosition(googleMap.getCameraPosition());
-        mMapView.onDestroy();
-
-        // Initialize thread stop protocol
-        stopThread = true;
-        markerSignal.release();
-        polylineSignal.release();
-        navigatedPolylineSignal.release();
         try {
-            markerThread.join();
-            polylineThread.join();
-            navigatedPolylineThread.join();
-        } catch (InterruptedException e) {
+            // Save last camera position before destroying the fragment, when map is ready
+            if(googleMap != null)
+                ContainerAndGlobal.setLastCameraPosition(googleMap.getCameraPosition());
+            mMapView.onDestroy();
+
+            // Initialize thread stop protocol
+            stopThread = true;
+            markerSignal.release();
+            polylineSignal.release();
+            navigatedPolylineSignal.release();
+            try {
+                markerThread.join();
+                polylineThread.join();
+                navigatedPolylineThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -466,83 +481,87 @@ public class MapsFragment extends Fragment {
      */
     private void markerThreadInitialize()
     {
-        markerThread = new Thread(() -> {
-            while(true)
-            {
-                // Wait for the signal from map
-                try {
-                    markerSignal.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                // Stop thread if needed to stop
-                if(stopThread)
-                    return;
-
-                // Clear all markers beforehand
-                requireActivity().runOnUiThread(() -> googleMap.clear());
-
-                // Put marked list markers
-                for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
+        try {
+            markerThread = new Thread(() -> {
+                while(true)
                 {
-                    if(stopThread)
-                        return;
-                    if(markerSignal.availablePermits() > 0)
-                        break;
-                    ChargingStation tmp = ContainerAndGlobal.getMarkedList().get(i);
-                    assignMarker(tmp);
+                    // Wait for the signal from map
                     try {
-                        //noinspection BusyWait
-                        Thread.sleep(0, 100);
+                        markerSignal.acquire();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
 
-                // Put favorite list markers
-                for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
-                {
+                    // Stop thread if needed to stop
                     if(stopThread)
                         return;
-                    if(markerSignal.availablePermits() > 0)
-                        break;
-                    ChargingStation tmp = ContainerAndGlobal.getFavoriteList().get(i);
-                    assignMarker(tmp);
-                    try {
-                        //noinspection BusyWait
-                        Thread.sleep(0, 100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
 
-                // Put normal list markers
-                int counter = 0;
-                for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
-                {
-                    if(stopThread)
-                        return;
-                    if(markerSignal.availablePermits() > 0)
-                        break;
-                    ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
-                    if(ContainerAndGlobal.getCurrentLocation() != null && counter >= ContainerAndGlobal.getMaxViewChargingStation()) {
-                        lastShownIndex = i-1;
-                        break;
+                    // Clear all markers beforehand
+                    requireActivity().runOnUiThread(() -> googleMap.clear());
+
+                    // Put marked list markers
+                    for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(markerSignal.availablePermits() > 0)
+                            break;
+                        ChargingStation tmp = ContainerAndGlobal.getMarkedList().get(i);
+                        assignMarker(tmp);
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(0, 100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    if(!tmp.isShowMarker())
-                        continue;
-                    assignMarker(tmp);
-                    counter++;
-                    try {
-                        //noinspection BusyWait
-                        Thread.sleep(0, 100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+                    // Put favorite list markers
+                    for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(markerSignal.availablePermits() > 0)
+                            break;
+                        ChargingStation tmp = ContainerAndGlobal.getFavoriteList().get(i);
+                        assignMarker(tmp);
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(0, 100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // Put normal list markers
+                    int counter = 0;
+                    for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
+                    {
+                        if(stopThread)
+                            return;
+                        if(markerSignal.availablePermits() > 0)
+                            break;
+                        ChargingStation tmp = ContainerAndGlobal.getChargingStationList().get(i);
+                        if(ContainerAndGlobal.getCurrentLocation() != null && counter >= ContainerAndGlobal.getMaxViewChargingStation()) {
+                            lastShownIndex = i-1;
+                            break;
+                        }
+                        if(!tmp.isShowMarker())
+                            continue;
+                        assignMarker(tmp);
+                        counter++;
+                        try {
+                            //noinspection BusyWait
+                            Thread.sleep(0, 100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -550,88 +569,96 @@ public class MapsFragment extends Fragment {
      */
     private void polylineThreadInitialize()
     {
-        polylineThread = new Thread(() -> {
-            PolylineCreator polylineCreator = new PolylineCreator();
-            while(true)
-            {
-                // Wait for the signal from map
-                try {
-                    polylineSignal.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        try {
+            polylineThread = new Thread(() -> {
+                PolylineCreator polylineCreator = new PolylineCreator();
+                while(true)
+                {
+                    // Wait for the signal from map
+                    try {
+                        polylineSignal.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                if(stopThread)
-                    return;
-                PolylineOptions polyline = polylineCreator.createPolyline(url, -1);
-                url = null;
-                // Put the route line on the map, delete the older one if it exists
-                if(currentPolyline != null)
-                    requireActivity().runOnUiThread(() -> currentPolyline.remove());
-                requireActivity().runOnUiThread(() -> currentPolyline = googleMap.addPolyline(polyline));
-            }
-        });
+                    if(stopThread)
+                        return;
+                    PolylineOptions polyline = polylineCreator.createPolyline(url, -1);
+                    url = null;
+                    // Put the route line on the map, delete the older one if it exists
+                    if(currentPolyline != null)
+                        requireActivity().runOnUiThread(() -> currentPolyline.remove());
+                    requireActivity().runOnUiThread(() -> currentPolyline = googleMap.addPolyline(polyline));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void navigatedPolylineThreadInitialize()
     {
-        navigatedPolylineThread = new Thread(() -> {
-            while(true) {
-                // Wait for the signal from map
-                try {
-                    navigatedPolylineSignal.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        try {
+            navigatedPolylineThread = new Thread(() -> {
+                while(true) {
+                    // Wait for the signal from map
+                    try {
+                        navigatedPolylineSignal.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                if(stopThread)
-                    return;
-
-                RoutePlan tmp = ContainerAndGlobal.getNavigateRoutePlan();
-                ContainerAndGlobal.setNavigateRoutePlan(null);
-                PolylineCreator polylineCreator = new PolylineCreator();
-                if(ContainerAndGlobal.getCurrentLocation() != null && tmp.getChargingStationRoutes().size() > 0 && !ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(0)))
-                {
-                    LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                    final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
-                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
-                    requireActivity().runOnUiThread(() -> {
-                        googleMap.addPolyline(tmpPolyline);
-                        imgBtnMyLocation.performClick();
-                    });
-                }
-                for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
-                {
                     if(stopThread)
                         return;
-                    int next = i+1;
-                    if(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(i)))
-                        continue;
-                    while(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(next))) {
-                        next++;
+
+                    RoutePlan tmp = ContainerAndGlobal.getNavigateRoutePlan();
+                    ContainerAndGlobal.setNavigateRoutePlan(null);
+                    PolylineCreator polylineCreator = new PolylineCreator();
+                    if(ContainerAndGlobal.getCurrentLocation() != null && tmp.getChargingStationRoutes().size() > 0 && !ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(0)))
+                    {
+                        LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                        final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
+                        final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
+                        requireActivity().runOnUiThread(() -> {
+                            googleMap.addPolyline(tmpPolyline);
+                            imgBtnMyLocation.performClick();
+                        });
+                    }
+                    for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
+                    {
+                        if(stopThread)
+                            return;
+                        int next = i+1;
+                        if(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(i)))
+                            continue;
+                        while(ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(next))) {
+                            next++;
+                            if(next >= tmp.getChargingStationRoutes().size())
+                                break;
+                        }
                         if(next >= tmp.getChargingStationRoutes().size())
                             break;
-                    }
-                    if(next >= tmp.getChargingStationRoutes().size())
-                        break;
 
-                    if(showOnMap(tmp.getChargingStationRoutes().get(i))) {
-                        assignMarker(tmp.getChargingStationRoutes().get(i));
-                        ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i));
-                    }
-                    if(next == tmp.getChargingStationRoutes().size()-1)
-                    {
-                        if(showOnMap(tmp.getChargingStationRoutes().get(next))) {
-                            assignMarker(tmp.getChargingStationRoutes().get(next));
-                            ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(next));
+                        if(showOnMap(tmp.getChargingStationRoutes().get(i))) {
+                            assignMarker(tmp.getChargingStationRoutes().get(i));
+                            ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i));
                         }
+                        if(next == tmp.getChargingStationRoutes().size()-1)
+                        {
+                            if(showOnMap(tmp.getChargingStationRoutes().get(next))) {
+                                assignMarker(tmp.getChargingStationRoutes().get(next));
+                                ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(next));
+                            }
+                        }
+                        final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(next).getLocation());
+                        final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, i%2);
+                        requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
                     }
-                    final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(next).getLocation());
-                    final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, i%2);
-                    requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -640,22 +667,26 @@ public class MapsFragment extends Fragment {
      */
     private void limitMaxChargingStation(int limit)
     {
-        if(ContainerAndGlobal.getMaxViewChargingStation() == limit)
-            return;
-        ContainerAndGlobal.setMaxViewChargingStation(limit);
-        for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
-        {
-            if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) < lastShownIndex)
+        try {
+            if(ContainerAndGlobal.getMaxViewChargingStation() == limit)
+                return;
+            ContainerAndGlobal.setMaxViewChargingStation(limit);
+            for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
             {
-                ContainerAndGlobal.getMarkedList().remove(i);
-                i--;
+                if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) < lastShownIndex)
+                {
+                    ContainerAndGlobal.getMarkedList().remove(i);
+                    i--;
+                }
             }
+            markerSignal.release();
+            SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        markerSignal.release();
-        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("maxChargingStations", ContainerAndGlobal.getMaxViewChargingStation());
-        editor.apply();
     }
 
     /**
@@ -664,30 +695,34 @@ public class MapsFragment extends Fragment {
      */
     private void assignMarker(ChargingStation chargingStation)
     {
-        if(ContainerAndGlobal.isInFavorite(chargingStation))
-            requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                    .position(chargingStation.getLocation())
-                    .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
-        else {
-            if(chargingStation.isFiltered())
+        try {
+            if(ContainerAndGlobal.isInFavorite(chargingStation))
                 requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
                         .position(chargingStation.getLocation())
                         .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
-            else
-            {
-                if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+            else {
+                if(chargingStation.isFiltered())
                     requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                             .position(chargingStation.getLocation())
                             .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
                 else
-                    requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                            .position(chargingStation.getLocation())
-                            .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+                {
+                    if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                        requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .position(chargingStation.getLocation())
+                                .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+                    else
+                        requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                .position(chargingStation.getLocation())
+                                .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -698,14 +733,18 @@ public class MapsFragment extends Fragment {
      */
     private void assignColor(Marker marker, ChargingStation chargingStation)
     {
-        if(chargingStation.isFiltered())
-            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        else
-        {
-            if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        try {
+            if(chargingStation.isFiltered())
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             else
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            {
+                if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                else
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -750,46 +789,50 @@ public class MapsFragment extends Fragment {
      */
     private void animate(boolean enter)
     {
-        ObjectAnimator animation;
-        if(enter)
-        {
-            animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", backgroundY);
+        try {
+            ObjectAnimator animation;
+            if(enter)
+            {
+                animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", backgroundY);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", routeY);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", 1000f);
+            }
+            else
+            {
+                animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
+                animation.setDuration(250);
+                animation.start();
+                animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", locationX);
+            }
             animation.setDuration(250);
             animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", favoriteY);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", reportY);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", routeY);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", -1000f);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", 1000f);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else
-        {
-            animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnFavorite, "translationY", 1000f);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnReport, "translationY", 1000f);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnAddToRoute, "translationY", 1000f);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(spRadiusValue, "translationX", spinnerX);
-            animation.setDuration(250);
-            animation.start();
-            animation = ObjectAnimator.ofFloat(imgBtnMyLocation, "translationX", locationX);
-        }
-        animation.setDuration(250);
-        animation.start();
     }
 }

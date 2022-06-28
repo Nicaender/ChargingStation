@@ -3,6 +3,7 @@ package com.nzse_chargingstation.app.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,20 +26,24 @@ public class ReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
-        btnReportBack = findViewById(R.id.buttonReportBack);
-        btnReportConfirm = findViewById(R.id.buttonReportConfirm);
-        tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
-        tvChargingStationCity = findViewById(R.id.textViewChargingStationCity);
-        etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
+        try {
+            btnReportBack = findViewById(R.id.buttonReportBack);
+            btnReportConfirm = findViewById(R.id.buttonReportConfirm);
+            tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
+            tvChargingStationCity = findViewById(R.id.textViewChargingStationCity);
+            etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
 
-        String name = ContainerAndGlobal.getReportedChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getReportedChargingStation().getHausnummer();
-        tvChargingStationAddress.setText(name);
-        String city = ContainerAndGlobal.getReportedChargingStation().getPostleitzahl() + ", " + ContainerAndGlobal.getReportedChargingStation().getOrt();
-        tvChargingStationCity.setText(city);
+            String name = ContainerAndGlobal.getReportedChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getReportedChargingStation().getHausnummer();
+            tvChargingStationAddress.setText(name);
+            String city = ContainerAndGlobal.getReportedChargingStation().getPostleitzahl() + ", " + ContainerAndGlobal.getReportedChargingStation().getOrt();
+            tvChargingStationCity.setText(city);
 
-        btnReportBack.setOnClickListener(v -> finish());
+            btnReportBack.setOnClickListener(v -> finish());
 
-        btnReportConfirm.setOnClickListener(v -> add_defective());
+            btnReportConfirm.setOnClickListener(v -> add_defective());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -51,11 +56,15 @@ public class ReportActivity extends AppCompatActivity {
      */
     private void add_defective()
     {
-        Defective tmp;
-        tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getReportedChargingStation()), etAdditionalInformation.getText().toString());
-        ContainerAndGlobal.addDefective(tmp);
-        ContainerAndGlobal.saveData(2, getApplicationContext());
-        finish();
-        Toast.makeText(this, getResources().getString(R.string.charging_station_successfully_reported), Toast.LENGTH_SHORT).show();
+        try {
+            Defective tmp;
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getReportedChargingStation()), etAdditionalInformation.getText().toString());
+            ContainerAndGlobal.addDefective(tmp);
+            ContainerAndGlobal.saveData(2, getApplicationContext());
+            finish();
+            Toast.makeText(this, getResources().getString(R.string.charging_station_successfully_reported), Toast.LENGTH_SHORT).show();
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

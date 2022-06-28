@@ -65,4 +65,7 @@
     <string name="this_route_plan_has_0_charging_station">Dieser Routenplan hat 0 Ladesäule</string>
     <string name="remove_route">Routenplan entfernen</string>
     <string name="route_plan_is_removed">Der Routenplan wurde entfernt</string>
+    <string name="rename">Umbenennen</string>
+    <string name="successfully_renamed">Erfolgreich umbenannt</string>
+    <string name="delete_route_plan_question">Möchten Sie diesen Routeplan wirklich löschen?</string>
 </resources>

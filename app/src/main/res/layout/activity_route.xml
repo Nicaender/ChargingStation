@@ -3,26 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color"
     android:padding="10dp"
     tools:context=".activities.RouteActivity">
 
-    <Button
-        android:id="@+id/buttonRouteEachBack"
+    <ImageView
+        android:id="@+id/imageViewRouteBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:src="@drawable/ic_baseline_arrow_back_32"
+        android:contentDescription="@string/back"
+        app:tint="@color/arrow_color" />
+
+    <Button
+        android:id="@+id/buttonRouteNameRename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/imageViewRouteBack"
         android:backgroundTint="@color/button_background_color"
         android:textColor="@color/button_text_color"
         android:textStyle="bold"
-        android:text="@string/back"/>
+        android:text="@string/rename"/>
 
     <TextView
         android:id="@+id/textViewRoutePlanName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/buttonRouteEachBack"
+        android:layout_below="@id/imageViewRouteBack"
+        android:layout_toRightOf="@id/buttonRouteNameRename"
         android:textColor="@color/text_color"
         android:textSize="24sp"
         android:textStyle="bold"/>
@@ -31,7 +41,7 @@
         android:id="@+id/rvRouteEachList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/buttonRouteEachBack"
+        android:layout_below="@id/buttonRouteNameRename"
         android:layout_above="@id/buttonRouteRemove"
         android:layout_marginTop="10dp"/>
 

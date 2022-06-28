@@ -23,21 +23,25 @@ public class TechnicianActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technician);
 
-        if(ContainerAndGlobal.getCurrentLocation() != null)
-            ContainerAndGlobal.getDefectiveList().sort(new DefectiveDistanceComparator());
+        try {
+            if(ContainerAndGlobal.getCurrentLocation() != null)
+                ContainerAndGlobal.getDefectiveList().sort(new DefectiveDistanceComparator());
 
-        RecyclerView recyclerView = findViewById(R.id.rvDefectiveList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
+            RecyclerView recyclerView = findViewById(R.id.rvDefectiveList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setHasFixedSize(true);
 
-        DefectiveAdapter adapter = new DefectiveAdapter(this);
-        recyclerView.setAdapter(adapter);
+            DefectiveAdapter adapter = new DefectiveAdapter(this);
+            recyclerView.setAdapter(adapter);
 
-        adapter.setDefectiveList(ContainerAndGlobal.getDefectiveList());
+            adapter.setDefectiveList(ContainerAndGlobal.getDefectiveList());
 
-        btnBackTechniker = findViewById(R.id.buttonBackTechniker);
+            btnBackTechniker = findViewById(R.id.buttonBackTechniker);
 
-        btnBackTechniker.setOnClickListener(v -> finish());
+            btnBackTechniker.setOnClickListener(v -> finish());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -72,4 +72,7 @@
     <string name="this_route_plan_has_0_charging_station">This route plan has 0 charging station</string>
     <string name="remove_route">Remove route plan</string>
     <string name="route_plan_is_removed">Route plan is removed</string>
+    <string name="rename">Rename</string>
+    <string name="successfully_renamed">Successfully renamed</string>
+    <string name="delete_route_plan_question">Do you really want to delete this route plan?</string>
 </resources>
