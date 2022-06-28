@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/item_curved">
+        android:background="@drawable/item_curved"
+        android:elevation="3dp">
 
         <TextView
             android:id="@+id/textViewRouteName"
@@ -20,7 +21,8 @@
             android:gravity="center_vertical"
             android:textSize="32sp"
             android:textColor="@color/recycler_view_text_color"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:text="@string/route_plan_name_question"/>
 
         <Button
             android:id="@+id/buttonRouteEdit"
