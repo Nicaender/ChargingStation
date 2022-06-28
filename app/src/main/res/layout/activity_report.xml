@@ -8,22 +8,22 @@
     android:padding="10dp"
     tools:context=".activities.ReportActivity">
 
-    <Button
-        android:id="@+id/buttonReportBack"
+    <ImageView
+        android:id="@+id/imageViewReportBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:backgroundTint="@color/button_background_color"
-        android:textColor="@color/button_text_color"
-        android:textStyle="bold"
-        android:text="@string/back"/>
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_baseline_arrow_back_32"
+        android:contentDescription="@string/back"
+        app:tint="@color/arrow_color" />
 
     <ImageView
         android:id="@+id/imageViewChargingStation"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@id/buttonReportBack"
-        app:srcCompat="@drawable/ic_baseline_electrical_services_24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewReportBack"
+        android:layout_marginRight="5dp"
+        app:srcCompat="@drawable/ic_baseline_electrical_services_80"
         android:contentDescription="@string/no_description"
         app:tint="@color/charging_station_icon_color" />
 
@@ -31,7 +31,7 @@
         android:id="@+id/textViewChargingStationAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonReportBack"
+        android:layout_below="@id/imageViewReportBack"
         android:layout_toRightOf="@id/imageViewChargingStation"
         android:textColor="@color/text_color"
         android:textSize="16sp"/>

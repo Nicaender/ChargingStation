@@ -20,8 +20,6 @@ import com.nzse_chargingstation.app.classes.LocaleHelper;
 
 public class SettingsFragment extends Fragment{
 
-    Button btnTechnicianSite, btnDarkmode, btnLanguageSwitch;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,9 +33,9 @@ public class SettingsFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         try {
-            btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
-            btnDarkmode = view.findViewById(R.id.buttonDarkMode);
-            btnLanguageSwitch =  view.findViewById(R.id.buttonLanguageSwitch);
+            Button btnTechnicianSite =  view.findViewById(R.id.buttonTechnicianSite);
+            Button btnDarkmode = view.findViewById(R.id.buttonDarkMode);
+            Button btnLanguageSwitch =  view.findViewById(R.id.buttonLanguageSwitch);
 
             // Saving state of our app
             // using SharedPreferences

@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
-    final MapsFragment mapsFragment = new MapsFragment();
-    final FavoritesFragment favoritesFragment = new FavoritesFragment();
-    final SettingsFragment settingsFragment = new SettingsFragment();
-    final RouteFragment routeFragment = new RouteFragment();
     private FusedLocationProviderClient fusedLocationClient;
 
     private BottomNavigationView bottomNavBar;
@@ -60,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final MapsFragment mapsFragment = new MapsFragment();
+        final FavoritesFragment favoritesFragment = new FavoritesFragment();
+        final SettingsFragment settingsFragment = new SettingsFragment();
+        final RouteFragment routeFragment = new RouteFragment();
 
         try {
             // get current location

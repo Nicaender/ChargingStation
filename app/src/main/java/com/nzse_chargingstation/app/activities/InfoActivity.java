@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,13 +21,13 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
 
         try {
-            Button btnInfoBack;
+            ImageView imgViewInfoBack;
             TextView tvBetreiber, tvStrasse, tvHausnummer, tvAdresszusatz, tvPostleitzahl, tvOrt, tvBundesland,
                     tvKreisOderKreisfreiestadt, tvBreitengrad, tvLaengengrad, tvInbetriebnahmedatum,
                     tvAnschlussleitung, tvArtDerLadeeinrichung, tvAnzahlLadepunkte, tvSteckertypen1,
                     tvSteckertypen2, tvSteckertypen3, tvSteckertypen4 ;
 
-            btnInfoBack = findViewById(R.id.buttonInfoBack);
+            imgViewInfoBack = findViewById(R.id.imageViewInfoBack);
             tvBetreiber = findViewById(R.id.textViewBetreiber);
             tvStrasse = findViewById(R.id.textViewStrasse);
             tvHausnummer = findViewById(R.id.textViewHausnummer);
@@ -46,7 +47,7 @@ public class InfoActivity extends AppCompatActivity {
             tvSteckertypen3 = findViewById(R.id.textViewSteckertypen3);
             tvSteckertypen4 = findViewById(R.id.textViewSteckertypen4);
 
-            btnInfoBack.setOnClickListener(v -> finish());
+            imgViewInfoBack.setOnClickListener(v -> finish());
             String operator = getResources().getString(R.string.string_operator) + ": " + ContainerAndGlobal.getClickedChargingStation().getBetreiber();
             String street = getResources().getString(R.string.string_street) + ": " + ContainerAndGlobal.getClickedChargingStation().getStrasse();
             String houseNumber = getResources().getString(R.string.string_house_number) + ": " + ContainerAndGlobal.getClickedChargingStation().getHausnummer();

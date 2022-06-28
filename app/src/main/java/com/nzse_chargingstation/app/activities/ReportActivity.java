@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +16,10 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
+import org.w3c.dom.Text;
+
 public class ReportActivity extends AppCompatActivity {
 
-    Button btnReportBack, btnReportConfirm;
-    TextView tvChargingStationAddress, tvChargingStationCity;
     EditText etAdditionalInformation;
 
     @Override
@@ -27,10 +28,10 @@ public class ReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report);
 
         try {
-            btnReportBack = findViewById(R.id.buttonReportBack);
-            btnReportConfirm = findViewById(R.id.buttonReportConfirm);
-            tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
-            tvChargingStationCity = findViewById(R.id.textViewChargingStationCity);
+            ImageView imgViewReportBack = findViewById(R.id.imageViewReportBack);
+            Button btnReportConfirm = findViewById(R.id.buttonReportConfirm);
+            TextView tvChargingStationAddress = findViewById(R.id.textViewChargingStationAddress);
+            TextView tvChargingStationCity = findViewById(R.id.textViewChargingStationCity);
             etAdditionalInformation = findViewById(R.id.editTextAdditionalInformation);
 
             String name = ContainerAndGlobal.getReportedChargingStation().getStrasse() + ' ' + ContainerAndGlobal.getReportedChargingStation().getHausnummer();
@@ -38,7 +39,7 @@ public class ReportActivity extends AppCompatActivity {
             String city = ContainerAndGlobal.getReportedChargingStation().getPostleitzahl() + ", " + ContainerAndGlobal.getReportedChargingStation().getOrt();
             tvChargingStationCity.setText(city);
 
-            btnReportBack.setOnClickListener(v -> finish());
+            imgViewReportBack.setOnClickListener(v -> finish());
 
             btnReportConfirm.setOnClickListener(v -> add_defective());
         } catch (Exception e) {
