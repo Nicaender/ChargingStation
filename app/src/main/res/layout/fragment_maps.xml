@@ -34,6 +34,7 @@
         android:layout_marginLeft="65dp"
         android:layout_marginBottom="10dp"
         android:background="@android:drawable/btn_dropdown"
+        android:textColor="@color/text_color"
         android:elevation="3dp"
         android:spinnerMode="dropdown"
         app:ms_dropdown_max_height="200dp"

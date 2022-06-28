@@ -11,7 +11,6 @@
     <color name="button_background_color">@color/dark_cloudy_blue</color>
     <color name="item_background_color">@color/darker_cloudy_blue</color>
     <color name="button_text_color">@color/white</color>
-    <color name="recycler_view_text_color">@color/white</color>
     <color name="nav_icon_color">@color/medium_green</color>
     <color name="icon_color">@color/medium_green</color>
     <color name="arrow_color">@color/white</color>

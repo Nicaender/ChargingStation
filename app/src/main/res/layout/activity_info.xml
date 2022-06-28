@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonInfoBack"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewBetreiber"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewStrasse"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -50,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewHausnummer"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -59,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewAdresszusatz"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -68,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewPostleitzahl"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -77,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewOrt"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -86,6 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewBundesland"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -95,6 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewKreisOderKreisfreieStadt"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -104,6 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewBreitengrad"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -113,6 +123,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewLaengengrad"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -122,6 +133,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewInbetriebnahmedatum"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -131,6 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewAnschlussleitung"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -140,6 +153,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewArtDerLadeeinrichung"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -149,6 +163,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewAnzahlLadepunkte"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -158,6 +173,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSteckertypen1"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -167,6 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSteckertypen2"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 
@@ -176,6 +193,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSteckertypen3"
         android:layout_marginVertical="5dp"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"/>
 

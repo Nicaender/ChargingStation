@@ -20,7 +20,7 @@
             android:layout_margin="10dp"
             android:gravity="center_vertical"
             android:textSize="32sp"
-            android:textColor="@color/recycler_view_text_color"
+            android:textColor="@color/text_color"
             android:textStyle="bold"
             android:text="@string/route_plan_name_question"/>
 
