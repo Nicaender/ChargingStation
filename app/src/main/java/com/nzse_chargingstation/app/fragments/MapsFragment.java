@@ -164,7 +164,7 @@ public class MapsFragment extends Fragment {
                 // Triggered when the camera is moving, removing the dot on location ui
                 googleMap.setOnCameraMoveListener(() -> {
                     if(updateLocationUI && ContainerAndGlobal.getCurrentLocation() != null)
-                        imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_location_searching_24", "drawable", requireContext().getPackageName()));
+                        imgBtnMyLocation.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_location_searching_24));
                 });
 
                 // Get user location, starting the threads, after that put markers on the map
@@ -184,7 +184,7 @@ public class MapsFragment extends Fragment {
                 {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
                     if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getCurrentLocation()) < 0.1)
-                        imgBtnMyLocation.setImageResource(getResources().getIdentifier("ic_baseline_my_location_24", "drawable", requireContext().getPackageName()));
+                        imgBtnMyLocation.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_my_location_24));
                     ContainerAndGlobal.setLastCameraPosition(null);
                 }
 
