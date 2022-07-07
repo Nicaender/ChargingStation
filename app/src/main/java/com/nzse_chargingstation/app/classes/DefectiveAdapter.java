@@ -12,14 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nzse_chargingstation.app.R;
+import com.nzse_chargingstation.app.activities.MainActivity;
+import com.nzse_chargingstation.app.activities.TechnicianActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.DefectiveHolder> {
 
-    public DefectiveAdapter(Context context)
-    {
+    public DefectiveAdapter(Context context) {
         this.mContext = context;
     }
     private List<Defective> defectiveList = new ArrayList<>();
@@ -35,33 +36,31 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
 
     @Override
     public void onBindViewHolder(@NonNull DefectiveHolder holder, int position) {
-        Defective currentDefective = defectiveList.get(holder.getAdapterPosition());
+        holder.myDefective = defectiveList.get(holder.getAdapterPosition());
         String distance;
-        String name = currentDefective.getDefectiveCs().getStrasse() + ' ' + currentDefective.getDefectiveCs().getHausnummer();
+        String name = holder.myDefective.getDefectiveCs().getStrasse() + ' ' + holder.myDefective.getDefectiveCs().getHausnummer();
         holder.tvDefectiveAddress.setText(name);
-        String city = currentDefective.getDefectiveCs().getPostleitzahl() + ", " + currentDefective.getDefectiveCs().getOrt();
+        String city = holder.myDefective.getDefectiveCs().getPostleitzahl() + ", " + holder.myDefective.getDefectiveCs().getOrt();
         holder.tvDefectiveCity.setText(city);
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(currentDefective.getDefectiveCs().getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myDefective.getDefectiveCs().getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
-        holder.tvDefectiveReason.setText(currentDefective.getReason());
+        holder.tvDefectiveReason.setText(holder.myDefective.getReason());
         holder.tvDistance.setText(distance);
-        if(!currentDefective.isMarked())
+        if(!holder.myDefective.isMarked())
             holder.btnMarkToRepair.setText(mContext.getResources().getString(R.string.mark));
         else
             holder.btnMarkToRepair.setText(mContext.getResources().getString(R.string.finish));
 
         holder.btnMarkToRepair.setOnClickListener(v -> {
-            if(!currentDefective.isMarked())
-            {
-                currentDefective.setMarked(true);
+            if(!holder.myDefective.isMarked()) {
+                holder.myDefective.setMarked(true);
                 notifyItemChanged(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), mContext.getResources().getString(R.string.successfully_marked), Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                ContainerAndGlobal.removeDefective(currentDefective);
+            else {
+                ContainerAndGlobal.removeDefective(holder.myDefective);
                 ContainerAndGlobal.saveData(2, v.getContext());
                 notifyItemRemoved(holder.getAdapterPosition());
                 Toast.makeText(v.getContext(), mContext.getResources().getString(R.string.successfully_repaired), Toast.LENGTH_SHORT).show();
@@ -74,15 +73,15 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
         return defectiveList.size();
     }
 
-    public void setDefectiveList(List<Defective> defectives)
-    {
+    public void setDefectiveList(List<Defective> defectives) {
         this.defectiveList = defectives;
         notifyItemRangeChanged(0, defectives.size());
     }
 
-    protected static class DefectiveHolder extends RecyclerView.ViewHolder {
+    protected class DefectiveHolder extends RecyclerView.ViewHolder {
         private final TextView tvDefectiveAddress, tvDefectiveReason, tvDefectiveCity, tvDistance;
         private final Button btnMarkToRepair;
+        private Defective myDefective;
 
         public DefectiveHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,7 +89,12 @@ public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.Defe
             tvDefectiveReason = itemView.findViewById(R.id.textViewDefectiveReason);
             tvDefectiveCity = itemView.findViewById(R.id.textViewDefectiveCity);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
-            btnMarkToRepair = itemView.findViewById(R.id.buttonMarkToRepair);
+            btnMarkToRepair = itemView.findViewById(R.id.buttonRepair);
+
+            itemView.setOnClickListener(v -> {
+                ContainerAndGlobal.setZoomToThisChargingStationOnDefective(myDefective.getDefectiveCs());
+                ((TechnicianActivity)mContext).finish();
+            });
         }
     }
 

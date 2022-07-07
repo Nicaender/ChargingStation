@@ -63,8 +63,7 @@ public class RouteFragment extends Fragment {
 
                 // Set up the buttons
                 builder.setPositiveButton(getString(R.string.builder_positive_button), (dialog, which) -> {
-                    if(!input.getText().toString().isEmpty())
-                    {
+                    if(!input.getText().toString().isEmpty()) {
                         ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
                         ContainerAndGlobal.saveData(3, requireContext());
                         Toast.makeText(requireContext(), getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();

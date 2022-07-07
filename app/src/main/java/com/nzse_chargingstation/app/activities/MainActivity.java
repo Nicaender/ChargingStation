@@ -66,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
             // get current location
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-            if(ContainerAndGlobal.isFirstTime())
-            {
+            if(ContainerAndGlobal.isFirstTime()) {
                 ContainerAndGlobal.setFirstTime(false);
 
                 // Clearing old data in case the user closes the app and then reopens it
@@ -93,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 getOldData();
             }
 
-            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled())
-            {
+            if(ContainerAndGlobal.getCurrentLocation() != null && ContainerAndGlobal.isFirstTimeGPSEnabled()) {
                 ContainerAndGlobal.setFirstTimeGPSEnabled(false);
                 ContainerAndGlobal.getChargingStationList().sort(new ChargingStationDistanceComparator());
             }
@@ -121,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
             ContainerAndGlobal.setMaxViewChargingStation(ContainerAndGlobal.getMaxViewChargingStation());
 
-            if(ContainerAndGlobal.isChangedSetting())
-            {
+            if(ContainerAndGlobal.isChangedSetting()) {
                 bottomNavBar.setSelectedItemId(R.id.navSettings);
                 ContainerAndGlobal.setChangedSetting(false);
             }
@@ -133,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
             // Implementation of bottom navigation bar
             bottomNavBar.setOnItemSelectedListener(item -> {
 
-                switch (item.getItemId())
-                {
+                switch (item.getItemId()) {
                     case R.id.navMaps:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, mapsFragment).commit();
                         return true;
@@ -178,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
                             if (location != null) {
                                 // Logic to handle location object
                                 ContainerAndGlobal.setCurrentLocation(location);
-                                if(ContainerAndGlobal.isFirstTimeGPSEnabled())
-                                {
+                                if(ContainerAndGlobal.isFirstTimeGPSEnabled()) {
                                     startActivity(new Intent(this, MainActivity.class));
                                     overridePendingTransition(0, 0);
                                     finish();
@@ -222,6 +217,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(ContainerAndGlobal.getZoomToThisChargingStationOnDefective() != null)
+            switchFragment(0);
+    }
+
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(LocaleHelper.onAttach(base, "de"));
     }
@@ -229,8 +231,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Importing favorites and defectives from shared preferences
      */
-    private void getOldData()
-    {
+    private void getOldData() {
         try {
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             Gson gson = new Gson();
@@ -238,9 +239,8 @@ public class MainActivity extends AppCompatActivity {
             Type type = new TypeToken<List<ChargingStation>>() {}.getType();
             List<ChargingStation> oldFavorites = gson.fromJson(json, type);
             if(oldFavorites != null) {
-                for(int i = 0; i < oldFavorites.size(); i++)
-                {
-                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getLocation());
+                for(int i = 0; i < oldFavorites.size(); i++) {
+                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldFavorites.get(i).getPosition());
                     ContainerAndGlobal.addFavorite(tmp);
                 }
             }
@@ -248,9 +248,8 @@ public class MainActivity extends AppCompatActivity {
             type = new TypeToken<List<Defective>>() {}.getType();
             List<Defective> oldDefectives = gson.fromJson(json, type);
             if(oldDefectives != null) {
-                for(int i = 0; i < oldDefectives.size(); i++)
-                {
-                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getLocation());
+                for(int i = 0; i < oldDefectives.size(); i++) {
+                    ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getPosition());
                     Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
                     defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
                     ContainerAndGlobal.addDefective(defectiveTmp);
@@ -260,12 +259,10 @@ public class MainActivity extends AppCompatActivity {
             type = new TypeToken<List<RoutePlan>>() {}.getType();
             List<RoutePlan> oldRoutePlans = gson.fromJson(json, type);
             if(oldRoutePlans != null) {
-                for(int i = 0; i < oldRoutePlans.size(); i++)
-                {
+                for(int i = 0; i < oldRoutePlans.size(); i++) {
                     RoutePlan newRoutePlan = new RoutePlan(oldRoutePlans.get(i).getName());
-                    for(int j = 0; j < oldRoutePlans.get(i).getChargingStationRoutes().size(); j++)
-                    {
-                        newRoutePlan.getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(oldRoutePlans.get(i).getChargingStationRoutes().get(j).getLocation()));
+                    for(int j = 0; j < oldRoutePlans.get(i).getChargingStationRoutes().size(); j++) {
+                        newRoutePlan.getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(oldRoutePlans.get(i).getChargingStationRoutes().get(j).getPosition()));
                     }
                     ContainerAndGlobal.getRoutePlanList().add(newRoutePlan);
                 }
@@ -279,8 +276,7 @@ public class MainActivity extends AppCompatActivity {
      * A function to switch the fragment from inside a fragment
      * @param option is the option, which fragment to be changed
      */
-    public void switchFragment(int option)
-    {
+    public void switchFragment(int option) {
         try {
             if(option == 0)
                 bottomNavBar.setSelectedItemId(R.id.navMaps);

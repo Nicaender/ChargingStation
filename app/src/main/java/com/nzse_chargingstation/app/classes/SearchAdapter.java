@@ -21,8 +21,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHold
     private ArrayList<ChargingStation> chargingStationList;
     private final Context mContext;
 
-    public SearchAdapter(Context context, ArrayList<ChargingStation> chargingStationList)
-    {
+    public SearchAdapter(Context context, ArrayList<ChargingStation> chargingStationList) {
         this.chargingStationList = chargingStationList;
         this.mContext = context;
     }
@@ -54,7 +53,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHold
         holder.tvSearchAddress.setText(name);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvDistance.setText(distance);

@@ -47,8 +47,8 @@
     <string name="fast_charging_auf_deutsch" translatable="false">Schnellladung ist verfügbar</string>
     <string name="fast_charging_no">Fast charging is not available</string>
     <string name="fast_charging_no_auf_deutsch" translatable="false">Schnellladung ist nicht verfügbar</string>
-    <string name="click_to_show_navigation_route">Click to show navigation route</string>
-    <string name="click_to_show_navigation_route_auf_deutsch" translatable="false">Drücken für die Navigationsroute</string>
+    <string name="click_to_show_navigation_route">Press the tile to navigate</string>
+    <string name="click_to_show_navigation_route_auf_deutsch" translatable="false">Drücken Sie die Kachel, um zu navigieren</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_auf_deutsch" translatable="false">Unbekannt</string>
     <string name="removed_from_favorites">Removed from favorites</string>
@@ -68,7 +68,7 @@
     <string name="successfully_added">Successfully added</string>
     <string name="route_plan_list">Route plan list</string>
     <string name="removed_from_this_route_plan">Removed from this route plan</string>
-    <string name="this_route_plan_has_0_charging_station">This route plan has 0 charging station</string>
+    <string name="this_route_plan_has_0_charging_station">This route plan has no charging station</string>
     <string name="remove_route">Remove route plan</string>
     <string name="route_plan_is_removed">Route plan is removed</string>
     <string name="rename">Rename</string>

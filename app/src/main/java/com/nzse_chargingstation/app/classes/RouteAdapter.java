@@ -21,8 +21,7 @@ import java.util.List;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder> {
 
-    public RouteAdapter(Context context)
-    {
+    public RouteAdapter(Context context) {
         this.mContext = context;
     }
     private List<RoutePlan> routeList = new ArrayList<>();
@@ -38,20 +37,12 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RouteHolder holder, int position) {
-        holder.tvRouteName.setText(routeList.get(holder.getAdapterPosition()).getName());
+        holder.myRoutePlan = routeList.get(holder.getAdapterPosition());
+        holder.tvRouteName.setText(holder.myRoutePlan.getName());
 
         holder.btnRouteEdit.setOnClickListener(v -> {
-            ContainerAndGlobal.setSelectedRoutePlan(routeList.get(holder.getAdapterPosition()));
+            ContainerAndGlobal.setSelectedRoutePlan(holder.myRoutePlan);
             mContext.startActivity(new Intent(mContext, RouteActivity.class));
-        });
-
-        holder.btnRouteNavigate.setOnClickListener(v -> {
-            if(routeList.get(holder.getAdapterPosition()).getChargingStationRoutes().size() != 0) {
-                ContainerAndGlobal.setNavigateRoutePlan(routeList.get(holder.getAdapterPosition()));
-                ((MainActivity)mContext).switchFragment(0);
-            }
-            else
-                Toast.makeText(mContext, R.string.this_route_plan_has_0_charging_station, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -60,22 +51,29 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
         return routeList.size();
     }
 
-    public void setRouteList(List<RoutePlan> routeList)
-    {
+    public void setRouteList(List<RoutePlan> routeList) {
         this.routeList = routeList;
         notifyItemRangeChanged(0, routeList.size());
     }
 
-    protected static class RouteHolder extends RecyclerView.ViewHolder {
+    protected class RouteHolder extends RecyclerView.ViewHolder {
         private final TextView tvRouteName;
-        private final Button btnRouteEdit, btnRouteNavigate;
+        private final Button btnRouteEdit;
+        private RoutePlan myRoutePlan;
 
-        public RouteHolder(View itemView)
-        {
+        public RouteHolder(View itemView) {
             super(itemView);
             tvRouteName = itemView.findViewById(R.id.textViewRouteName);
             btnRouteEdit = itemView.findViewById(R.id.buttonRouteEdit);
-            btnRouteNavigate = itemView.findViewById(R.id.buttonRouteNavigate);
+
+            itemView.setOnClickListener(v -> {
+                if(myRoutePlan.getChargingStationRoutes().size() != 0) {
+                    ContainerAndGlobal.setNavigateRoutePlan(myRoutePlan);
+                    ((MainActivity)mContext).switchFragment(0);
+                }
+                else
+                    Toast.makeText(mContext, R.string.this_route_plan_has_0_charging_station, Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }

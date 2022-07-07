@@ -42,7 +42,7 @@
     <string name="string_connector_type_4">Steckertyp 4</string>
     <string name="fast_charging">Schnellladung ist verfügbar</string>
     <string name="fast_charging_no">Schnellladung ist nicht verfügbar</string>
-    <string name="click_to_show_navigation_route">Drücken für die Navigationsroute</string>
+    <string name="click_to_show_navigation_route">Drücken Sie die Kachel, um zu navigieren</string>
     <string name="unknown">Unbekannt</string>
     <string name="removed_from_favorites">Von Favoriten entfernt</string>
     <string name="successfully_marked">Erfolgreich markiert</string>
@@ -61,7 +61,7 @@
     <string name="edit">Bearbeiten</string>
     <string name="route_plan_list">Routenplan Liste</string>
     <string name="removed_from_this_route_plan">Von diesem Routenplan entfernt</string>
-    <string name="this_route_plan_has_0_charging_station">Dieser Routenplan hat 0 Ladesäule</string>
+    <string name="this_route_plan_has_0_charging_station">Dieser Routenplan hat keine Ladesäule</string>
     <string name="remove_route">Routenplan entfernen</string>
     <string name="route_plan_is_removed">Der Routenplan wurde entfernt</string>
     <string name="rename">Umbenennen</string>

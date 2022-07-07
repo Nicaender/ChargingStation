@@ -46,10 +46,8 @@ public class SearchActivity extends AppCompatActivity {
             ContainerAndGlobal.getFilteredList().clear();
             ContainerAndGlobal.getFilteredList().addAll(ContainerAndGlobal.getChargingStationList());
             ContainerAndGlobal.getFilteredList().addAll(ContainerAndGlobal.getFavoriteList());
-            for(int i = 0; i < ContainerAndGlobal.getFilteredList().size(); i++)
-            {
-                if(ContainerAndGlobal.isInDefective(ContainerAndGlobal.getFilteredList().get(i)))
-                {
+            for(int i = 0; i < ContainerAndGlobal.getFilteredList().size(); i++) {
+                if(ContainerAndGlobal.isInDefective(ContainerAndGlobal.getFilteredList().get(i))) {
                     ContainerAndGlobal.getFilteredList().remove(i);
                     i--;
                 }
@@ -91,8 +89,7 @@ public class SearchActivity extends AppCompatActivity {
      * Filtering the list that contains the word from the searched words
      * @param text is the current searched address
      */
-    private void filter(String text)
-    {
+    private void filter(String text) {
         try {
             // creating a new array list to filter our data.
             ArrayList<ChargingStation> filteredList = new ArrayList<>();

@@ -18,8 +18,7 @@ import java.util.List;
 
 public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.RouteEachHolder> {
 
-    public RouteEachAdapter(Context context, RoutePlan routePlan)
-    {
+    public RouteEachAdapter(Context context, RoutePlan routePlan) {
         this.mContext = context;
         this.routePlan = routePlan;
     }
@@ -43,7 +42,7 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
         holder.tvRouteEachCity.setText(city);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(routeEachList.get(holder.getAdapterPosition()).getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(routeEachList.get(holder.getAdapterPosition()).getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvRouteEachDistance.setText(distance);
@@ -62,8 +61,7 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
         return routeEachList.size();
     }
 
-    public void setRouteEachList(List<ChargingStation> routeEachList)
-    {
+    public void setRouteEachList(List<ChargingStation> routeEachList) {
         this.routeEachList = routeEachList;
         notifyItemRangeChanged(0, routeEachList.size());
     }
@@ -73,8 +71,7 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
         private final TextView tvRouteEachAddress, tvRouteEachCity, tvRouteEachDistance;
         private final Button btnRouteEachRemove;
 
-        public RouteEachHolder(View itemView)
-        {
+        public RouteEachHolder(View itemView) {
             super(itemView);
             tvRouteEachAddress = itemView.findViewById(R.id.textViewRouteEachAddress);
             tvRouteEachCity = itemView.findViewById(R.id.textViewRouteEachCity);

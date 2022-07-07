@@ -129,8 +129,7 @@ public class MapsFragment extends Fragment {
                         imgViewFavorite.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_border_40));
 
                     // Show the icons if it is invisible
-                    if(imgViewMenuBackground.getVisibility() == View.GONE)
-                    {
+                    if(imgViewMenuBackground.getVisibility() == View.GONE) {
                         imgViewMenuBackground.setVisibility(View.VISIBLE);
                         imgViewFavorite.setVisibility(View.VISIBLE);
                         imgViewReport.setVisibility(View.VISIBLE);
@@ -146,9 +145,11 @@ public class MapsFragment extends Fragment {
                 googleMap.setOnInfoWindowClickListener(marker -> {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), zoomLevel));
                     // Show direction from current location to the selected charging station
-                    LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                    url = getUrl(start, marker.getPosition());
-                    polylineSignal.release();
+                    if(ContainerAndGlobal.getCurrentLocation() != null) {
+                        LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                        url = getUrl(start, marker.getPosition());
+                        polylineSignal.release();
+                    }
                 });
 
                 // Triggered when user long click the info window
@@ -179,8 +180,7 @@ public class MapsFragment extends Fragment {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, zoomLevel));
 
                 // When user changes menu, it will regain the last camera position
-                if(ContainerAndGlobal.getLastCameraPosition() != null)
-                {
+                if(ContainerAndGlobal.getLastCameraPosition() != null) {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getLastCameraPosition().zoom));
                     if(ContainerAndGlobal.calculateLength(ContainerAndGlobal.getLastCameraPosition().target, ContainerAndGlobal.getCurrentLocation()) < 0.1)
                         imgViewMyLocation.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_my_location_24));
@@ -188,15 +188,17 @@ public class MapsFragment extends Fragment {
                 }
 
                 // When user clicked charging station on favorite, it will moves the camera to that charging station
-                if(ContainerAndGlobal.getZoomToThisChargingStation() != null)
-                {
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getLocation(), zoomLevel));
+                if(ContainerAndGlobal.getZoomToThisChargingStation() != null) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStation().getPosition(), zoomLevel));
+                    if(ContainerAndGlobal.getCurrentLocation() != null) {
+                        url = getUrl(start, ContainerAndGlobal.getZoomToThisChargingStation().getPosition());
+                        polylineSignal.release();
+                    }
                     ContainerAndGlobal.setZoomToThisChargingStation(null);
                 }
 
                 // When user clicked navigate on route plan, it will automatically created a polyline from the beginning to the end
-                if(ContainerAndGlobal.getNavigateRoutePlan() != null)
-                {
+                if(ContainerAndGlobal.getNavigateRoutePlan() != null) {
                     navigatedPolylineSignal.release();
                 }
     /*
@@ -257,8 +259,7 @@ public class MapsFragment extends Fragment {
 
             // Implementation of radius filter spinner
             ArrayList<String> items = new ArrayList<>();
-            for(int i = 0; i < 100; i++)
-            {
+            for(int i = 0; i < 100; i++) {
                 items.add(i + " KM");
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
@@ -266,8 +267,7 @@ public class MapsFragment extends Fragment {
             spRadiusValue.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.item_curved));
 
             spRadiusValue.setOnItemSelectedListener((view1, position, id, item) -> {
-                if(googleMap.isMyLocationEnabled())
-                {
+                if(googleMap.isMyLocationEnabled()) {
                     ContainerAndGlobal.setFilterRangeAndApply(position);
                     markerSignal.release();
                 }
@@ -278,17 +278,15 @@ public class MapsFragment extends Fragment {
             // Implementation of favorite button
             imgViewFavorite.setOnClickListener(v -> {
                 ChargingStation tmp = ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition());
-                if(ContainerAndGlobal.isInFavorite(tmp))
-                {
+                if(ContainerAndGlobal.isInFavorite(tmp)) {
                     ContainerAndGlobal.removeFavorite(tmp);
                     assert tmp != null;
                     assignColor(clickedMarker, tmp);
                     imgViewFavorite.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_border_40));
                 }
-                else
-                {
+                else {
                     ContainerAndGlobal.addFavorite(tmp);
-                    clickedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    assignColor(clickedMarker, tmp);
                     imgViewFavorite.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_baseline_favorite_40));
                 }
                 ContainerAndGlobal.saveData(1, requireContext());
@@ -328,8 +326,7 @@ public class MapsFragment extends Fragment {
             // Implementation to limit total charging stations on the map
             final int size = 12;
             String[] maxView = new String[size];
-            for(int i = 0; i < size; i++)
-            {
+            for(int i = 0; i < size; i++) {
                 maxView[i] = String.valueOf((i+1) * 25);
             }
             AlertDialog.Builder builderLimit = new AlertDialog.Builder(requireActivity());
@@ -347,8 +344,7 @@ public class MapsFragment extends Fragment {
             AlertDialog.Builder builderAddRoute = new AlertDialog.Builder(requireActivity());
             imgViewAddToRoute.setOnClickListener(v -> {
                 String[] routeList = new String[ContainerAndGlobal.getRoutePlanList().size()];
-                for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
-                {
+                for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++) {
                     routeList[i] = ContainerAndGlobal.getRoutePlanList().get(i).getName();
                 }
                 builderRoute.setTitle(R.string.route_plan_list)
@@ -367,8 +363,7 @@ public class MapsFragment extends Fragment {
                             builderAddRoute.setView(input);
                             // Set up the buttons
                             builderAddRoute.setPositiveButton(getString(R.string.builder_positive_button), (dialog2, which2) -> {
-                                if(!input.getText().toString().isEmpty())
-                                {
+                                if(!input.getText().toString().isEmpty()) {
                                     ContainerAndGlobal.getRoutePlanList().add(new RoutePlan(input.getText().toString()));
                                     ContainerAndGlobal.getRoutePlanList().get(ContainerAndGlobal.getRoutePlanList().size()-1).getChargingStationRoutes().add(ContainerAndGlobal.searchChargingStation(clickedMarker.getPosition()));
                                     ContainerAndGlobal.saveData(3, requireContext());
@@ -396,13 +391,17 @@ public class MapsFragment extends Fragment {
 
         try {
             // Moves camera to this charging station when user searched this charging station
-            if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null)
-            {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getLocation(), zoomLevel));
+            if(ContainerAndGlobal.getZoomToThisChargingStationOnPause() != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ContainerAndGlobal.getZoomToThisChargingStationOnPause().getPosition(), zoomLevel));
 
                 if(showOnMap(ContainerAndGlobal.getZoomToThisChargingStationOnPause())) {
                     assignMarker(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
                     ContainerAndGlobal.getMarkedList().add(ContainerAndGlobal.getZoomToThisChargingStationOnPause());
+                }
+                if(ContainerAndGlobal.getCurrentLocation() != null) {
+                    LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                    url = getUrl(start, ContainerAndGlobal.getZoomToThisChargingStationOnPause().getPosition());
+                    polylineSignal.release();
                 }
                 ContainerAndGlobal.setZoomToThisChargingStationOnPause(null);
             }
@@ -469,8 +468,7 @@ public class MapsFragment extends Fragment {
      * @return true if marker exists & the same location of charging station exists
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean reportChargingStation(Marker marker)
-    {
+    private boolean reportChargingStation(Marker marker) {
         ContainerAndGlobal.setReportedChargingStation(ContainerAndGlobal.searchChargingStation(marker.getPosition()));
         if(ContainerAndGlobal.getReportedChargingStation() != null)
             ContainerAndGlobal.setReportedMarker(marker);
@@ -480,12 +478,10 @@ public class MapsFragment extends Fragment {
     /**
      * Initialize a marker thread that manages all the marker creation and deletion
      */
-    private void markerThreadInitialize()
-    {
+    private void markerThreadInitialize() {
         try {
             markerThread = new Thread(() -> {
-                while(true)
-                {
+                while(true) {
                     // Wait for the signal from map
                     try {
                         markerSignal.acquire();
@@ -501,8 +497,7 @@ public class MapsFragment extends Fragment {
                     requireActivity().runOnUiThread(() -> googleMap.clear());
 
                     // Put marked list markers
-                    for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
-                    {
+                    for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++) {
                         if(stopThread)
                             return;
                         if(markerSignal.availablePermits() > 0)
@@ -518,8 +513,7 @@ public class MapsFragment extends Fragment {
                     }
 
                     // Put favorite list markers
-                    for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++)
-                    {
+                    for(int i = 0 ; i < ContainerAndGlobal.getFavoriteList().size(); i++) {
                         if(stopThread)
                             return;
                         if(markerSignal.availablePermits() > 0)
@@ -536,8 +530,7 @@ public class MapsFragment extends Fragment {
 
                     // Put normal list markers
                     int counter = 0;
-                    for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++)
-                    {
+                    for(int i = 0 ; i < ContainerAndGlobal.getChargingStationList().size(); i++) {
                         if(stopThread)
                             return;
                         if(markerSignal.availablePermits() > 0)
@@ -558,6 +551,19 @@ public class MapsFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
+
+                    // When user clicked charging station on defective, it will moves the camera to that charging station and put a marker
+                    if(ContainerAndGlobal.getZoomToThisChargingStationOnDefective() != null) {
+                        ChargingStation tmp = ContainerAndGlobal.getZoomToThisChargingStationOnDefective();
+                        assignMarker(tmp);
+                        if(ContainerAndGlobal.getCurrentLocation() != null) {
+                            LatLng start = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
+                            url = getUrl(start, tmp.getPosition());
+                            polylineSignal.release();
+                        }
+                        requireActivity().runOnUiThread(() -> googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tmp.getPosition(), zoomLevel)));
+                        ContainerAndGlobal.setZoomToThisChargingStationOnDefective(null);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -568,13 +574,11 @@ public class MapsFragment extends Fragment {
     /**
      * Initializing polyline thread that manages all the direction route creation and deletion
      */
-    private void polylineThreadInitialize()
-    {
+    private void polylineThreadInitialize() {
         try {
             polylineThread = new Thread(() -> {
                 PolylineCreator polylineCreator = new PolylineCreator();
-                while(true)
-                {
+                while(true) {
                     // Wait for the signal from map
                     try {
                         polylineSignal.acquire();
@@ -597,8 +601,7 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    private void navigatedPolylineThreadInitialize()
-    {
+    private void navigatedPolylineThreadInitialize() {
         try {
             navigatedPolylineThread = new Thread(() -> {
                 while(true) {
@@ -615,18 +618,16 @@ public class MapsFragment extends Fragment {
                     RoutePlan tmp = ContainerAndGlobal.getNavigateRoutePlan();
                     ContainerAndGlobal.setNavigateRoutePlan(null);
                     PolylineCreator polylineCreator = new PolylineCreator();
-                    if(ContainerAndGlobal.getCurrentLocation() != null && tmp.getChargingStationRoutes().size() > 0 && !ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(0)))
-                    {
+                    if(ContainerAndGlobal.getCurrentLocation() != null && tmp.getChargingStationRoutes().size() > 0 && !ContainerAndGlobal.isInDefective(tmp.getChargingStationRoutes().get(0))) {
                         LatLng startLocation = new LatLng(ContainerAndGlobal.getCurrentLocation().getLatitude(), ContainerAndGlobal.getCurrentLocation().getLongitude());
-                        final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getLocation());
+                        final String tmpUrl = getUrl(startLocation, tmp.getChargingStationRoutes().get(0).getPosition());
                         final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, 1);
                         requireActivity().runOnUiThread(() -> {
                             googleMap.addPolyline(tmpPolyline);
                             imgViewMyLocation.performClick();
                         });
                     }
-                    for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++)
-                    {
+                    for(int i = 0; i < tmp.getChargingStationRoutes().size()-1; i++) {
                         if(stopThread)
                             return;
                         int next = i+1;
@@ -644,14 +645,13 @@ public class MapsFragment extends Fragment {
                             assignMarker(tmp.getChargingStationRoutes().get(i));
                             ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(i));
                         }
-                        if(next == tmp.getChargingStationRoutes().size()-1)
-                        {
+                        if(next == tmp.getChargingStationRoutes().size()-1) {
                             if(showOnMap(tmp.getChargingStationRoutes().get(next))) {
                                 assignMarker(tmp.getChargingStationRoutes().get(next));
                                 ContainerAndGlobal.getMarkedList().add(tmp.getChargingStationRoutes().get(next));
                             }
                         }
-                        final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getLocation(), tmp.getChargingStationRoutes().get(next).getLocation());
+                        final String tmpUrl = getUrl(tmp.getChargingStationRoutes().get(i).getPosition(), tmp.getChargingStationRoutes().get(next).getPosition());
                         final PolylineOptions tmpPolyline = polylineCreator.createPolyline(tmpUrl, i%2);
                         requireActivity().runOnUiThread(() -> googleMap.addPolyline(tmpPolyline));
                     }
@@ -666,16 +666,13 @@ public class MapsFragment extends Fragment {
      * Limiting charging stations shown on the map excluding favorites and marked list
      * @param limit is the total charging station that should be shown
      */
-    private void limitMaxChargingStation(int limit)
-    {
+    private void limitMaxChargingStation(int limit) {
         try {
             if(ContainerAndGlobal.getMaxViewChargingStation() == limit)
                 return;
             ContainerAndGlobal.setMaxViewChargingStation(limit);
-            for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++)
-            {
-                if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) < lastShownIndex)
-                {
+            for(int i = 0; i < ContainerAndGlobal.getMarkedList().size(); i++) {
+                if(ContainerAndGlobal.indexOfChargingStation(ContainerAndGlobal.getMarkedList().get(i)) < lastShownIndex) {
                     ContainerAndGlobal.getMarkedList().remove(i);
                     i--;
                 }
@@ -694,31 +691,34 @@ public class MapsFragment extends Fragment {
      * Assigning a marker for a charging station and automatically filters its color
      * @param chargingStation is the charging station that wants to be added
      */
-    private void assignMarker(ChargingStation chargingStation)
-    {
+    private void assignMarker(ChargingStation chargingStation) {
         try {
-            if(ContainerAndGlobal.isInFavorite(chargingStation))
+            if(ContainerAndGlobal.isInDefective(chargingStation))
+                requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                        .position(chargingStation.getPosition())
+                        .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
+            else if(ContainerAndGlobal.isInFavorite(chargingStation))
                 requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                        .position(chargingStation.getLocation())
+                        .position(chargingStation.getPosition())
                         .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
             else {
                 if(chargingStation.isFiltered())
                     requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                            .position(chargingStation.getLocation())
+                            .position(chargingStation.getPosition())
                             .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
-                else
-                {
+                else {
                     if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
                         requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .position(chargingStation.getLocation())
+                                .position(chargingStation.getPosition())
                                 .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
                     else
                         requireActivity().runOnUiThread(() -> googleMap.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                .position(chargingStation.getLocation())
+                                .position(chargingStation.getPosition())
                                 .title(chargingStation.getStrasse() + ' ' + chargingStation.getHausnummer())));
                 }
             }
@@ -728,21 +728,25 @@ public class MapsFragment extends Fragment {
     }
 
     /**
-     * Assign a marker color automatically (Not for favorite)
+     * Assign a marker color automatically
      * @param marker is the marker that wants to be changed
      * @param chargingStation is the parameter for its filter
      */
-    private void assignColor(Marker marker, ChargingStation chargingStation)
-    {
+    private void assignColor(Marker marker, ChargingStation chargingStation) {
         try {
-            if(chargingStation.isFiltered())
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            else
-            {
-                if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                else
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            if(ContainerAndGlobal.isInDefective(chargingStation))
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+            else if(ContainerAndGlobal.isInFavorite(chargingStation))
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            else {
+                if(chargingStation.isFiltered())
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                else {
+                    if(chargingStation.getArtDerLadeeinrichtung().equals("Normalladeeinrichtung"))
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    else
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -775,8 +779,7 @@ public class MapsFragment extends Fragment {
      * @param chargingStation is the input class
      * @return true if it is not shown yet, else false
      */
-    private boolean showOnMap(ChargingStation chargingStation)
-    {
+    private boolean showOnMap(ChargingStation chargingStation) {
         return ContainerAndGlobal.getCurrentLocation() != null
                 && ContainerAndGlobal.indexOfChargingStation(chargingStation) > lastShownIndex
                 && !ContainerAndGlobal.isInMarkedList(chargingStation)
@@ -788,12 +791,10 @@ public class MapsFragment extends Fragment {
      * Help function to animate some ui when entering or exiting
      * @param enter is a boolean, whether it is for entry animation
      */
-    private void animate(boolean enter)
-    {
+    private void animate(boolean enter) {
         try {
             ObjectAnimator animation;
-            if(enter)
-            {
+            if(enter) {
                 animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", backgroundY);
                 animation.setDuration(250);
                 animation.start();
@@ -811,8 +812,7 @@ public class MapsFragment extends Fragment {
                 animation.start();
                 animation = ObjectAnimator.ofFloat(imgViewMyLocation, "translationX", 1000f);
             }
-            else
-            {
+            else {
                 animation = ObjectAnimator.ofFloat(imgViewMenuBackground, "translationY", 1000f);
                 animation.setDuration(250);
                 animation.start();

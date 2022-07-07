@@ -56,7 +56,7 @@ public class ChargingStation {
         this.steckertypen4 = steckertypen4;
         this.p4 = p4;
         this.pk4 = pk4;
-        this.location = new LatLng(this.breitengrad, this.längengrad);
+        this.position = new LatLng(this.breitengrad, this.längengrad);
     }
 
     private final String betreiber;
@@ -86,7 +86,7 @@ public class ChargingStation {
     private final String steckertypen4;
     private final double p4;
     private final String pk4;
-    private final LatLng location;
+    private final LatLng position;
     private boolean isFiltered = false;
     private boolean showMarker = true;
 
@@ -195,8 +195,8 @@ public class ChargingStation {
         return pk4;
     }
 
-    public LatLng getLocation() {
-        return location;
+    public LatLng getPosition() {
+        return position;
     }
 
     public boolean isFiltered() {

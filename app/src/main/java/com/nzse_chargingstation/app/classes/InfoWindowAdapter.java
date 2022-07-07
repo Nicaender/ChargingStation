@@ -50,15 +50,13 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         address = myCS.getStrasse() + ' ' + myCS.getHausnummer();
         tvChargingStationAddress.setText(address);
 
-        if(ContainerAndGlobal.getCurrentLocation() != null)
-        {
+        if(ContainerAndGlobal.getCurrentLocation() != null) {
             if(LocaleHelper.getLanguage(mContext).equals("en"))
-                distance = mContext.getResources().getString(R.string.distance) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+                distance = mContext.getResources().getString(R.string.distance) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
             else
-                distance = mContext.getResources().getString(R.string.distance_auf_deutsch) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+                distance = mContext.getResources().getString(R.string.distance_auf_deutsch) + " : " + ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(myCS.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         }
-        else
-        {
+        else {
             if(LocaleHelper.getLanguage(mContext).equals("en"))
                 distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
             else
@@ -67,16 +65,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         tvChargingStationDistance.setText(distance);
 
-        if(myCS.getArtDerLadeeinrichtung().equals("Schnellladeeinrichtung"))
-        {
+        if(myCS.getArtDerLadeeinrichtung().equals("Schnellladeeinrichtung")) {
             if(LocaleHelper.getLanguage(mContext).equals("en"))
                 fastCharging = mContext.getString(R.string.fast_charging);
             else
                 fastCharging = mContext.getString(R.string.fast_charging_auf_deutsch);
             imgViewChargingStation.setColorFilter(mContext.getColor(R.color.icon_color));
         }
-        else
-        {
+        else {
             if(LocaleHelper.getLanguage(mContext).equals("en"))
                 fastCharging = mContext.getString(R.string.fast_charging_no);
             else
@@ -89,19 +85,16 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         tvChargingStationFastCharging.setText(fastCharging);
 
-        if(LocaleHelper.getLanguage(mContext).equals("en"))
-        {
+        if(LocaleHelper.getLanguage(mContext).equals("en")) {
             tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route));
             tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info));
         }
-        else
-        {
+        else {
             tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route_auf_deutsch));
             tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info_auf_deutsch));
         }
 
-        if(ContainerAndGlobal.isDarkmode())
-        {
+        if(ContainerAndGlobal.isDarkmode()) {
             v.setBackground(AppCompatResources.getDrawable(mContext, R.drawable.item_curved_dark));
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.white));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.white));
@@ -109,8 +102,7 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             tvInfo.setTextColor(mContext.getColor(R.color.white));
             tvHoldInfo.setTextColor(mContext.getColor(R.color.white));
         }
-        else
-        {
+        else {
             v.setBackground(AppCompatResources.getDrawable(mContext, R.drawable.item_curved_light));
             tvChargingStationAddress.setTextColor(mContext.getColor(R.color.black));
             tvChargingStationDistance.setTextColor(mContext.getColor(R.color.black));

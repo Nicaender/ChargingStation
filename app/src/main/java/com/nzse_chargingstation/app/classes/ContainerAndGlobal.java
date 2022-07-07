@@ -34,6 +34,7 @@ public class ContainerAndGlobal {
     private static ChargingStation reportedChargingStation = null;
     private static ChargingStation zoomToThisChargingStation = null;
     private static ChargingStation zoomToThisChargingStationOnPause = null;
+    private static ChargingStation zoomToThisChargingStationOnDefective = null;
     private static ChargingStation clickedChargingStation = null;
     private static Marker reportedMarker = null;
     private static RoutePlan selectedRoutePlan = null;
@@ -75,13 +76,11 @@ public class ContainerAndGlobal {
      * @param filterRange is the new filter range
      */
     public static void setFilterRangeAndApply(double filterRange) {
-        for(int i = 0; i < chargingStationList.size(); i++)
-        {
-            if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) < filterRange)
-            {
+        for(int i = 0; i < chargingStationList.size(); i++) {
+            if(calculateLength(chargingStationList.get(i).getPosition(), currentLocation) < filterRange) {
                 chargingStationList.get(i).setFiltered(true);
             }
-            else if(calculateLength(chargingStationList.get(i).getLocation(), currentLocation) > Math.max(filterRange, ContainerAndGlobal.filterRange))
+            else if(calculateLength(chargingStationList.get(i).getPosition(), currentLocation) > Math.max(filterRange, ContainerAndGlobal.filterRange))
                 break;
             else
                 chargingStationList.get(i).setFiltered(false);
@@ -119,6 +118,14 @@ public class ContainerAndGlobal {
 
     public static void setZoomToThisChargingStationOnPause(ChargingStation zoomToThisChargingStationOnPause) {
         ContainerAndGlobal.zoomToThisChargingStationOnPause = zoomToThisChargingStationOnPause;
+    }
+
+    public static ChargingStation getZoomToThisChargingStationOnDefective() {
+        return zoomToThisChargingStationOnDefective;
+    }
+
+    public static void setZoomToThisChargingStationOnDefective(ChargingStation zoomToThisChargingStationOnDefective) {
+        ContainerAndGlobal.zoomToThisChargingStationOnDefective = zoomToThisChargingStationOnDefective;
     }
 
     public static ChargingStation getClickedChargingStation() {
@@ -202,10 +209,8 @@ public class ContainerAndGlobal {
      * @param chargingStation is the class that wants to be indexed
      * @return the index from the array or -1 if it fails to found it
      */
-    public static int indexOfChargingStation(ChargingStation chargingStation)
-    {
-        for(int i = 0; i < chargingStationList.size(); i++)
-        {
+    public static int indexOfChargingStation(ChargingStation chargingStation) {
+        for(int i = 0; i < chargingStationList.size(); i++) {
             if(chargingStation.equals(chargingStationList.get(i)))
                 return i;
         }
@@ -218,11 +223,9 @@ public class ContainerAndGlobal {
      * @param latLng is the coordination of the charging station
      * @return return a charging station, null if it fails
      */
-    public static ChargingStation searchChargingStation(LatLng latLng)
-    {
-        for(int i = 0; i < chargingStationList.size(); i++)
-        {
-            if(chargingStationList.get(i).getLocation().equals(latLng))
+    public static ChargingStation searchChargingStation(LatLng latLng) {
+        for(int i = 0; i < chargingStationList.size(); i++) {
+            if(chargingStationList.get(i).getPosition().equals(latLng))
                 return chargingStationList.get(i);
         }
 
@@ -234,10 +237,8 @@ public class ContainerAndGlobal {
      * @param chargingStation is the class that wants to be checked
      * @return true if it is in favorite, else false
      */
-    public static boolean isInFavorite(ChargingStation chargingStation)
-    {
-        for(int i = 0; i < favoriteList.size(); i++)
-        {
+    public static boolean isInFavorite(ChargingStation chargingStation) {
+        for(int i = 0; i < favoriteList.size(); i++) {
             if(favoriteList.get(i).equals(chargingStation))
                 return true;
         }
@@ -250,10 +251,8 @@ public class ContainerAndGlobal {
      * @param chargingStation is the class that wants to be checked
      * @return true if it is in defective, else false
      */
-    public static boolean isInDefective(ChargingStation chargingStation)
-    {
-        for(int i = 0; i < defectiveList.size(); i++)
-        {
+    public static boolean isInDefective(ChargingStation chargingStation) {
+        for(int i = 0; i < defectiveList.size(); i++) {
             if(defectiveList.get(i).getDefectiveCs().equals(chargingStation))
                 return true;
         }
@@ -266,10 +265,8 @@ public class ContainerAndGlobal {
      * @param chargingStation is the class that wants to be checked
      * @return true if it is in marked list, else false
      */
-    public static boolean isInMarkedList(ChargingStation chargingStation)
-    {
-        for(int i = 0; i < markedList.size(); i++)
-        {
+    public static boolean isInMarkedList(ChargingStation chargingStation) {
+        for(int i = 0; i < markedList.size(); i++) {
             if(markedList.get(i).equals(chargingStation))
                 return true;
         }
@@ -281,8 +278,7 @@ public class ContainerAndGlobal {
      * Add defective charging station and remove it from the normal or favorite list
      * @param defective is the defective class
      */
-    public static void addDefective(Defective defective)
-    {
+    public static void addDefective(Defective defective) {
         defectiveList.add(defective);
         reportedChargingStation = null;
         if(defective.isFavorite())
@@ -298,12 +294,9 @@ public class ContainerAndGlobal {
      * remove the defective class from defective and automatically add to normal list or fav list
      * @param defective is the defective that will be removed
      */
-    public static void removeDefective(Defective defective)
-    {
-        for(int i = 0; i < defectiveList.size(); i++)
-        {
-            if(defectiveList.get(i).equals(defective))
-            {
+    public static void removeDefective(Defective defective) {
+        for(int i = 0; i < defectiveList.size(); i++) {
+            if(defectiveList.get(i).equals(defective)) {
                 defectiveList.remove(i);
                 if(defective.isFavorite())
                     ContainerAndGlobal.addFavorite(defective.getDefectiveCs());
@@ -318,8 +311,7 @@ public class ContainerAndGlobal {
      * Add a charging station to favorite list and marked showMarker false
      * @param chargingStation is the class
      */
-    public static void addFavorite(ChargingStation chargingStation)
-    {
+    public static void addFavorite(ChargingStation chargingStation) {
         favoriteList.add(chargingStation);
         chargingStation.setShowMarker(false);
     }
@@ -328,12 +320,9 @@ public class ContainerAndGlobal {
      * Add a charging station to favorite list and marked showMarker false
      * @param chargingStation is the class
      */
-    public static void removeFavorite(ChargingStation chargingStation)
-    {
-        for(int i = 0; i < favoriteList.size(); i++)
-        {
-            if(favoriteList.get(i).equals(chargingStation))
-            {
+    public static void removeFavorite(ChargingStation chargingStation) {
+        for(int i = 0; i < favoriteList.size(); i++) {
+            if(favoriteList.get(i).equals(chargingStation)) {
                 favoriteList.remove(i);
                 chargingStation.setShowMarker(true);
                 return;
@@ -347,8 +336,7 @@ public class ContainerAndGlobal {
      * @param user is the location from the user
      * @return a calculated distance between the user and the marker
      */
-    public static double calculateLength(LatLng marker, Location user)
-    {
+    public static double calculateLength(LatLng marker, Location user) {
         if(user == null)
             return -1;
         double lat1 = deg2grad(marker.latitude);
@@ -367,8 +355,7 @@ public class ContainerAndGlobal {
      * @param degree is the latitude or longitude
      * @return converted value from latitude or longitude
      */
-    private static double deg2grad(double degree)
-    {
+    private static double deg2grad(double degree) {
         double pi = 3.14;
         return (degree * (pi/180));
     }
@@ -441,14 +428,12 @@ public class ContainerAndGlobal {
      * A function to save the data from favorite list or defective list to sharedpreferences
      * @param option is the data selector, 0 = all, 1 = favorites, 2 = defectives, 3 = routes
      */
-    public static void saveData(int option, Context context)
-    {
+    public static void saveData(int option, Context context) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
         String json;
-        if(option == 0)
-        {
+        if(option == 0) {
             json = gson.toJson(ContainerAndGlobal.getFavoriteList());
             editor.putString("FavoriteList", json);
             json = gson.toJson(ContainerAndGlobal.getDefectiveList());
@@ -456,18 +441,15 @@ public class ContainerAndGlobal {
             json = gson.toJson(ContainerAndGlobal.getRoutePlanList());
             editor.putString("RouteList", json);
         }
-        else if(option == 1)
-        {
+        else if(option == 1) {
             json = gson.toJson(ContainerAndGlobal.getFavoriteList());
             editor.putString("FavoriteList", json);
         }
-        else if(option == 2)
-        {
+        else if(option == 2) {
             json = gson.toJson(ContainerAndGlobal.getDefectiveList());
             editor.putString("DefectiveList", json);
         }
-        else if(option == 3)
-        {
+        else if(option == 3) {
             json = gson.toJson(ContainerAndGlobal.getRoutePlanList());
             editor.putString("RouteList", json);
         }
@@ -477,13 +459,13 @@ public class ContainerAndGlobal {
     /**
      * Resetting all static variables
      */
-    public static void resetVariables()
-    {
+    public static void resetVariables() {
         filterRange = 0;
         currentLocation = null;
         reportedChargingStation = null;
         zoomToThisChargingStation = null;
         zoomToThisChargingStationOnPause = null;
+        zoomToThisChargingStationOnDefective = null;
         clickedChargingStation = null;
         reportedMarker = null;
         selectedRoutePlan = null;

@@ -22,8 +22,7 @@ import java.util.Objects;
 
 public class PolylineCreator {
 
-    public PolylineOptions createPolyline(String url, int colorState)
-    {
+    public PolylineOptions createPolyline(String url, int colorState) {
         String data = storeDataFromWebsite(url);
         List<List<HashMap<String, String>>> routes = jsonToRoute(data);
         return parsePolyline(routes, colorState);
@@ -73,8 +72,7 @@ public class PolylineCreator {
         return data;
     }
 
-    private List<List<HashMap<String, String>>> parseFromJson(JSONObject jObject)
-    {
+    private List<List<HashMap<String, String>>> parseFromJson(JSONObject jObject) {
         List<List<HashMap<String, String>>> routes = new ArrayList<>();
         JSONArray jRoutes;
         JSONArray jLegs;

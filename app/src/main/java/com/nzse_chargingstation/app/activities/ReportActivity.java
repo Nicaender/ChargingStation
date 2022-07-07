@@ -55,8 +55,7 @@ public class ReportActivity extends AppCompatActivity {
     /**
      * Adding a new defective charging station
      */
-    private void add_defective()
-    {
+    private void add_defective() {
         try {
             Defective tmp;
             tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getReportedChargingStation()), etAdditionalInformation.getText().toString());

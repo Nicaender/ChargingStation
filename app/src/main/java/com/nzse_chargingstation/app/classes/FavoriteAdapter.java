@@ -19,8 +19,7 @@ import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
 
-    public FavoriteAdapter(Context context)
-    {
+    public FavoriteAdapter(Context context) {
         this.mContext = context;
     }
     private List<ChargingStation> favoriteList = new ArrayList<>();
@@ -43,7 +42,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         holder.tvFavoriteCity.setText(city);
         String distance;
         if(ContainerAndGlobal.getCurrentLocation() != null)
-            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getLocation(), ContainerAndGlobal.getCurrentLocation())) + " KM";
+            distance = ContainerAndGlobal.df.format(ContainerAndGlobal.calculateLength(holder.myCS.getPosition(), ContainerAndGlobal.getCurrentLocation())) + " KM";
         else
             distance = mContext.getResources().getString(R.string.distance) + " : " + mContext.getResources().getString(R.string.unknown);
         holder.tvDistance.setText(distance);
@@ -62,8 +61,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         return favoriteList.size();
     }
 
-    public void setFavoriteList(List<ChargingStation> favorites)
-    {
+    public void setFavoriteList(List<ChargingStation> favorites) {
         this.favoriteList = favorites;
         notifyItemRangeChanged(0, favorites.size());
     }
@@ -73,13 +71,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         private final Button btnRemoveFromFavorite;
         private ChargingStation myCS;
 
-        public FavoriteHolder(View itemView)
-        {
+        public FavoriteHolder(View itemView) {
             super(itemView);
             tvFavoriteAddress = itemView.findViewById(R.id.textViewFavoriteAddress);
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             tvFavoriteCity = itemView.findViewById(R.id.textViewFavoriteCity);
-            btnRemoveFromFavorite = itemView.findViewById(R.id.buttonUnfavorite);
+            btnRemoveFromFavorite = itemView.findViewById(R.id.buttonRemoveFromFavorite);
 
             itemView.setOnClickListener(v -> {
                 ContainerAndGlobal.setZoomToThisChargingStation(myCS);

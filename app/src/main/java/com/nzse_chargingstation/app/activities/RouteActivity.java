@@ -66,8 +66,7 @@ public class RouteActivity extends AppCompatActivity {
 
                 // Set up the buttons
                 builder.setPositiveButton(getString(R.string.builder_positive_button), (dialog, which) -> {
-                    if(!input.getText().toString().isEmpty())
-                    {
+                    if(!input.getText().toString().isEmpty()) {
                         currentRoutePlan.setName(input.getText().toString());
                         ContainerAndGlobal.saveData(3, v.getContext());
                         Toast.makeText(v.getContext(), getString(R.string.successfully_renamed), Toast.LENGTH_SHORT).show();
@@ -86,8 +85,7 @@ public class RouteActivity extends AppCompatActivity {
                 builder.setTitle(R.string.delete_route_plan_question);
                 // Set up the buttons
                 builder.setPositiveButton(getString(R.string.builder_positive_button), (dialog, which) -> {
-                    for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++)
-                    {
+                    for(int i = 0; i < ContainerAndGlobal.getRoutePlanList().size(); i++) {
                         if(currentRoutePlan.equals(ContainerAndGlobal.getRoutePlanList().get(i))) {
                             ContainerAndGlobal.getRoutePlanList().remove(i);
                             Toast.makeText(this, getString(R.string.route_plan_is_removed), Toast.LENGTH_SHORT).show();
