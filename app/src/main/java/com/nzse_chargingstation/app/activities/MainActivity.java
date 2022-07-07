@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        requestLocationPermission();
         if(ContainerAndGlobal.getZoomToThisChargingStationOnDefective() != null)
             switchFragment(0);
     }
