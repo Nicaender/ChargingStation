@@ -1,7 +1,5 @@
 package com.nzse_chargingstation.app.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -11,12 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
-
-import org.w3c.dom.Text;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -58,7 +56,7 @@ public class ReportActivity extends AppCompatActivity {
     private void add_defective() {
         try {
             Defective tmp;
-            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), ContainerAndGlobal.isInFavorite(ContainerAndGlobal.getReportedChargingStation()), etAdditionalInformation.getText().toString());
+            tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), etAdditionalInformation.getText().toString());
             ContainerAndGlobal.addDefective(tmp);
             ContainerAndGlobal.saveData(2, getApplicationContext());
             finish();

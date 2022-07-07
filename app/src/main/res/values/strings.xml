@@ -60,7 +60,6 @@
     <string name="location_is_unknown">Location is unknown</string>
     <string name="route_plan">Route plan</string>
     <string name="edit">Edit</string>
-    <string name="navigate">Navigate</string>
     <string name="add_new_route_plan">Add new route plan</string>
     <string name="route_plan_name_question">Route plan\'s name</string>
     <string name="builder_positive_button">Confirm</string>
@@ -75,4 +74,5 @@
     <string name="successfully_renamed">Successfully renamed</string>
     <string name="delete_route_plan_question">Do you really want to delete this route plan?</string>
     <string name="successfully_applied">Successfully applied</string>
+    <string name="this_charging_station_is_defective">This charging station is defective</string>
 </resources>

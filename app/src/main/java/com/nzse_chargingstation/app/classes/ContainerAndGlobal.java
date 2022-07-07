@@ -275,15 +275,14 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * Add defective charging station and remove it from the normal or favorite list
+     * Add defective charging station and remove it from the normal list
      * @param defective is the defective class
      */
     public static void addDefective(Defective defective) {
         defectiveList.add(defective);
         reportedChargingStation = null;
-        if(defective.isFavorite())
-            removeFavorite(defective.getDefectiveCs());
-        defective.getDefectiveCs().setShowMarker(false);
+        if(!isInFavorite(defective.getDefectiveCs()))
+            defective.getDefectiveCs().setShowMarker(false);
 
         if(reportedMarker != null)
             reportedMarker.remove();
@@ -291,16 +290,14 @@ public class ContainerAndGlobal {
     }
 
     /**
-     * remove the defective class from defective and automatically add to normal list or fav list
+     * remove the defective class from defective
      * @param defective is the defective that will be removed
      */
     public static void removeDefective(Defective defective) {
         for(int i = 0; i < defectiveList.size(); i++) {
             if(defectiveList.get(i).equals(defective)) {
                 defectiveList.remove(i);
-                if(defective.isFavorite())
-                    ContainerAndGlobal.addFavorite(defective.getDefectiveCs());
-                else
+                if(!isInFavorite(defective.getDefectiveCs()))
                     defective.getDefectiveCs().setShowMarker(true);
                 return;
             }

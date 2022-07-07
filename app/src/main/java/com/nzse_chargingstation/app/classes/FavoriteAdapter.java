@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     @Override
     public void onBindViewHolder(@NonNull FavoriteHolder holder, int position) {
         holder.myCS = favoriteList.get(holder.getAdapterPosition());
+        if(!ContainerAndGlobal.isInDefective(holder.myCS))
+            holder.imgViewFavoriteDefective.setVisibility(View.GONE);
         String name = holder.myCS.getStrasse() + ' ' + holder.myCS.getHausnummer();
         holder.tvFavoriteAddress.setText(name);
         String city = holder.myCS.getPostleitzahl() + ", " + holder.myCS.getOrt();
@@ -69,6 +72,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     protected class FavoriteHolder extends RecyclerView.ViewHolder {
         private final TextView tvFavoriteAddress, tvDistance, tvFavoriteCity;
         private final Button btnRemoveFromFavorite;
+        private final ImageView imgViewFavoriteDefective;
         private ChargingStation myCS;
 
         public FavoriteHolder(View itemView) {
@@ -77,10 +81,15 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             tvDistance = itemView.findViewById(R.id.textViewDistance);
             tvFavoriteCity = itemView.findViewById(R.id.textViewFavoriteCity);
             btnRemoveFromFavorite = itemView.findViewById(R.id.buttonRemoveFromFavorite);
+            imgViewFavoriteDefective = itemView.findViewById(R.id.imageViewFavoriteDefective);
 
             itemView.setOnClickListener(v -> {
-                ContainerAndGlobal.setZoomToThisChargingStation(myCS);
-                ((MainActivity)mContext).switchFragment(0);
+                if(!ContainerAndGlobal.isInDefective(myCS)) {
+                    ContainerAndGlobal.setZoomToThisChargingStation(myCS);
+                    ((MainActivity)mContext).switchFragment(0);
+                }
+                else
+                    Toast.makeText(v.getContext(), v.getContext().getString(R.string.this_charging_station_is_defective), Toast.LENGTH_SHORT).show();
             });
         }
     }

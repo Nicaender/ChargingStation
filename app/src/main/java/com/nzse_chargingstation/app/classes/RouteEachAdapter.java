@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,8 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
 
     @Override
     public void onBindViewHolder(@NonNull RouteEachHolder holder, int position) {
+        if(!ContainerAndGlobal.isInDefective(routeEachList.get(holder.getAdapterPosition())))
+            holder.imgViewRouteEachDefective.setVisibility(View.GONE);
         String name = routeEachList.get(holder.getAdapterPosition()).getStrasse() + ' ' + routeEachList.get(holder.getAdapterPosition()).getHausnummer();
         holder.tvRouteEachAddress.setText(name);
         String city = routeEachList.get(holder.getAdapterPosition()).getPostleitzahl() + ", " + routeEachList.get(holder.getAdapterPosition()).getOrt();
@@ -70,6 +73,7 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
 
         private final TextView tvRouteEachAddress, tvRouteEachCity, tvRouteEachDistance;
         private final Button btnRouteEachRemove;
+        private final ImageView imgViewRouteEachDefective;
 
         public RouteEachHolder(View itemView) {
             super(itemView);
@@ -77,6 +81,7 @@ public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.Rout
             tvRouteEachCity = itemView.findViewById(R.id.textViewRouteEachCity);
             tvRouteEachDistance = itemView.findViewById(R.id.textViewRouteEachDistance);
             btnRouteEachRemove = itemView.findViewById(R.id.buttonRouteEachRemove);
+            imgViewRouteEachDefective = itemView.findViewById(R.id.imageViewRouteEachDefective);
         }
     }
 }

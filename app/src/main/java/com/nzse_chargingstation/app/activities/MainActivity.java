@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        requestLocationPermission();
         if(ContainerAndGlobal.getZoomToThisChargingStationOnDefective() != null)
             switchFragment(0);
     }
@@ -250,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
             if(oldDefectives != null) {
                 for(int i = 0; i < oldDefectives.size(); i++) {
                     ChargingStation tmp = ContainerAndGlobal.searchChargingStation(oldDefectives.get(i).getDefectiveCs().getPosition());
-                    Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).isFavorite(), oldDefectives.get(i).getReason());
+                    Defective defectiveTmp = new Defective(tmp, oldDefectives.get(i).getReason());
                     defectiveTmp.setMarked(oldDefectives.get(i).isMarked());
                     ContainerAndGlobal.addDefective(defectiveTmp);
                 }

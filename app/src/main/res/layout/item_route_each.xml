@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,12 +32,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@id/textViewRouteEachAddress"
-            android:layout_toLeftOf="@id/buttonRouteEachRemove"
             android:layout_margin="10dp"
             android:gravity="center_vertical"
             android:textSize="16sp"
             android:textColor="@color/text_color"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:text="@string/string_city"/>
 
         <TextView
             android:id="@+id/textViewRouteEachDistance"
@@ -62,6 +63,17 @@
             android:textColor="@color/button_text_color"
             android:textStyle="bold"
             android:text="@string/remove"/>
+
+        <ImageView
+            android:id="@+id/imageViewRouteEachDefective"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:src="@drawable/ic_baseline_report_gmailerrorred_24"
+            android:layout_below="@id/textViewRouteEachAddress"
+            android:layout_toRightOf="@id/textViewRouteEachCity"
+            app:tint="@color/yellow"
+            android:contentDescription="@string/no_description" />
 
     </RelativeLayout>
 

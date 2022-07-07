@@ -519,6 +519,8 @@ public class MapsFragment extends Fragment {
                         if(markerSignal.availablePermits() > 0)
                             break;
                         ChargingStation tmp = ContainerAndGlobal.getFavoriteList().get(i);
+                        if(ContainerAndGlobal.isInDefective(tmp))
+                            continue;
                         assignMarker(tmp);
                         try {
                             //noinspection BusyWait

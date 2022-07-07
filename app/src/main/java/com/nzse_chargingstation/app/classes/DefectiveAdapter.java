@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nzse_chargingstation.app.R;
-import com.nzse_chargingstation.app.activities.MainActivity;
 import com.nzse_chargingstation.app.activities.TechnicianActivity;
 
 import java.util.ArrayList;

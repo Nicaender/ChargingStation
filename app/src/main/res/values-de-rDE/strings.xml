@@ -52,7 +52,6 @@
     <string name="charging_station_successfully_reported">Ladesäule wurde erfolgreich gemeldet</string>
     <string name="location_is_unknown">Standort ist unbekannt</string>
     <string name="route_plan">Routenplan</string>
-    <string name="navigate">Navigieren</string>
     <string name="add_new_route_plan">Neu Routenplan hinzufügen</string>
     <string name="route_plan_name_question">Name des Routenplans</string>
     <string name="builder_positive_button">Bestätigen</string>
@@ -68,4 +67,5 @@
     <string name="successfully_renamed">Erfolgreich umbenannt</string>
     <string name="delete_route_plan_question">Möchten Sie diesen Routeplan wirklich löschen?</string>
     <string name="successfully_applied">Erfolgreich angewendet</string>
+    <string name="this_charging_station_is_defective">Diese Ladesäule ist defekt</string>
 </resources>
