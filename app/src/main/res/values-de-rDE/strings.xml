@@ -42,7 +42,7 @@
     <string name="string_connector_type_4">Steckertyp 4</string>
     <string name="fast_charging">Schnellladung ist verfügbar</string>
     <string name="fast_charging_no">Schnellladung ist nicht verfügbar</string>
-    <string name="click_to_show_navigation_route">Drücken Sie die Kachel, um zu navigieren</string>
+    <string name="press_to_show_navigation_route">Drücken Sie die Kachel, um zu navigieren</string>
     <string name="unknown">Unbekannt</string>
     <string name="removed_from_favorites">Von Favoriten entfernt</string>
     <string name="successfully_marked">Erfolgreich markiert</string>

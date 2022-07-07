@@ -74,7 +74,7 @@
             android:layout_below="@id/textViewDefectiveCity"
             android:textColor="@color/text_color"
             android:textStyle="bold"
-            android:text="@string/click_to_show_navigation_route"/>
+            android:text="@string/press_to_show_navigation_route"/>
 
         <Button
             android:id="@+id/buttonRepair"

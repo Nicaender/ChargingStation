@@ -20,7 +20,7 @@
     <string name="input_additional_information">Input additional information</string>
     <string name="search_here">Search here</string>
     <string name="how_many_charging_station_to_show_on_the_map">How many charging stations to show on the map?</string>
-    <string name="hold_for_more_info">Long click for more information</string>
+    <string name="hold_for_more_info">Long press for more information</string>
     <string name="hold_for_more_info_auf_deutsch" translatable="false">Weitere Information lang drücken</string>
     <string name="report">Report</string>
     <string name="language_button">Translate to german</string>
@@ -47,8 +47,8 @@
     <string name="fast_charging_auf_deutsch" translatable="false">Schnellladung ist verfügbar</string>
     <string name="fast_charging_no">Fast charging is not available</string>
     <string name="fast_charging_no_auf_deutsch" translatable="false">Schnellladung ist nicht verfügbar</string>
-    <string name="click_to_show_navigation_route">Press the tile to navigate</string>
-    <string name="click_to_show_navigation_route_auf_deutsch" translatable="false">Drücken Sie die Kachel, um zu navigieren</string>
+    <string name="press_to_show_navigation_route">Press the tile to navigate</string>
+    <string name="press_to_show_navigation_route_auf_deutsch" translatable="false">Drücken Sie die Kachel, um zu navigieren</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_auf_deutsch" translatable="false">Unbekannt</string>
     <string name="removed_from_favorites">Removed from favorites</string>

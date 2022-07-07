@@ -86,11 +86,11 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         tvChargingStationFastCharging.setText(fastCharging);
 
         if(LocaleHelper.getLanguage(mContext).equals("en")) {
-            tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route));
+            tvInfo.setText(mContext.getString(R.string.press_to_show_navigation_route));
             tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info));
         }
         else {
-            tvInfo.setText(mContext.getString(R.string.click_to_show_navigation_route_auf_deutsch));
+            tvInfo.setText(mContext.getString(R.string.press_to_show_navigation_route_auf_deutsch));
             tvHoldInfo.setText(mContext.getString(R.string.hold_for_more_info_auf_deutsch));
         }
 
