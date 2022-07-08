@@ -75,4 +75,5 @@
     <string name="delete_route_plan_question">Do you really want to delete this route plan?</string>
     <string name="successfully_applied">Successfully applied</string>
     <string name="this_charging_station_is_defective">This charging station is defective</string>
+    <string name="duplicate_in_defective">Charging station is already in defective list</string>
 </resources>

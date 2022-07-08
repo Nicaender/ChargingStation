@@ -17,6 +17,9 @@ import com.nzse_chargingstation.app.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A route each adapter that implements recycler view to show the list of charging station in a route plan.
+ */
 public class RouteEachAdapter extends RecyclerView.Adapter<RouteEachAdapter.RouteEachHolder> {
 
     public RouteEachAdapter(Context context, RoutePlan routePlan) {

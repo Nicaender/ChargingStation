@@ -14,6 +14,9 @@ import com.nzse_chargingstation.app.classes.DefectiveAdapter;
 import com.nzse_chargingstation.app.classes.DefectiveDistanceComparator;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
+/**
+ * An activity class that show the lists of defective charging station. Mainly used by Technician to mark and repair the defective charging station.
+ */
 public class TechnicianActivity extends AppCompatActivity {
 
     @Override

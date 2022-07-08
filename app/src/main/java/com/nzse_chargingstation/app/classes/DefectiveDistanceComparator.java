@@ -2,6 +2,9 @@ package com.nzse_chargingstation.app.classes;
 
 import java.util.Comparator;
 
+/**
+ * A distance comparator for defective class to measure two charging stations, which one is closer to the user.
+ */
 public class DefectiveDistanceComparator implements Comparator<Defective> {
     public int compare(Defective df1, Defective df2) {
         double d1, d2;

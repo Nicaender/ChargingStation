@@ -19,6 +19,9 @@ import com.nzse_chargingstation.app.activities.RouteActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A route adapter that implements recycler view to show the list of route plan.
+ */
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder> {
 
     public RouteAdapter(Context context) {

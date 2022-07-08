@@ -23,6 +23,9 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.RouteAdapter;
 import com.nzse_chargingstation.app.classes.RoutePlan;
 
+/**
+ * A fragment to show the list of route plan, and a button to add new route plan.
+ */
 public class RouteFragment extends Fragment {
 
     private RouteAdapter adapter;

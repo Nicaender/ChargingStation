@@ -18,6 +18,9 @@ import com.nzse_chargingstation.app.activities.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A favorite adapter that implements recycler view to show the list of charging station in favorite.
+ */
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteHolder> {
 
     public FavoriteAdapter(Context context) {

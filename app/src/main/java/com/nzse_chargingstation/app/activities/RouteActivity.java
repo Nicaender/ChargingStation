@@ -21,6 +21,9 @@ import com.nzse_chargingstation.app.classes.LocaleHelper;
 import com.nzse_chargingstation.app.classes.RouteEachAdapter;
 import com.nzse_chargingstation.app.classes.RoutePlan;
 
+/**
+ * An activity class that show the charging stations in a route plan.
+ */
 public class RouteActivity extends AppCompatActivity {
 
     @Override

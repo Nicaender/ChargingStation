@@ -17,6 +17,9 @@ import com.nzse_chargingstation.app.classes.SearchAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * An activity class that will be used when user wants to search a charging station from the search bar. This class contains all charging stations except defective charging stations.
+ */
 public class SearchActivity extends AppCompatActivity {
 
     private SearchAdapter searchAdapter;

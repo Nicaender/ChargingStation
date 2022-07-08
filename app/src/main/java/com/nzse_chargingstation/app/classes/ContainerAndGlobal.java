@@ -21,6 +21,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * A container class that contains all global variables and array lists. The variables will be reset when user closes the program.
+ */
 public class ContainerAndGlobal {
 
     private static final ArrayList<ChargingStation> chargingStationList = new ArrayList<>();

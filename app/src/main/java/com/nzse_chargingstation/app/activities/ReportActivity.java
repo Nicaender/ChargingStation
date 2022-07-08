@@ -16,6 +16,9 @@ import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.Defective;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
+/**
+ * An activity class that will be used to submit information about the defective charging station and to submit the information into a defective class.
+ */
 public class ReportActivity extends AppCompatActivity {
 
     EditText etAdditionalInformation;
@@ -51,10 +54,15 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     /**
-     * Adding a new defective charging station
+     * Adding a new defective charging station and then do not show it on the map
      */
     private void add_defective() {
         try {
+            if(ContainerAndGlobal.isInDefective(ContainerAndGlobal.getReportedChargingStation())) {
+                finish();
+                Toast.makeText(this, getResources().getString(R.string.duplicate_in_defective), Toast.LENGTH_SHORT).show();
+                return;
+            }
             Defective tmp;
             tmp = new Defective(ContainerAndGlobal.getReportedChargingStation(), etAdditionalInformation.getText().toString());
             ContainerAndGlobal.addDefective(tmp);

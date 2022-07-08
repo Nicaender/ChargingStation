@@ -2,6 +2,9 @@ package com.nzse_chargingstation.app.classes;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * A class of charging station that consists of address, type of charging device, etc.
+ */
 public class ChargingStation {
 
     public ChargingStation(String betreiber,

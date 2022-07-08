@@ -15,6 +15,9 @@ import com.nzse_chargingstation.app.R;
 
 import java.util.ArrayList;
 
+/**
+ * A Search adapter that implements recycler view to show the list of all charging stations except defective ones.
+ */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchHolder> {
 
     // creating a variable for array list and context.

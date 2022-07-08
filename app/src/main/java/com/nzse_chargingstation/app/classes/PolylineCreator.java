@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A class to create a polyline that serves as navigation line on the map using Google API.
+ */
 public class PolylineCreator {
 
     public PolylineOptions createPolyline(String url, int colorState) {

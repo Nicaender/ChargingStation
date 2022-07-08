@@ -17,6 +17,9 @@ import com.nzse_chargingstation.app.activities.TechnicianActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A defective adapter that implements recycler view to show the list of defective charging station.
+ */
 public class DefectiveAdapter extends RecyclerView.Adapter<DefectiveAdapter.DefectiveHolder> {
 
     public DefectiveAdapter(Context context) {

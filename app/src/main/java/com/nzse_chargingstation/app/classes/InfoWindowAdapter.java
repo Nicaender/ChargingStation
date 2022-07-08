@@ -15,6 +15,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.nzse_chargingstation.app.R;
 
+/**
+ * An adapter class to customize the info window on the map, when a marker is clicked by user.
+ */
 public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final Context mContext;

@@ -12,6 +12,9 @@ import com.nzse_chargingstation.app.R;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
+/**
+ * An activity class that provides information about the selected charging station.
+ */
 public class InfoActivity extends AppCompatActivity {
 
     @Override

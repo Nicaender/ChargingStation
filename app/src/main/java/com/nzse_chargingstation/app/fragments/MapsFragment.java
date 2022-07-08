@@ -51,6 +51,9 @@ import com.nzse_chargingstation.app.classes.RoutePlan;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+/**
+ * A fragment that will show the google map on the phone, and also marks the charging stations with markers.
+ */
 public class MapsFragment extends Fragment {
 
     private MapView mMapView;

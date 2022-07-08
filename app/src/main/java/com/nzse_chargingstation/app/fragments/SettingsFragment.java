@@ -18,6 +18,9 @@ import com.nzse_chargingstation.app.activities.TechnicianActivity;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.LocaleHelper;
 
+/**
+ * A fragment to show the setting, such as dark mode and language, and also a button to access technician site.
+ */
 public class SettingsFragment extends Fragment{
 
     @Override

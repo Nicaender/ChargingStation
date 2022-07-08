@@ -16,6 +16,9 @@ import com.nzse_chargingstation.app.classes.ChargingStationDistanceComparator;
 import com.nzse_chargingstation.app.classes.ContainerAndGlobal;
 import com.nzse_chargingstation.app.classes.FavoriteAdapter;
 
+/**
+ * A Fragment to show the list of favorite charging station.
+ */
 public class FavoritesFragment extends Fragment {
 
     @Override
