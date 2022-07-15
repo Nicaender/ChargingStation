@@ -606,6 +606,9 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    /**
+     * Initializing polyline thread that manages all the direction route from a route plan
+     */
     private void navigatedPolylineThreadInitialize() {
         try {
             navigatedPolylineThread = new Thread(() -> {
